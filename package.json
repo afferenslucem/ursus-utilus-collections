@@ -1,0 +1,27 @@
+{
+  "name": "ursus-utilus-collections",
+  "version": "1.0.0",
+  "description": "Collections manipulation utils",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "ts-mocha -p tsconfig.json tests/**/*.spec.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/afferenslucem/ursus-utilus-collections.git"
+  },
+  "keywords": [
+    "collections",
+    "array",
+    "filter",
+    "map",
+    "zip",
+    "query"
+  ],
+  "author": "Alex Shakirov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/afferenslucem/ursus-utilus-collections/issues"
+  },
+  "homepage": "https://github.com/afferenslucem/ursus-utilus-collections#readme"
+}
