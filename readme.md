@@ -1,4 +1,3 @@
-
 # Ursus-Utilus
 
 Simple library with useful utils
@@ -19,6 +18,7 @@ Project is created with:
 * ts-mocha 7.0.0
 
 ## Examples
+
 ```
 # Ursus-Utilus
 
@@ -41,4 +41,7 @@ Project is created with:
 
 ## Examples
 ```
+
+``````bash
+$npm install ursus-utilus-logger
 ``````
