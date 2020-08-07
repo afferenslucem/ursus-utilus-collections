@@ -5,7 +5,9 @@
   "typings": "lib/index",
   "main": "lib/index.js",
   "scripts": {
-    "test": "ts-mocha -p tsconfig.json tests/**/*.spec.ts"
+    "test": "ts-mocha -p tsconfig.json tests/**/*.spec.ts",
+    "build": "tsc --p tsconfig.json",
+    "pack": "npm run build && npm pack"
   },
   "repository": {
     "type": "git",
