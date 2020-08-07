@@ -7,4 +7,8 @@ export abstract class IterableCollection<T> implements IIterable<T> {
     public [Symbol.iterator](): IIterator<T> {
         return this.iterator;
     }
+
+    public getIterator(): IIterator<T> {
+        return this[Symbol.iterator]();
+    }
 }

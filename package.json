@@ -12,7 +12,9 @@
     "url": "git+https://github.com/afferenslucem/ursus-utilus-collections.git"
   },
   "keywords": [
-    "collections"
+    "collections",
+    "filtering",
+    "filter"
   ],
   "author": "Alex Shakirov",
   "license": "ISC",
