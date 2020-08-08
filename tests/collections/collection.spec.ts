@@ -9,7 +9,9 @@ describe('Collection', function () {
 
         const collection = new Collection<number>(items);
 
-        const result = collection.where(item => item % 2 == 0).where(item => item % 3 == 0).toArray();
+        const result = collection
+        .where(item => item % 2 == 0)
+        .where(item => item % 3 == 0).toArray();
 
         assert.deepEqual(result, expected);
     });  

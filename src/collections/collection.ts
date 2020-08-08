@@ -5,8 +5,9 @@ import { ICollection } from "../interfaces/i-collection";
 import { FilterCondition, filter, MapCondition, map } from "../commands/delegates";
 import { IIterator } from "../interfaces/i-iterator";
 import { CommandId } from "../commands/command-id";
-import { IIterable } from "../interfaces/i-iterable";
 import { FilteringIterator } from "../iterators/filtering-iterator";
+import { MappingIterator } from "../iterators/mapping-iterator";
+import { SkippingIterator } from "../iterators/skipping-iterator";
 
 export class Collection<T> extends IterableCollection<T> implements ICollection<T> {
     protected commands: Command[];
@@ -21,53 +22,28 @@ export class Collection<T> extends IterableCollection<T> implements ICollection<
         } else {
             this.inner = iterable;
         }
-
-        this.commands = [];
     }
 
     where(condition: FilterCondition<T>): ICollection<T> {
-        const result = new FilteringCollection<T>(this, condition);
-
-        return result;
+        return new FilteringCollection<T>(this, condition);
     }
 
-    select<TOut>(condition: MapCondition<T, TOut>): ICollection<TOut> {
-        const result = this.deepCopy();
-
-        result.commands.push({
-            id: CommandId.Map,
-            function: (items: T[]) => map<T,TOut>(items, condition)
-        });
-
-        // @ts-ignore
-        return result;
+    select<TOut>(condition: MapCondition<T, TOut>): ICollection<TOut> {        
+        return new MappingCollection<T, TOut>(this, condition);
     }
 
-    skip(): ICollection<T> {
-        
+    skip(shouldSkip: number): ICollection<T> {
+        return new SkippingCollection(this, shouldSkip);
     }
 
     protected deepCopy(): Collection<T> {
         const result = new Collection<T>(this);
-        result.commands = Array.from(this.commands);
 
         return result;
     }
 
     public toArray(): T[] {
-        let result: IIterable<any> = this;
-
-        this.commands.forEach(item => {
-            result = this.applyCommand(item, result);
-        })
-
-        return Array.from(result)
-    }
-
-    private applyCommand(command: Command, iterable: Iterable<any>): IIterable<any> {
-        const result = command.function(Array.from(iterable));
-
-        return new NativeArrayWrapper(...result);
+        return Array.from(this)
     }
 
     public getIterator(): IIterator<T> {
@@ -103,8 +79,46 @@ class FilteringCollection<T> extends Collection<T> {
 
     protected deepCopy(): FilteringCollection<T> {
         const result = new FilteringCollection<T>(this, ...this.conditions);
-        result.commands = Array.from(this.commands);
 
         return result;
+    }
+}
+
+class MappingCollection<T, E> extends Collection<E> {
+    private conditions: MapCondition<T, E>[];
+
+    public constructor(iterable: IterableCollection<T>, ...conditions: MapCondition<T, E>[]) {
+        // @ts-ignore
+        super(iterable);
+        this.conditions = [...conditions];
+    }
+    
+    public getIterator(): IIterator<E> {
+        const iterator = super.getIterator();
+
+        return new MappingIterator(iterator, ...this.conditions);
+    }
+
+    public appendConndition(condition: MapCondition<T, E>) {
+        this.conditions.push(condition);
+    }
+
+    protected deepCopy(): MappingCollection<T, E> {
+        // @ts-ignore
+        const result = new MappingCollection<T, E>(this, ...this.conditions);
+
+        return result;
+    }
+}
+
+export class SkippingCollection<T> extends Collection<T> {
+    public constructor(iterable: IterableCollection<T>, private shouldSkip: number) {
+        super(iterable);
+    }
+
+    public getIterator(): IIterator<T> {
+        const iterator = super.getIterator();
+
+        return new SkippingIterator(iterator, this.shouldSkip);
     }
 }

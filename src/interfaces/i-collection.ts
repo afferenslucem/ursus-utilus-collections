@@ -7,6 +7,10 @@ export interface ICollection<T> {
      */
     where(predicate: FilterCondition<T>) : ICollection<T>;
 
+    /**
+     * Skips some data from start of sequence
+     * @param count Count of skipping elements
+     */
     skip(count: number) : ICollection<T>;
 
     /**
