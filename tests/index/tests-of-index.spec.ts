@@ -26,4 +26,20 @@ describe('Index', function () {
 
         assert.deepEqual(expected, result);
     });
+
+    it('should skip', () => {
+        const expected = [4, 5, 6];
+
+        const result = _([1, 2, 3, 4, 5, 6]).skip(3).toArray();
+
+        assert.deepEqual(expected, result);
+    });
+
+    it('should map', () => {
+        const expected = [1, 2, 3];
+
+        const result = _([1, 2, 3, 4, 5, 6]).take(3).toArray();
+
+        assert.deepEqual(expected, result);
+    });
 });

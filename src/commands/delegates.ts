@@ -9,3 +9,7 @@ export type MapCondition<T, E> = (item: T) => E;
 export function map<T, E>(items: T[], condition: MapCondition<T, E>): E[] {
     return items.map((item) => condition(item));
 }
+
+export function skip<T>(count: number): T[] {
+    return items.map((item) => condition(item));
+}

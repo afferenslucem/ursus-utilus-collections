@@ -13,7 +13,7 @@ export abstract class Iterator<T> implements IIterator<T> {
         return LAST_ITERATOR_ITEM;
     }
 
-    protected abstract getFinished(): boolean;
+    public abstract getFinished(): boolean;
     
     protected get finished(): boolean {
         return this.getFinished();

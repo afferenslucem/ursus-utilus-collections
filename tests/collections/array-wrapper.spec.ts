@@ -15,4 +15,24 @@ describe('NativeArrayWrapper', function () {
 
         assert.deepEqual(result, expected);
     });  
+
+    it('should iterrate many times', () => {
+        const expected = [1, 2, 3];
+
+        let result = [];
+
+        const wrapper = new NativeArrayWrapper(...expected);
+
+        for(let item of wrapper) {
+            result.push(item);
+        }
+        assert.deepEqual(result, expected);
+
+        result = [];
+
+        for(let item of wrapper) {
+            result.push(item);
+        }
+        assert.deepEqual(result, expected);
+    });  
 });

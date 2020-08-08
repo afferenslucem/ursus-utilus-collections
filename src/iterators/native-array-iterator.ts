@@ -15,6 +15,7 @@ export class NativeArrayIterator<T> extends Iterator<T> {
 
     next(): IIteratorData<T> {
         if (this.finished) {
+            this.reset();
             return LAST_ITERATOR_ITEM;
         }
 
@@ -27,8 +28,12 @@ export class NativeArrayIterator<T> extends Iterator<T> {
 
         return result;
     }
+
+    private reset(): void {
+        this.current = 0;
+    }
     
-    protected getFinished(): boolean {
+    public getFinished(): boolean {
         return this.current == this.items.length;
     }
 }
