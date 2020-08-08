@@ -1,3 +1,4 @@
 export enum CommandId {
-    Filter
+    Filter,
+    Map
 }

@@ -37,12 +37,12 @@ export class Collection<T> extends IterableCollection<T> implements ICollection<
         return result;
     }
 
-    select<TExt>(condition: MapCondition<T, TExt>): ICollection<TExt> {
+    select<TOut>(condition: MapCondition<T, TOut>): ICollection<TOut> {
         const result = this.deepCopy();
 
         result.commands.push({
-            id: CommandId.Filter,
-            function: (items: T[]) => map<T,TExt>(items, condition)
+            id: CommandId.Map,
+            function: (items: T[]) => map<T,TOut>(items, condition)
         });
 
         // @ts-ignore
