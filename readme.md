@@ -16,8 +16,11 @@ Project is created with:
 * chai 4.2.0
 * mocha 8.1.0
 * ts-mocha 7.0.0
+* tsc 1.20150623.0
 
 ## Examples
+
+### Filtering
 
 ``````typescript
 import _ from 'ursus-utilus-collections';
@@ -26,8 +29,13 @@ const c = _([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
     .where(item => !(item % 2))
     .where(item => !(item % 3))
     .toArray();
+``````
 
-console.log(c);
+### Mapping
+
+``````typescript
+import _ from 'ursus-utilus-collections';
+const result = _([1, 2, 3, 4]).select(item => (item * 2).toString()).toArray();
 ``````
 
 ## Setup

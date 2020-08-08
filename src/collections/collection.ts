@@ -2,7 +2,7 @@ import { NativeArrayWrapper } from "./native-array-wrapper";
 import { IterableCollection } from "./iterable-collection";
 import { Command } from "../commands/command";
 import { ICollection } from "../interfaces/i-collection";
-import { FilterCondition, filter } from "../commands/delegates";
+import { FilterCondition, filter, MapCondition, map } from "../commands/delegates";
 import { IIterator } from "../interfaces/i-iterator";
 import { CommandId } from "../commands/command-id";
 import { IIterable } from "../interfaces/i-iterable";
@@ -34,6 +34,18 @@ export class Collection<T> extends IterableCollection<T> implements ICollection<
             function: (items: T[]) => filter<T>(items, condition)
         });
 
+        return result;
+    }
+
+    select<TExt>(condition: MapCondition<T, TExt>): ICollection<TExt> {
+        const result = this.deepCopy();
+
+        result.commands.push({
+            id: CommandId.Filter,
+            function: (items: T[]) => map<T,TExt>(items, condition)
+        });
+
+        // @ts-ignore
         return result;
     }
 

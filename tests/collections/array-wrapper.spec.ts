@@ -1,9 +1,8 @@
-import { describe, it } from 'mocha';
-import { assert } from 'chai';
 import {NativeArrayWrapper} from '../../src/collections/native-array-wrapper';
+import { assert } from 'chai';
 
 describe('NativeArrayWrapper', function () {  
-    it('should log debug by console.log', () => {
+    it('should correct wrap native array', () => {
         const expected = [1, 2, 3];
 
         const result = [];

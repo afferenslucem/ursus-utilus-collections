@@ -1,9 +1,9 @@
-import { FilterCondition } from "../commands/delegates";
+import { FilterCondition, MapCondition } from "../commands/delegates";
 
 export interface ICollection<T> {
     /**
      * Filtering method
-     * @param item filtering predicate
+     * @param item Filtering predicate
      */
     where(predicate: FilterCondition<T>) : ICollection<T>;
 
@@ -12,4 +12,10 @@ export interface ICollection<T> {
      * Triggers computation
      */
     toArray(): T[];
+
+    /**
+     * Converts sequence
+     * @param condition Converting func
+     */
+    select<V>(condition: MapCondition<T, V>): ICollection<V>;
 }

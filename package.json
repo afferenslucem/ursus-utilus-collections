@@ -1,6 +1,6 @@
 {
   "name": "ursus-utilus-collections",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "Collections manipulation utils",
   "typings": "lib/index",
   "main": "lib/index.js",
@@ -29,9 +29,8 @@
     "@types/mocha": "^8.0.1",
     "chai": "^4.2.0",
     "mocha": "^8.1.1",
-    "mocha-sinon": "^2.1.2",
-    "sinon": "^9.0.2",
     "ts-mocha": "^7.0.0",
+    "tsc": "^1.20150623.0",
     "typescript": "^3.9.7"
   },
   "dependencies": {}
