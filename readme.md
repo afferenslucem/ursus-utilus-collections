@@ -25,18 +25,44 @@ Project is created with:
 ``````typescript
 import _ from 'ursus-utilus-collections';
 
-const c = _([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
-    .where(item => !(item % 2))
-    .where(item => !(item % 3))
-    .toArray();
+const expected = [2, 4];
+const result = _([1, 2, 3, 4]).where(item => !(item % 2)).toArray();
+
+assert.deepEqual(expected, result);
 ``````
 
 ### Mapping
 
 ``````typescript
 import _ from 'ursus-utilus-collections';
+
+const expected = ['2', '4', '6', '8'];
 const result = _([1, 2, 3, 4]).select(item => (item * 2).toString()).toArray();
+
+assert.deepEqual(expected, result);
 ``````
+
+### Skipping
+
+```typescript
+import _ from 'ursus-utilus-collections'
+
+const expected = [4, 5, 6];
+const result = _([1, 2, 3, 4, 5, 6]).skip(3).toArray();
+
+assert.deepEqual(expected, result);
+```
+
+### Taking
+
+```typescript
+import _ from 'ursus-utilus-collections'
+
+const expected = [1, 2, 3];
+const result = _([1, 2, 3, 4, 5, 6]).take(3).toArray();
+
+assert.deepEqual(expected, result);
+```
 
 ## Setup
 

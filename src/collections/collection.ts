@@ -1,16 +1,14 @@
 import { NativeArrayWrapper } from "./native-array-wrapper";
 import { IterableCollection } from "./iterable-collection";
-import { Command } from "../commands/command";
 import { ICollection } from "../interfaces/i-collection";
 import { FilterCondition, filter, MapCondition, map } from "../commands/delegates";
 import { IIterator } from "../interfaces/i-iterator";
-import { CommandId } from "../commands/command-id";
 import { FilteringIterator } from "../iterators/filtering-iterator";
 import { MappingIterator } from "../iterators/mapping-iterator";
 import { SkippingIterator } from "../iterators/skipping-iterator";
+import { TakingIterator } from "../iterators/taking-iterator";
 
 export class Collection<T> extends IterableCollection<T> implements ICollection<T> {
-    protected commands: Command[];
     private inner: IterableCollection<T>;
 
     public constructor(iterable: T[] | IterableCollection<T>) {
@@ -34,6 +32,10 @@ export class Collection<T> extends IterableCollection<T> implements ICollection<
 
     skip(shouldSkip: number): ICollection<T> {
         return new SkippingCollection(this, shouldSkip);
+    }
+
+    take(shouldTake: number): ICollection<T> {
+        return new TakingCollection(this, shouldTake);
     }
 
     protected deepCopy(): Collection<T> {
@@ -120,5 +122,17 @@ export class SkippingCollection<T> extends Collection<T> {
         const iterator = super.getIterator();
 
         return new SkippingIterator(iterator, this.shouldSkip);
+    }
+}
+
+export class TakingCollection<T> extends Collection<T> {
+    public constructor(iterable: IterableCollection<T>, private shouldTake: number) {
+        super(iterable);
+    }
+
+    public getIterator(): IIterator<T> {
+        const iterator = super.getIterator();
+
+        return new TakingIterator(iterator, this.shouldTake);
     }
 }

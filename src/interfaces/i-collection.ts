@@ -9,9 +9,15 @@ export interface ICollection<T> {
 
     /**
      * Skips some data from start of sequence
-     * @param count Count of skipping elements
+     * @param shouldSkip Count of skipping elements
      */
-    skip(count: number) : ICollection<T>;
+    skip(shouldSkip: number) : ICollection<T>;
+
+    /**
+     * Takes some data from start of sequence
+     * @param shouldTake Count of taking elements
+     */
+    take(shouldTake: number) : ICollection<T>;
 
     /**
      * Converts sequence
