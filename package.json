@@ -1,6 +1,6 @@
 {
   "name": "ursus-utilus-collections",
-  "version": "1.2.2",
+  "version": "1.3.0",
   "description": "Collections manipulation utils",
   "typings": "lib/index",
   "main": "lib/index.js",
@@ -16,7 +16,8 @@
   "keywords": [
     "collections",
     "filtering",
-    "filter"
+    "mapping",
+    "LINQ"
   ],
   "author": "afferenslucem",
   "license": "ISC",

@@ -7,6 +7,8 @@ import { FilteringIterator } from "../iterators/filtering-iterator";
 import { MappingIterator } from "../iterators/mapping-iterator";
 import { SkippingIterator } from "../iterators/skipping-iterator";
 import { TakingIterator } from "../iterators/taking-iterator";
+import { FirstFindManager } from "../managers/first-find-manager";
+import { LastFindManager } from "../managers/last-find-manager";
 
 export class Collection<T> extends IterableCollection<T> implements ICollection<T> {
     private inner: IterableCollection<T>;
@@ -36,6 +38,22 @@ export class Collection<T> extends IterableCollection<T> implements ICollection<
 
     take(shouldTake: number): ICollection<T> {
         return new TakingCollection(this, shouldTake);
+    }
+
+    first(predicate?: FilterCondition<T> | undefined): T {
+        return new FirstFindManager(this).first(predicate);
+    }
+
+    firstOrDefault(predicate?: FilterCondition<T> | undefined, $default?: T | null | undefined): T | null {
+        return new FirstFindManager(this).firstOrDefault(predicate, $default);
+    }
+
+    last(predicate?: FilterCondition<T> | undefined): T {
+        return new LastFindManager(this).last(predicate);
+    }
+
+    lastOrDefault(predicate?: FilterCondition<T> | undefined, $default?: T | null | undefined): T | null {
+        return new LastFindManager(this).lastOrDefault(predicate, $default);;
     }
 
     protected deepCopy(): Collection<T> {
