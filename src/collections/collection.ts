@@ -1,7 +1,7 @@
 import { NativeArrayWrapper } from "./native-array-wrapper";
 import { IterableCollection } from "./iterable-collection";
 import { ICollection } from "../interfaces/i-collection";
-import { FilterCondition, filter, MapCondition, map } from "../commands/delegates";
+import { FilterCondition, MapCondition } from "../commands/delegates";
 import { IIterator } from "../interfaces/i-iterator";
 import { FilteringIterator } from "../iterators/filtering-iterator";
 import { MappingIterator } from "../iterators/mapping-iterator";
@@ -45,7 +45,8 @@ export class Collection<T> extends IterableCollection<T> implements ICollection<
     }
 
     public toArray(): T[] {
-        return Array.from(this)
+        // @ts-ignore
+        return Array.from<T>(this)
     }
 
     public getIterator(): IIterator<T> {

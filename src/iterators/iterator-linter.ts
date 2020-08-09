@@ -1,6 +1,5 @@
 import { Iterator } from "./iterator";
 import { IIteratorData } from "../interfaces/i-iterator-data";
-import { LAST_ITERATOR_ITEM } from "./last-iterator-item";
 import { IIterator } from "../interfaces/i-iterator";
 
 export class IteratorLinter<T> extends Iterator<T> {
@@ -18,7 +17,7 @@ export class IteratorLinter<T> extends Iterator<T> {
 
     public next(): IIteratorData<T> {
         if (this.finished) {
-            return LAST_ITERATOR_ITEM;
+            return this.onFinished();
         }
 
         let result = this.currentIterator.next();
@@ -39,7 +38,7 @@ export class IteratorLinter<T> extends Iterator<T> {
         return result;
     }
 
-    protected getFinished(): boolean {
+    public getFinished(): boolean {
         return this.currentIterator == undefined;
     }
 }

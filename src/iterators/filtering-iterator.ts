@@ -12,10 +12,12 @@ export class FilteringIterator<T> extends IteratorWrapper<T> {
     }
 
     public next(): IIteratorData<T> {
-        let result: IIteratorData<T> = null;
+        let result: IIteratorData<T> | null = null;
         
         do {
             result = this.inner.next();
+
+            // @ts-ignore
         } while(!(result.done || this.checkCondition(result.value)));
 
         return result;
