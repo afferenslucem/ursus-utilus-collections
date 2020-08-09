@@ -59,6 +59,7 @@ export interface ICollection<T> extends IIterable<T> {
     /**
      * Converting method to array
      * Triggers computation
+     * Array is freezed
      */
     toArray(): T[];
 }

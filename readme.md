@@ -20,6 +20,10 @@ Project is created with:
 
 ## Examples
 
+##### Pay attention
+
+> ⚠️ Method toArray returns freezed array
+
 ### Filtering
 
 ``````typescript
@@ -113,7 +117,7 @@ assert.equal(last, 12, 'Return wrong last value');
 
 const lastByCondition = collection.last(item => item < 3); // returns 2
 assert.equal(lastByCondition, 2, 'Return wrong last filtered value');
-        
+  
 assert.throws(() => {
     collection.last(item => item < 1); // throws error
 }, 'No matches found');
@@ -144,4 +148,3 @@ assert.equal(defaultlast, 0, 'Return wrong overrided default');
 ``````bash
 $npm install ursus-utilus-collections
 ``````
-

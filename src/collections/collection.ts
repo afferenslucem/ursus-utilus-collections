@@ -7,11 +7,15 @@ import { FilteringIterator } from "../iterators/filtering-iterator";
 import { MappingIterator } from "../iterators/mapping-iterator";
 import { SkippingIterator } from "../iterators/skipping-iterator";
 import { TakingIterator } from "../iterators/taking-iterator";
-import { FirstFindManager } from "../managers/first-find-manager";
-import { LastFindManager } from "../managers/last-find-manager";
+import { NativeArrayIterator } from "../iterators/native-array-iterator";
+import { FirstAggregator } from "../aggregators/first-aggregator";
+import { FirstOrDefaultAggregator } from "../aggregators/first-or-default-aggregator";
+import { LastAggregator } from "../aggregators/last-aggregtor";
+import { LastOrDefaultAggregator } from "../aggregators/last-or-default-aggregtor";
 
 export class Collection<T> extends IterableCollection<T> implements ICollection<T> {
     private inner: IterableCollection<T>;
+    private _computed: T[] | null = null;
 
     public constructor(iterable: T[] | IterableCollection<T>) {
         super();
@@ -22,6 +26,24 @@ export class Collection<T> extends IterableCollection<T> implements ICollection<
         } else {
             this.inner = iterable;
         }
+    }
+
+    public [Symbol.iterator](): IIterator<T> {
+        return new NativeArrayIterator(...this.computed);
+    }
+
+    protected deepCopy(): Collection<T> {
+        const result = new Collection<T>(this);
+
+        return result;
+    }
+
+    public toArray(): T[] {
+        return this.computed;
+    }
+
+    public getIterator(): IIterator<T> {
+        return this.inner.getIterator();
     }
 
     where(condition: FilterCondition<T>): ICollection<T> {
@@ -41,34 +63,42 @@ export class Collection<T> extends IterableCollection<T> implements ICollection<
     }
 
     first(predicate?: FilterCondition<T> | undefined): T {
-        return new FirstFindManager(this).first(predicate);
+        return new FirstAggregator(this, predicate).aggregate();
     }
 
     firstOrDefault(predicate?: FilterCondition<T> | undefined, $default?: T | null | undefined): T | null {
-        return new FirstFindManager(this).firstOrDefault(predicate, $default);
+        return new FirstOrDefaultAggregator(this, predicate, $default).aggregate();
     }
 
     last(predicate?: FilterCondition<T> | undefined): T {
-        return new LastFindManager(this).last(predicate);
+        return new LastAggregator(this, predicate).aggregate();
     }
 
     lastOrDefault(predicate?: FilterCondition<T> | undefined, $default?: T | null | undefined): T | null {
-        return new LastFindManager(this).lastOrDefault(predicate, $default);;
+        return new LastOrDefaultAggregator(this, predicate, $default).aggregate();
     }
 
-    protected deepCopy(): Collection<T> {
-        const result = new Collection<T>(this);
-
-        return result;
+    public get computed(): T[] {
+        if (this._computed == null) {
+            this._computed = this.materialize();
+        }
+        return this._computed;
     }
 
-    public toArray(): T[] {
+    private materialize(): T[] {
+        const iterator = this.getIterator();
+
+        const result = [];
+
+        while (!iterator.getFinished()) {
+            const item = iterator.next();
+            result.push(item.value);
+        }
+
+        Object.freeze(this._computed);
+
         // @ts-ignore
-        return Array.from<T>(this)
-    }
-
-    public getIterator(): IIterator<T> {
-        return this.inner.getIterator();
+        return result;
     }
 }
 
@@ -132,7 +162,7 @@ class MappingCollection<T, E> extends Collection<E> {
     }
 }
 
-export class SkippingCollection<T> extends Collection<T> {
+class SkippingCollection<T> extends Collection<T> {
     public constructor(iterable: IterableCollection<T>, private shouldSkip: number) {
         super(iterable);
     }
@@ -144,7 +174,7 @@ export class SkippingCollection<T> extends Collection<T> {
     }
 }
 
-export class TakingCollection<T> extends Collection<T> {
+class TakingCollection<T> extends Collection<T> {
     public constructor(iterable: IterableCollection<T>, private shouldTake: number) {
         super(iterable);
     }

@@ -9,11 +9,15 @@ describe('Collection', function () {
 
         const collection = new Collection<number>(items);
 
-        const result = collection
+        const filterCollection = collection
         .where(item => item % 2 == 0)
-        .where(item => item % 3 == 0).toArray();
+        .where(item => item % 3 == 0);
+
+        const result = filterCollection.toArray();
+        const result2 = filterCollection.toArray();
 
         assert.deepEqual(result, expected);
+        assert.equal(result, result2);
     });  
 
     it('should map items by predicate', () => {
