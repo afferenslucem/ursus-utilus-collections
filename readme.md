@@ -67,5 +67,5 @@ assert.deepEqual(expected, result);
 ## Setup
 
 ``````bash
-$npm install ursus-utilus-logger
+$npm install ursus-utilus-collections
 ``````
