@@ -1,14 +1,10 @@
 import Benchmark from "benchmark";
 import _ from './src/index';
 
-const suite = new Benchmark.Suite('Filter', {
-    onCycle: (event: Benchmark.Event) => console.log(String(event.target))
-});
-
 // @ts-ignore
 let array: number[] = null;
 
-function getArrayForFilter(count: number = 1000000) {
+function getArray(count: number) {
     const array = [];
 
     for(let i = 0; i < count; i++) {
@@ -18,40 +14,215 @@ function getArrayForFilter(count: number = 1000000) {
     return array;
 }
 
-suite
-.add('Where for 1000000 els', function () {
-    return _(array).where(item => (item % 2) == 0)
-    .toArray();
-}, {
-    onStart: function () {
-        array = getArrayForFilter();
-    }
-})
-.add('Native filter 1000000 els', function () {
-    return array.filter(item => (item % 2) == 0);
-}, {
-    onStart: function () {
-        array = getArrayForFilter();
-    }
-})
-.add('Double where 1000000 els', function () {
-    return _(array).where(item => (item % 2) == 0)
-    .where(item => (item % 3) == 0)
-    .toArray();
-}, {
-    onStart: function () {
-        array = getArrayForFilter();
-    }
-})
-.add('Double native filter 1000000 els', function () {
-    return array.filter(item => (item % 2) == 0)
-    .filter(item => (item % 3) == 0);
-}, {
-    onStart: function () {
-        array = getArrayForFilter();
-    }
-});
+function onCycle(event: Benchmark.Event) {console.log(String(event.target))}
 
-suite.run({
-    async: false
-});
+function suite(name: string, count = 1000000): Benchmark.Suite {
+    return new Benchmark.Suite('Filter for 1000000', {
+        onCycle: onCycle,   
+        onStart: function () {
+            array = getArray(count);
+            console.log(`${name}:`)
+        },
+        onComplete: function() {
+            console.log();
+        }
+    })
+}
+
+suite('Filter for 1000000')
+    .add('Where', function () {
+        return _(array).where(item => (item % 2) == 0)
+        .toArray();
+    })
+    .add('Native filter', function () {
+        return array.filter(item => (item % 2) == 0);
+    })
+    .add('Double where', function () {
+        return _(array).where(item => (item % 2) == 0)
+        .where(item => (item % 3) == 0)
+        .toArray();
+    })
+    .add('Double native filter', function () {
+        return array.filter(item => (item % 2) == 0)
+        .filter(item => (item % 3) == 0);
+    })
+    .add('10 where', function () {
+        return _(array)
+        .where(item => (item % 2) == 0)
+        .where(item => (item % 2) == 0)
+        .where(item => (item % 2) == 0)
+        .where(item => (item % 2) == 0)
+        .where(item => (item % 2) == 0)
+        .where(item => (item % 2) == 0)
+        .where(item => (item % 2) == 0)
+        .where(item => (item % 2) == 0)
+        .where(item => (item % 2) == 0)
+        .where(item => (item % 2) == 0)
+        .toArray();
+    })
+    .add('10 native filter', function () {
+        return array
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+    })
+    .run({
+        async: false
+    });
+
+suite('Filter for 1000', 1000)
+    .add('Where', function () {
+        return _(array).where(item => (item % 2) == 0)
+        .toArray();
+    })
+    .add('Native filter', function () {
+        return array.filter(item => (item % 2) == 0);
+    })
+    .add('Double where', function () {
+        return _(array).where(item => (item % 2) == 0)
+        .where(item => (item % 3) == 0)
+        .toArray();
+    })
+    .add('Double native filter', function () {
+        return array.filter(item => (item % 2) == 0)
+        .filter(item => (item % 3) == 0);
+    })
+    .add('10 where', function () {
+        return _(array)
+        .where(item => (item % 2) == 0)
+        .where(item => (item % 2) == 0)
+        .where(item => (item % 2) == 0)
+        .where(item => (item % 2) == 0)
+        .where(item => (item % 2) == 0)
+        .where(item => (item % 2) == 0)
+        .where(item => (item % 2) == 0)
+        .where(item => (item % 2) == 0)
+        .where(item => (item % 2) == 0)
+        .where(item => (item % 2) == 0)
+        .toArray();
+    })
+    .add('10 native filter', function () {
+        return array
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+    })
+    .run({
+        async: false
+    });
+
+suite('Select for 1000000')
+    .add('Select', function () {
+        return _(array)
+        .select(item => item + 1)
+        .toArray();
+    })
+    .add('Native map', function () {
+        return array.map(item => item + 1)
+    })
+    .add('Double select', function () {
+        return _(array)
+        .select(item => item + 1)
+        .select(item => item + 1)
+        .toArray();
+    })
+    .add('Double native map', function () {
+        return array
+        .map(item => item + 1)
+        .map(item => item + 1);
+    })
+    .add('10 select', function () {
+        return _(array)
+        .select(item => item + 1)
+        .select(item => item + 1)
+        .select(item => item + 1)
+        .select(item => item + 1)
+        .select(item => item + 1)
+        .select(item => item + 1)
+        .select(item => item + 1)
+        .select(item => item + 1)
+        .select(item => item + 1)
+        .select(item => item + 1)
+        .toArray();
+    })
+    .add('10 native map', function () {
+        return array
+        .map(item => item + 1)
+        .map(item => item + 1)
+        .map(item => item + 1)
+        .map(item => item + 1)
+        .map(item => item + 1)
+        .map(item => item + 1)
+        .map(item => item + 1)
+        .map(item => item + 1)
+        .map(item => item + 1)
+        .map(item => item + 1)
+    })
+    .run({
+        async: false
+    });
+
+suite('Select for 1000', 1000)
+    .add('Select', function () {
+        return _(array)
+        .select(item => item + 1)
+        .toArray();
+    })
+    .add('Native map', function () {
+        return array.map(item => item + 1)
+    })
+    .add('Double select', function () {
+        return _(array)
+        .select(item => item + 1)
+        .select(item => item + 1)
+        .toArray();
+    })
+    .add('Double native map', function () {
+        return array
+        .map(item => item + 1)
+        .map(item => item + 1);
+    })
+    .add('10 select', function () {
+        return _(array)
+        .select(item => item + 1)
+        .select(item => item + 1)
+        .select(item => item + 1)
+        .select(item => item + 1)
+        .select(item => item + 1)
+        .select(item => item + 1)
+        .select(item => item + 1)
+        .select(item => item + 1)
+        .select(item => item + 1)
+        .select(item => item + 1)
+        .toArray();
+    })
+    .add('10 native map', function () {
+        return array
+        .map(item => item + 1)
+        .map(item => item + 1)
+        .map(item => item + 1)
+        .map(item => item + 1)
+        .map(item => item + 1)
+        .map(item => item + 1)
+        .map(item => item + 1)
+        .map(item => item + 1)
+        .map(item => item + 1)
+        .map(item => item + 1)
+    })
+    .run({
+        async: false
+    });
