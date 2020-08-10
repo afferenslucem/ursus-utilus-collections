@@ -1,5 +1,6 @@
-import { FilterCondition, MapCondition } from "../commands/delegates";
+import { FilterCondition, MapCondition, SortCondition } from "../commands/delegates";
 import { IIterable } from "./i-iterable";
+import { ISortingCollection } from "./i-sorting-collection";
 
 export interface ICollection<T> extends IIterable<T> {
     /**
@@ -55,6 +56,10 @@ export interface ICollection<T> extends IIterable<T> {
      * @param $default Default value for returning if sequence hasn't tgot matches
      */
     lastOrDefault(predicate?: FilterCondition<T>, $default?: T | null): T | null;
+
+    sort(condition?: SortCondition<T> | undefined): ICollection<T>;
+
+    sortBy<E>(map: MapCondition<T, E>, condition?: SortCondition<E> | undefined): ISortingCollection<T>;
 
     /**
      * Converting method to array

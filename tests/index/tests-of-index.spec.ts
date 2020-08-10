@@ -111,4 +111,37 @@ describe('Index', function () {
         const defaultlast = collection.lastOrDefault(item => item < 1, 0); // returns null
         assert.equal(defaultlast, 0, 'Return wrong overrided default');
     });
+
+    it('should sort', () => {
+        const collection = _([3, 2, 1]);
+
+        const sorted = collection.sort().toArray();
+
+        assert.deepEqual(sorted, [1, 2, 3])
+    });
+
+    it('should sort with condition', () => {
+        const collection = _([1, 2, 3]);
+
+        const sorted = collection.sort((first, second) => second - first).toArray();
+
+        assert.deepEqual(sorted, [3, 2, 1])
+    });
+
+    it('should sort cascade', () => {
+        const collection = _([[3, 4], [2, 4], [2, 3], [1, 2]]);
+
+        const sorted = collection.sortBy(item => item[0]).thenBy(item => item[1]).toArray();
+
+        assert.deepEqual(sorted, [[1, 2], [2, 3], [2, 4], [3, 4]])
+    });
+
+    it('should sort cascade with condition', () => {
+        const collection = _([[1, 2], [2, 3], [2, 4], [3, 4]]);
+
+        const sorted = collection.sortBy(item => item[0], (first, second) => second - first)
+        .thenBy(item => item[1], (first, second) => second - first).toArray();
+
+        assert.deepEqual(sorted, [[3, 4], [2, 4], [2, 3], [1, 2]])
+    });
 });

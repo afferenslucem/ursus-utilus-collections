@@ -22,8 +22,8 @@ export class LastAggregator<T> extends Aggregator<T> {
         }
     }
     
-    private findLast(predicate?: FilterCondition<T> | undefined): IIteratorData<T> {
-        const iterator = this.getIterator(predicate);
+    private findLast(): IIteratorData<T> {
+        const iterator = this.getIterator();
 
         let prev = LAST_ITERATOR_ITEM;
         let current = LAST_ITERATOR_ITEM;
@@ -37,9 +37,9 @@ export class LastAggregator<T> extends Aggregator<T> {
     }
 
 
-    private getIterator(predicate?: FilterCondition<T> | undefined): IIterator<T> {
-        return predicate ? 
-        this.collection.where(predicate).getIterator() :
+    private getIterator(): IIterator<T> {
+        return this.predicate ? 
+        this.collection.where(this.predicate).getIterator() :
         this.collection.getIterator();
     }
 }

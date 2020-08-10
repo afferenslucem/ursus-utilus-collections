@@ -1,7 +1,7 @@
 import { NativeArrayWrapper } from "./native-array-wrapper";
 import { IterableCollection } from "./iterable-collection";
 import { ICollection } from "../interfaces/i-collection";
-import { FilterCondition, MapCondition } from "../commands/delegates";
+import { FilterCondition, MapCondition, SortCondition } from "../commands/delegates";
 import { IIterator } from "../interfaces/i-iterator";
 import { FilteringIterator } from "../iterators/filtering-iterator";
 import { MappingIterator } from "../iterators/mapping-iterator";
@@ -12,6 +12,9 @@ import { FirstAggregator } from "../aggregators/first-aggregator";
 import { FirstOrDefaultAggregator } from "../aggregators/first-or-default-aggregator";
 import { LastAggregator } from "../aggregators/last-aggregtor";
 import { LastOrDefaultAggregator } from "../aggregators/last-or-default-aggregtor";
+import { ISortingCollection } from "../interfaces/i-sorting-collection";
+import _ from '../index';
+import { SortSettings, Comparer } from "../utils/comparer";
 
 export class Collection<T> extends IterableCollection<T> implements ICollection<T> {
     private inner: IterableCollection<T>;
@@ -78,6 +81,20 @@ export class Collection<T> extends IterableCollection<T> implements ICollection<
         return new LastOrDefaultAggregator(this, predicate, $default).aggregate();
     }
 
+    sort(condition?: SortCondition<T> | undefined): ICollection<T> {
+        return new SortingCollection<T>(this, {
+            compare: condition
+        })
+    }
+
+    sortBy<E>(map: MapCondition<T, E>, condition?: SortCondition<E> | undefined): ISortingCollection<T> {
+        // @ts-ignore
+        return new SortingCollection<T, E>(this, {
+            mapping: map,
+            compare: condition
+        })
+    }
+
     public get computed(): T[] {
         if (this._computed == null) {
             this._computed = this.materialize();
@@ -85,17 +102,12 @@ export class Collection<T> extends IterableCollection<T> implements ICollection<
         return this._computed;
     }
 
-    private materialize(): T[] {
-        const iterator = this.getIterator();
+    protected materialize(): T[] {
+        const result = Array.from({
+            [Symbol.iterator]: () => this.getIterator()
+        });
 
-        const result = [];
-
-        while (!iterator.getFinished()) {
-            const item = iterator.next();
-            result.push(item.value);
-        }
-
-        Object.freeze(this._computed);
+        Object.freeze(result);
 
         // @ts-ignore
         return result;
@@ -183,5 +195,48 @@ class TakingCollection<T> extends Collection<T> {
         const iterator = super.getIterator();
 
         return new TakingIterator(iterator, this.shouldTake);
+    }
+}
+
+export class SortingCollection<T, E = T> extends Collection<T> implements ISortingCollection<T> {
+    private sortSettings: SortSettings<T, E>[];
+    
+    public constructor(iterable: T[] | IterableCollection<T>, ...sortSettings: SortSettings<T, E>[]) {
+        super(iterable);
+        this.sortSettings = _(sortSettings)
+        .where(item => !!item.compare || !!item.mapping)
+        .toArray();
+    }
+
+    thenBy<E>(map: MapCondition<T, E>, condition?: SortCondition<E>): ISortingCollection<T> {
+        // @ts-ignore
+        return new SortingCollection<T, E>(this, ...this.sortSettings, {
+            mapping: map,
+            compare: condition
+        })
+    }
+
+    protected materialize(): T[] {
+        const temp = super.materialize();
+
+        const copy = Array.from(temp);
+
+        const comparer = new Comparer(this.sortSettings, this.defaultCompare);
+
+        const result = copy.sort(this.sortSettings.length ? (first, second) => comparer.compare(first, second) : undefined);
+
+        Object.freeze(result);
+
+        return result;
+    }
+
+    private defaultCompare(first: E, second: E): number {
+        if(first < second) {
+            return -1
+        } else if (second < first) {
+            return 1
+        } else {
+            return 0;
+        }
     }
 }

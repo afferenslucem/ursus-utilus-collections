@@ -16,7 +16,6 @@ export class FilteringIterator<T> extends IteratorWrapper<T> {
         
         do {
             result = this.inner.next();
-
             // @ts-ignore
         } while(!(result.done || this.checkCondition(result.value)));
 
