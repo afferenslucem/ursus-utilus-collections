@@ -57,8 +57,17 @@ export interface ICollection<T> extends IIterable<T> {
      */
     lastOrDefault(predicate?: FilterCondition<T>, $default?: T | null): T | null;
 
+    /**
+     * Sorts items
+     * @param condition Comparing function
+     */
     sort(condition?: SortCondition<T> | undefined): ICollection<T>;
 
+    /**
+     * Sorts items
+     * @param map Property taking function
+     * @param condition Comparing function
+     */
     sortBy<E>(map: MapCondition<T, E>, condition?: SortCondition<E> | undefined): ISortingCollection<T>;
 
     /**
