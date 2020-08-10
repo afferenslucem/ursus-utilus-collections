@@ -6,7 +6,7 @@ export class NativeArrayIterator<T> extends Iterator<T> {
     private current: number;
     private items: T[];
 
-    public constructor(...items: T[]) {
+    public constructor(items: T[]) {
         super();
 
         this.items = items;

@@ -11,8 +11,8 @@ describe('IteratorLinter', function () {
 
         const result = [];
 
-        const wrapper1 = new NativeArrayWrapper(...first);
-        const wrapper2 = new NativeArrayWrapper(...second);
+        const wrapper1 = new NativeArrayWrapper(first);
+        const wrapper2 = new NativeArrayWrapper(second);
 
         const linter = new IteratorLinter(wrapper1[Symbol.iterator](), wrapper2[Symbol.iterator]());
 

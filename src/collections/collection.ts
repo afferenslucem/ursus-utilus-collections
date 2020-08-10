@@ -25,14 +25,14 @@ export class Collection<T> extends IterableCollection<T> implements ICollection<
 
         if(Array.isArray(iterable)) {
             const copy = Array.from(iterable);
-            this.inner = new NativeArrayWrapper<T>(...copy);
+            this.inner = new NativeArrayWrapper<T>(copy);
         } else {
             this.inner = iterable;
         }
     }
 
     public [Symbol.iterator](): IIterator<T> {
-        return new NativeArrayIterator(...this.computed);
+        return new NativeArrayIterator(this.computed);
     }
 
     protected deepCopy(): Collection<T> {

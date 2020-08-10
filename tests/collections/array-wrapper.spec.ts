@@ -7,7 +7,7 @@ describe('NativeArrayWrapper', function () {
 
         const result = [];
 
-        const wrapper = new NativeArrayWrapper(...expected);
+        const wrapper = new NativeArrayWrapper(expected);
 
         for(let item of wrapper) {
             result.push(item);
@@ -21,7 +21,7 @@ describe('NativeArrayWrapper', function () {
 
         let result = [];
 
-        const wrapper = new NativeArrayWrapper(...expected);
+        const wrapper = new NativeArrayWrapper(expected);
 
         for(let item of wrapper) {
             result.push(item);
