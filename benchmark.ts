@@ -14,6 +14,16 @@ function getArray(count: number) {
     return array;
 }
 
+function getArrayDesc(count: number) {
+    const array = [];
+
+    for(let i = count; i >= 0; i--) {
+        array.push(i);
+    }
+
+    return array;
+}
+
 function onCycle(event: Benchmark.Event) {console.log(String(event.target))}
 
 function suite(name: string, count = 1000000): Benchmark.Suite {
@@ -225,6 +235,55 @@ suite('Select for 1000', 1000)
         .map(item => item + 1)
         .map(item => item + 1)
         .map(item => item + 1)
+    })
+    .run({
+        async: false
+    });
+
+
+suite('Sort for 1000000', 1000000)
+    .add('Sort', function () {
+        return _(array)
+        .sort()
+        .toArray();
+    })
+    .add('Native sort', function () {
+        return array.sort()
+    })
+    .add('SortBy', function () {
+        return _(array)
+        .sortBy(item => item.toString())
+        .toArray();
+    })
+    .add('Sort after map', function () {
+        return array
+        .map(item => item.toString())
+        .sort();
+    })
+    .run({
+        async: false
+    });
+
+
+
+suite('Sort for 1000', 1000)
+    .add('Sort', function () {
+        return _(array)
+        .sort()
+        .toArray();
+    })
+    .add('Native sort', function () {
+        return array.sort()
+    })
+    .add('SortBy', function () {
+        return _(array)
+        .sortBy(item => item.toString())
+        .toArray();
+    })
+    .add('Sort after map', function () {
+        return array
+        .map(item => item.toString())
+        .sort();
     })
     .run({
         async: false
