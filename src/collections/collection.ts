@@ -17,7 +17,7 @@ import _ from '../index';
 import { SortSettings, Comparer } from "../utils/comparer";
 
 export class Collection<T> extends IterableCollection<T> implements ICollection<T> {
-    private inner: IterableCollection<T>;
+    protected inner: IterableCollection<T>;
     private _computed: T[] | null = null;
 
     public constructor(iterable: T[] | IterableCollection<T>) {
@@ -53,7 +53,8 @@ export class Collection<T> extends IterableCollection<T> implements ICollection<
         return new FilteringCollection<T>(this, condition);
     }
 
-    select<TOut>(condition: MapCondition<T, TOut>): ICollection<TOut> {        
+    select<TOut>(condition: MapCondition<T, TOut>): ICollection<TOut> {                
+        // @ts-ignore
         return new MappingCollection<T, TOut>(this, condition);
     }
 
@@ -141,7 +142,7 @@ class FilteringCollection<T> extends Collection<T> {
     }
 
     protected deepCopy(): FilteringCollection<T> {
-        const result = new FilteringCollection<T>(this, ...this.conditions);
+        const result = new FilteringCollection<T>(this.inner, ...this.conditions);
 
         return result;
     }
@@ -153,22 +154,34 @@ class MappingCollection<T, E> extends Collection<E> {
     public constructor(iterable: IterableCollection<T>, ...conditions: MapCondition<T, E>[]) {
         // @ts-ignore
         super(iterable);
-        this.conditions = [...conditions];
+        this.conditions = conditions;
     }
     
     public getIterator(): IIterator<E> {
         const iterator = super.getIterator();
 
-        return new MappingIterator(iterator, ...this.conditions);
+        return new MappingIterator<T, E>(iterator, ...this.conditions);
     }
 
-    public appendConndition(condition: MapCondition<T, E>) {
+    public appendCondition<TOut>(condition: MapCondition<T, TOut>) {
+        // @ts-ignore
         this.conditions.push(condition);
     }
 
+    // @ts-ignore
+    public select<TOut>(condition: MapCondition<T, TOut>): ICollection<TOut> {
+        const copy = this.deepCopy();
+        
+        copy.appendCondition(condition);
+
+        // @ts-ignore
+        return copy;
+    }
+
+    // @ts-ignore
     protected deepCopy(): MappingCollection<T, E> {
         // @ts-ignore
-        const result = new MappingCollection<T, E>(this, ...this.conditions);
+        const result = new MappingCollection<T, E>(this.inner, ...this.conditions);
 
         return result;
     }

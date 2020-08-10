@@ -25,6 +25,9 @@ function suite(name: string, count = 1000000): Benchmark.Suite {
         },
         onComplete: function() {
             console.log();
+        },
+        onError: function() {
+            console.warn(...arguments)
         }
     })
 }

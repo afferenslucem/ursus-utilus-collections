@@ -23,11 +23,14 @@ describe('Collection', function () {
     it('should map items by predicate', () => {
         const items = [1, 2, 3];
 
-        const expected = [1, 4, 9];
+        const expected = [3, 6, 11];
 
         const collection = new Collection<number>(items);
 
-        const result = collection.select(item => item ** 2).toArray();
+        const result = collection
+        .select(item => item ** 2)
+        .select(item => item + 2)
+        .toArray();
 
         assert.deepEqual(result, expected);
     });  

@@ -1,6 +1,6 @@
 import { IIteratorData } from "../interfaces/i-iterator-data";
 import { IteratorWrapper } from "./iterator-wrapper";
-import { FilterCondition, MapCondition } from "../commands/delegates";
+import { MapCondition } from "../commands/delegates";
 import { IIterator } from "../interfaces/i-iterator";
 
 export class MappingIterator<T, E> extends IteratorWrapper<E> {
@@ -30,7 +30,9 @@ export class MappingIterator<T, E> extends IteratorWrapper<E> {
     private applyConditions(item: T): E {
         let result: any = item;
 
-        this.conditions.forEach(condition => result = condition(result));
+        this.conditions.forEach(condition => {
+            result = condition(result)
+        });
 
         return result;
     }
