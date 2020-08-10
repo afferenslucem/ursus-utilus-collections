@@ -29,6 +29,7 @@ describe('Comparer', function () {
         assert.equal(-1, comparer.compare([1, 2], [2, 1]));
         assert.equal(-1, comparer.compare([1, 1], [1, 2]));
     });
+
     it('should compare with override func', () => {
         const comparer = new Comparer([
             {

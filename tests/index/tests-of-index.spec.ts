@@ -128,6 +128,14 @@ describe('Index', function () {
         assert.deepEqual(sorted, [3, 2, 1])
     });
 
+    it('should sort by field', () => {
+        const collection = _([[3, 4], [2, 4], [2, 3], [1, 2]]);
+
+        const sorted = collection.sortBy(item => item[0]).toArray();
+
+        assert.deepEqual(sorted, [[1, 2], [2, 4], [2, 3], [3, 4]])
+    });
+
     it('should sort cascade', () => {
         const collection = _([[3, 4], [2, 4], [2, 3], [1, 2]]);
 

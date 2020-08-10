@@ -20,7 +20,7 @@ Project is created with:
 
 ## Examples
 
-##### Pay attention
+###### Pay attention
 
 > ⚠️ Method toArray returns freezed array
 
@@ -143,8 +143,52 @@ const defaultlast = collection.lastOrDefault(item => item < 1, 0); // returns nu
 assert.equal(defaultlast, 0, 'Return wrong overrided default');
 ```
 
+### Sorting
+
+###### Default sorting
+
+```typescript
+const collection = _([3, 2, 1]);
+
+const sorted = collection.sort().toArray();
+
+assert.deepEqual(sorted, [1, 2, 3])
+```
+
+###### Sorting desc
+
+```typescript
+const collection = _([1, 2, 3]);
+
+const sorted = collection.sort((first, second) => second - first).toArray();
+
+assert.deepEqual(sorted, [3, 2, 1])
+```
+
+###### Sorting by field
+
+```typescript
+const collection = _([[3, 4], [2, 4], [2, 3], [1, 2]]);
+
+const sorted = collection.sortBy(item => item[0]).toArray();
+
+assert.deepEqual(sorted, [[1, 2], [2, 4], [2, 3], [3, 4]])
+```
+
+###### Sorting by many fields
+
+```typescript
+const collection = _([[3, 4], [2, 4], [2, 3], [1, 2]]);
+
+const sorted = collection.sortBy(item => item[0]).thenBy(item => item[1]).toArray();
+
+assert.deepEqual(sorted, [[1, 2], [2, 3], [2, 4], [3, 4]])
+```
+
+
 ## Setup
 
 ``````bash
 $npm install ursus-utilus-collections
 ``````
+
