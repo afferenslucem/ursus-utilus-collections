@@ -6,7 +6,7 @@ import { IIterator } from "../interfaces/i-iterator";
 export class FilteringIterator<T> extends IteratorWrapper<T> {
     private conditions: FilterCondition<T>[];
 
-    public constructor(iterator: IIterator<T>, ...conditions: FilterCondition<T>[]) {
+    public constructor(iterator: IIterator<T>, conditions: FilterCondition<T>[]) {
         super(iterator);
         this.conditions = conditions;
     }

@@ -50,12 +50,12 @@ export class Collection<T> extends IterableCollection<T> implements ICollection<
     }
 
     where(condition: FilterCondition<T>): ICollection<T> {
-        return new FilteringCollection<T>(this, condition);
+        return new FilteringCollection<T>(this, [condition]);
     }
 
     select<TOut>(condition: MapCondition<T, TOut>): ICollection<TOut> {                
         // @ts-ignore
-        return new MappingCollection<T, TOut>(this, condition);
+        return new MappingCollection<T, TOut>(this, [condition]);
     }
 
     skip(shouldSkip: number): ICollection<T> {
@@ -118,15 +118,15 @@ export class Collection<T> extends IterableCollection<T> implements ICollection<
 class FilteringCollection<T> extends Collection<T> {
     private conditions: FilterCondition<T>[];
 
-    public constructor(iterable: IterableCollection<T>, ...conditions: FilterCondition<T>[]) {
+    public constructor(iterable: IterableCollection<T>, conditions: FilterCondition<T>[]) {
         super(iterable);
-        this.conditions = [...conditions];
+        this.conditions = conditions;
     }
     
     public getIterator(): IIterator<T> {
         const iterator = super.getIterator();
 
-        return new FilteringIterator(iterator, ...this.conditions);
+        return new FilteringIterator(iterator, this.conditions);
     }
 
     where(condition: FilterCondition<T>): ICollection<T> {
@@ -142,7 +142,7 @@ class FilteringCollection<T> extends Collection<T> {
     }
 
     protected deepCopy(): FilteringCollection<T> {
-        const result = new FilteringCollection<T>(this.inner, ...this.conditions);
+        const result = new FilteringCollection<T>(this.inner, this.conditions);
 
         return result;
     }
@@ -151,7 +151,7 @@ class FilteringCollection<T> extends Collection<T> {
 class MappingCollection<T, E> extends Collection<E> {
     private conditions: MapCondition<T, E>[];
 
-    public constructor(iterable: IterableCollection<T>, ...conditions: MapCondition<T, E>[]) {
+    public constructor(iterable: IterableCollection<T>, conditions: MapCondition<T, E>[]) {
         // @ts-ignore
         super(iterable);
         this.conditions = conditions;
@@ -160,7 +160,7 @@ class MappingCollection<T, E> extends Collection<E> {
     public getIterator(): IIterator<E> {
         const iterator = super.getIterator();
 
-        return new MappingIterator<T, E>(iterator, ...this.conditions);
+        return new MappingIterator<T, E>(iterator, this.conditions);
     }
 
     public appendCondition<TOut>(condition: MapCondition<T, TOut>) {
@@ -181,7 +181,7 @@ class MappingCollection<T, E> extends Collection<E> {
     // @ts-ignore
     protected deepCopy(): MappingCollection<T, E> {
         // @ts-ignore
-        const result = new MappingCollection<T, E>(this.inner, ...this.conditions);
+        const result = new MappingCollection<T, E>(this.inner, this.conditions);
 
         return result;
     }

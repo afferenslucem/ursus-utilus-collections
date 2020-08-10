@@ -6,7 +6,7 @@ import { IIterator } from "../interfaces/i-iterator";
 export class MappingIterator<T, E> extends IteratorWrapper<E> {
     private conditions: MapCondition<T, E>[];
 
-    public constructor(iterator: IIterator<E>, ...conditions: MapCondition<T, E>[]) {
+    public constructor(iterator: IIterator<E>, conditions: MapCondition<T, E>[]) {
         super(iterator);
         this.conditions = conditions;
     }
