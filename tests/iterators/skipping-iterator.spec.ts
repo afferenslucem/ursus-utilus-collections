@@ -7,7 +7,7 @@ describe('SkippingIterator', function () {
     it('should skip data', () => {
         const expected = [4, 5, 6];
 
-        const iterator = new SkippingIterator<number>(new NativeArrayIterator(...[1, 2, 3, 4, 5, 6]), 3);
+        const iterator = new SkippingIterator<number>(new NativeArrayIterator([1, 2, 3, 4, 5, 6]), 3);
 
         const obj = {
             [Symbol.iterator]: function() {
@@ -22,7 +22,7 @@ describe('SkippingIterator', function () {
     it('should return empty array if skip vallue greater the entries count', () => {
         const expected = [];
 
-        const iterator = new SkippingIterator<number>(new NativeArrayIterator(...[1, 2, 3, 4, 5, 6]), 7);
+        const iterator = new SkippingIterator<number>(new NativeArrayIterator([1, 2, 3, 4, 5, 6]), 7);
 
         const obj = {
             [Symbol.iterator]: function() {
