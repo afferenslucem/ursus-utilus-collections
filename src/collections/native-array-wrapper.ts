@@ -14,4 +14,8 @@ export class NativeArrayWrapper<T> extends IterableCollection<T> {
     public getIterator(): IIterator<T> {
        return new NativeArrayIterator(this.items)
     }
+
+    public materialize(): T[] {
+        return this.items;
+    }
 }

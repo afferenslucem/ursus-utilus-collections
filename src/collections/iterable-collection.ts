@@ -9,4 +9,6 @@ export abstract class IterableCollection<T> implements IIterable<T> {
     }
 
     public abstract getIterator(): IIterator<T>;
+
+    public abstract materialize(): T[];
 }
