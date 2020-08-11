@@ -15,6 +15,7 @@ import { LastOrDefaultAggregator } from "../aggregators/last-or-default-aggregto
 import { ISortingCollection } from "../interfaces/i-sorting-collection";
 import _ from '../index';
 import { SortSettings, Comparer } from "../utils/comparer";
+import { IGroupedData } from "../interfaces/i-grouped-data";
 
 export class Collection<T> extends IterableCollection<T> implements ICollection<T> {
     protected inner: IterableCollection<T>;
@@ -95,6 +96,10 @@ export class Collection<T> extends IterableCollection<T> implements ICollection<
             compare: condition
         })
     }
+    
+    groupBy<K, V>(key: MapCondition<T, K>, group?: MapCondition<ICollection<T>, V> | undefined): ICollection<IGroupedData<K, V>> {
+        return new GroupingCollection<T, K, V>(this, key, group);
+    }
 
     public get computed(): T[] {
         if (this._computed == null) {
@@ -115,10 +120,10 @@ export class Collection<T> extends IterableCollection<T> implements ICollection<
     }
 }
 
-class FilteringCollection<T> extends Collection<T> {
+export class FilteringCollection<T> extends Collection<T> {
     private conditions: FilterCondition<T>[];
 
-    public constructor(iterable: IterableCollection<T>, conditions: FilterCondition<T>[]) {
+    public constructor(iterable: IterableCollection<T> | T[], conditions: FilterCondition<T>[]) {
         super(iterable);
         this.conditions = conditions;
     }
@@ -148,10 +153,10 @@ class FilteringCollection<T> extends Collection<T> {
     }
 }
 
-class MappingCollection<T, E> extends Collection<E> {
+export class MappingCollection<T, E> extends Collection<E> {
     private conditions: MapCondition<T, E>[];
 
-    public constructor(iterable: IterableCollection<T>, conditions: MapCondition<T, E>[]) {
+    public constructor(iterable: IterableCollection<T> | T[], conditions: MapCondition<T, E>[]) {
         // @ts-ignore
         super(iterable);
         this.conditions = conditions;
@@ -211,10 +216,10 @@ class TakingCollection<T> extends Collection<T> {
     }
 }
 
-export class SortingCollection<T, E = T> extends Collection<T> implements ISortingCollection<T> {
-    private sortSettings: SortSettings<T, E>[];
+export class SortingCollection<T, V = T> extends Collection<T> implements ISortingCollection<T> {
+    private sortSettings: SortSettings<T, V>[];
     
-    public constructor(iterable: T[] | IterableCollection<T>, ...sortSettings: SortSettings<T, E>[]) {
+    public constructor(iterable: T[] | IterableCollection<T>, ...sortSettings: SortSettings<T, V>[]) {
         super(iterable);
         this.sortSettings = _(sortSettings)
         .where(item => !!item.compare || !!item.mapping)
@@ -243,7 +248,7 @@ export class SortingCollection<T, E = T> extends Collection<T> implements ISorti
         return result;
     }
 
-    private defaultCompare(first: E, second: E): number {
+    private defaultCompare(first: V, second: V): number {
         if(first < second) {
             return -1
         } else if (second < first) {
@@ -251,5 +256,67 @@ export class SortingCollection<T, E = T> extends Collection<T> implements ISorti
         } else {
             return 0;
         }
+    }
+}
+
+export class GroupingCollection<T, K, V = ICollection<T>> extends Collection<IGroupedData<K, V>> {    
+    public constructor(iterable: T[] | IterableCollection<T>, private key: MapCondition<T, K>, private groupMapping?: MapCondition<ICollection<T>, V>) {
+        // @ts-ignore
+        super(iterable);
+    }
+
+    protected materialize(): IGroupedData<K, V>[] {
+        // @ts-ignore
+        const temp: T[] = super.materialize();
+
+        const storage = this.groupNativeItems(temp);
+
+        const result = this.mapGroups(storage);
+
+        Object.freeze(result);
+
+        return result;
+    }
+
+    private groupNativeItems(items: T[]): Map<K, T[]> {
+        const storage = new Map<K, T[]>();
+
+        items.forEach(item => {
+            const key = this.key(item);
+
+            if (!storage.has(key)) {
+                storage.set(key, [item]);
+            } else {
+                const list = storage.get(key);
+                // @ts-ignore
+                list.push(item)
+            }
+        });
+
+        return storage;
+    }
+
+    private mapGroups(storage: Map<K, T[]>): IGroupedData<K, V>[] {
+        const result: IGroupedData<K, V>[] = [];
+
+        const keys = Array.from(storage.keys());
+
+        keys.forEach(item => {
+            const group = storage.get(item);
+            result.push({
+                key: item,
+
+                // @ts-ignore
+                group: _(group)
+            });
+        })
+
+        return this.groupMapping ? 
+        result.map(item => {
+            // @ts-ignore
+            item.group = this.groupMapping(item.group);
+            return item;
+        }) : 
+        result;
     }
 }

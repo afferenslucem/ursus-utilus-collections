@@ -1,6 +1,7 @@
-import _ from '../../src';
+import _, { ICollection } from '../../src';
 import { Collection } from '../../src/collections/collection';
 import { assert } from 'chai';
+import { IGroupedData } from '../../src/interfaces/i-grouped-data';
 
 describe('Index', function () {  
     it('should wrap native array', () => {
@@ -151,5 +152,47 @@ describe('Index', function () {
         .thenBy(item => item[1], (first, second) => second - first).toArray();
 
         assert.deepEqual(sorted, [[3, 4], [2, 4], [2, 3], [1, 2]])
+    });
+
+    it('should group', () => {
+        const collection = _([[1, 2], [2, 3], [2, 4], [3, 4]]);
+
+        const expected = _([{
+            key: 1,
+            group: _([[1, 2]])
+        },
+        {
+            key: 2,
+            group: _([[2, 3], [2, 4]])
+        },
+        {
+            key: 3,
+            group: _([[3, 4]])
+        }]);
+
+        const grouped = collection.groupBy(item => item[0]);
+
+        assert.deepEqual(grouped, expected)
+    });
+
+    it('should group and aggregate', () => {
+        const collection = _([[1, 2], [2, 3], [2, 4], [3, 4]]);
+
+        const expected: ICollection<IGroupedData<number, number[]>> = _([{
+            key: 1,
+            group: [1, 2]
+        },
+        {
+            key: 2,
+            group: [2, 3]
+        },
+        {
+            key: 3,
+            group: [3, 4]
+        }]);
+
+        const grouped = collection.groupBy(item => item[0], group => group.first());
+
+        assert.deepEqual(grouped, expected)
     });
 });

@@ -1,6 +1,7 @@
 import { FilterCondition, MapCondition, SortCondition } from "../commands/delegates";
 import { IIterable } from "./i-iterable";
 import { ISortingCollection } from "./i-sorting-collection";
+import { IGroupedData } from "./i-grouped-data";
 
 export interface ICollection<T> extends IIterable<T> {
     /**
@@ -69,6 +70,13 @@ export interface ICollection<T> extends IIterable<T> {
      * @param condition Comparing function
      */
     sortBy<E>(map: MapCondition<T, E>, condition?: SortCondition<E> | undefined): ISortingCollection<T>;
+
+    /**
+     * Groups items
+     * @param key Key taking function
+     * @param group Group taking function
+     */
+    groupBy<K, E>(key: MapCondition<T, K>, group?: MapCondition<ICollection<T>, E> | undefined): ICollection<IGroupedData<K, E>>;
 
     /**
      * Converting method to array
