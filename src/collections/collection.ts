@@ -21,34 +21,19 @@ export class Collection<T> extends IterableCollection<T> implements ICollection<
         super();
 
         if(Array.isArray(iterable)) {
-            const copy = Array.from(iterable);
-            this.inner = new NativeArrayWrapper<T>(copy);
+            this.inner = new NativeArrayWrapper<T>(iterable);
         } else {
             this.inner = iterable;
         }
     }
 
-    protected deepCopy(): Collection<T> {
-        const result = new Collection<T>(this);
-
-        return result;
-    }
-
-    public toArray(): T[] {
-        return this.computed;
-    }
-
-    public getIterator(): IIterator<T> {
-        return new NativeArrayIterator(this.computed);
-    }
-
     where(condition: FilterCondition<T>): ICollection<T> {
-        return new FilteringCollection<T>(this, [condition]);
+        return new FilteringCollection<T>(this, condition);
     }
 
     select<TOut>(condition: MapCondition<T, TOut>): ICollection<TOut> {                
         // @ts-ignore
-        return new MappingCollection<T, TOut>(this, [condition]);
+        return new MappingCollection<T, TOut>(this, condition);
     }
 
     skip(shouldSkip: number): ICollection<T> {
@@ -93,11 +78,23 @@ export class Collection<T> extends IterableCollection<T> implements ICollection<
         return new GroupingCollection<T, K, V>(this, key, group);
     }
 
+    protected deepCopy(): Collection<T> {
+        const result = new Collection<T>(this);
+
+        return result;
+    }
+
+    public toArray(): T[] {
+        return this.computed;
+    }
+
+    public getIterator(): IterableIterator<T> {
+        return this.computed[Symbol.iterator]();
+    }
+
     public get computed(): T[] {
         if (this._computed == null) {
             this._computed = this.materialize();
-
-            Object.freeze(this._computed);
         }
         return this._computed;
     }
@@ -108,80 +105,39 @@ export class Collection<T> extends IterableCollection<T> implements ICollection<
 }
 
 export class FilteringCollection<T> extends Collection<T> {
-    private conditions: FilterCondition<T>[];
-
-    public constructor(iterable: IterableCollection<T> | T[], conditions: FilterCondition<T>[]) {
+    public constructor(iterable: IterableCollection<T> | T[], private condition: FilterCondition<T>) {
         super(iterable);
-        this.conditions = conditions;
     }
     
     where(condition: FilterCondition<T>): ICollection<T> { 
-        const copy = this.deepCopy();
-
-        copy.conditions.push(condition);
-
-        return copy;
-    }
-
-    protected deepCopy(): FilteringCollection<T> {
-        const result = new FilteringCollection<T>(this.inner, this.conditions);
+        const result = new FilteringCollection<T>(this.inner, (item: T) => condition(item) && this.condition(item));
         
         return result;
     }
 
     public materialize(): T[] {
-        const result = super.materialize();
-
-        return result.filter(item => this.checkCondition(item));
-    }
-
-    private checkCondition(item: T): boolean {
-        return this.conditions.every(condition => condition(item));
+        return this.inner.materialize().filter(item => this.condition(item));
     }
 }
 
 export class MappingCollection<T, V> extends Collection<T> {
-    private conditions: MapCondition<T, V>[];
-
-    public constructor(iterable: IterableCollection<T> | T[], conditions: MapCondition<T, V>[]) {
+    public constructor(iterable: IterableCollection<T> | T[], private condition: MapCondition<T, V>) {
         // @ts-ignore
         super(iterable);
-        this.conditions = conditions;
-    }
-
-    public appendCondition<TOut>(condition: MapCondition<T, TOut>) {
-        // @ts-ignore
-        this.conditions.push(condition);
     }
 
     // @ts-ignore
     public select<TOut>(condition: MapCondition<T, TOut>): ICollection<TOut> {
-        const copy = this.deepCopy();
-        
-        copy.appendCondition(condition);
+        // @ts-ignore
+        const result = new MappingCollection<T, V>(this.inner, (item: T) => condition(this.condition(item)));
 
         // @ts-ignore
-        return copy;
-    }
-
-    // @ts-ignore
-    protected deepCopy(): MappingCollection<T, V> {
-        // @ts-ignore
-        const result = new MappingCollection<T, V>(this.inner, this.conditions);
-
         return result;
     }
 
     // @ts-ignore
     public materialize(): V[] {
-        const result = super.materialize();
-
-        return result.map(item => this.applyConditions(item));
-    }
-
-    private applyConditions(item: T): V {
-        // @ts-ignore
-        return this.conditions.reduce<V>((acc, condition) => condition(acc), item);
+        return this.inner.materialize().map(item => this.condition(item));
     }
 }
 
@@ -191,9 +147,7 @@ class SkippingCollection<T> extends Collection<T> {
     }
 
     public materialize(): T[] {
-        const result = super.materialize();
-
-        return result.slice(this.shouldSkip);
+        return this.inner.materialize().slice(this.shouldSkip);
     }
 }
 
@@ -203,9 +157,7 @@ class TakingCollection<T> extends Collection<T> {
     }
 
     public materialize(): T[] {
-        const result = super.materialize();
-
-        return result.slice(0, this.shouldTake);
+        return this.inner.materialize().slice(0, this.shouldTake);
     }
 }
 
@@ -228,9 +180,7 @@ export class SortingCollection<T, V = T> extends Collection<T> implements ISorti
     }
 
     public materialize(): T[] {
-        const temp = super.materialize();
-
-        const copy = Array.from(temp);
+        const copy = Array.from(this.inner.materialize());
 
         const comparer = new Comparer(this.sortSettings, this.defaultCompare);
 

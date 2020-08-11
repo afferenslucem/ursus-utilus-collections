@@ -12,34 +12,19 @@ export class LastAggregator<T> extends Aggregator<T> {
     }
 
     public aggregate(): T {
-        const result = this.findLast();
+        const result = this.getResult();
 
-        if (result.done) {
+        if (result.length == 0) {
             throw Exception.NoMatches;
         } else {
             // @ts-ignore
-            return result.value;
+            return result[result.length - 1];
         }
     }
-    
-    private findLast(): IIteratorData<T> {
-        const iterator = this.getIterator();
 
-        let prev = LAST_ITERATOR_ITEM;
-        let current = LAST_ITERATOR_ITEM;
-
-        do {
-            prev = current;
-            current = iterator.next();
-        } while (!current.done);
-
-        return prev;
-    }
-
-
-    private getIterator(): IIterator<T> {
+    private getResult(): T[] {
         return this.predicate ? 
-        this.collection.where(this.predicate).getIterator() :
-        this.collection.getIterator();
+        this.collection.where(this.predicate).toArray() :
+        this.collection.toArray();
     }
 }
