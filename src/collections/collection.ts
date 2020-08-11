@@ -2,8 +2,6 @@ import { NativeArrayWrapper } from "./native-array-wrapper";
 import { IterableCollection } from "./iterable-collection";
 import { ICollection } from "../interfaces/i-collection";
 import { FilterCondition, MapCondition, SortCondition } from "../commands/delegates";
-import { IIterator } from "../interfaces/i-iterator";
-import { NativeArrayIterator } from "../iterators/native-array-iterator";
 import { FirstAggregator } from "../aggregators/first-aggregator";
 import { FirstOrDefaultAggregator } from "../aggregators/first-or-default-aggregator";
 import { LastAggregator } from "../aggregators/last-aggregtor";
@@ -110,7 +108,7 @@ export class FilteringCollection<T> extends Collection<T> {
     }
     
     where(condition: FilterCondition<T>): ICollection<T> { 
-        const result = new FilteringCollection<T>(this.inner, (item: T) => condition(item) && this.condition(item));
+        const result = new FilteringCollection<T>(this.inner, (item: T) => this.condition(item) && condition(item));
         
         return result;
     }
