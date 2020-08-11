@@ -30,6 +30,7 @@
   "devDependencies": {
     "@types/benchmark": "^1.0.33",
     "@types/chai": "^4.2.12",
+    "@types/lodash": "^4.14.159",
     "@types/mocha": "^8.0.1",
     "benchmark": "^2.1.4",
     "chai": "^4.2.0",

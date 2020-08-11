@@ -1,5 +1,6 @@
 import Benchmark from "benchmark";
 import _ from './src/index';
+import lodash from 'lodash';
 
 // @ts-ignore
 let array: number[] = null;
@@ -57,6 +58,9 @@ suite('Filter for 1000000')
         return _(array).where(item => (item % 2) == 0)
         .toArray();
     })
+    .add('Lodash filter', function () {
+        return lodash(array).filter(item => (item % 2) == 0).value();
+    })
     .add('Native filter', function () {
         return array.filter(item => (item % 2) == 0);
     })
@@ -64,6 +68,12 @@ suite('Filter for 1000000')
         return _(array).where(item => (item % 2) == 0)
         .where(item => (item % 3) == 0)
         .toArray();
+    })
+    .add('Double lodash filter', function () {
+        return lodash(array)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .value();
     })
     .add('Double native filter', function () {
         return array.filter(item => (item % 2) == 0)
@@ -82,6 +92,20 @@ suite('Filter for 1000000')
         .where(item => (item % 2) == 0)
         .where(item => (item % 2) == 0)
         .toArray();
+    })
+    .add('10 lodash filter', function () {
+        return lodash(array)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .value()
     })
     .add('10 native filter', function () {
         return array
@@ -105,6 +129,9 @@ suite('Filter for 1000', 1000)
         return _(array).where(item => (item % 2) == 0)
         .toArray();
     })
+    .add('Lodash filter', function () {
+        return lodash(array).filter(item => (item % 2) == 0).value();
+    })
     .add('Native filter', function () {
         return array.filter(item => (item % 2) == 0);
     })
@@ -112,6 +139,12 @@ suite('Filter for 1000', 1000)
         return _(array).where(item => (item % 2) == 0)
         .where(item => (item % 3) == 0)
         .toArray();
+    })
+    .add('Double lodash filter', function () {
+        return lodash(array)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .value();
     })
     .add('Double native filter', function () {
         return array.filter(item => (item % 2) == 0)
@@ -130,6 +163,20 @@ suite('Filter for 1000', 1000)
         .where(item => (item % 2) == 0)
         .where(item => (item % 2) == 0)
         .toArray();
+    })
+    .add('10 lodash filter', function () {
+        return lodash(array)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .value()
     })
     .add('10 native filter', function () {
         return array
@@ -153,6 +200,9 @@ suite('Filter for 10', 10)
         return _(array).where(item => (item % 2) == 0)
         .toArray();
     })
+    .add('Lodash filter', function () {
+        return lodash(array).filter(item => (item % 2) == 0).value();
+    })
     .add('Native filter', function () {
         return array.filter(item => (item % 2) == 0);
     })
@@ -160,6 +210,12 @@ suite('Filter for 10', 10)
         return _(array).where(item => (item % 2) == 0)
         .where(item => (item % 3) == 0)
         .toArray();
+    })
+    .add('Double lodash filter', function () {
+        return lodash(array)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .value();
     })
     .add('Double native filter', function () {
         return array.filter(item => (item % 2) == 0)
@@ -178,6 +234,20 @@ suite('Filter for 10', 10)
         .where(item => (item % 2) == 0)
         .where(item => (item % 2) == 0)
         .toArray();
+    })
+    .add('10 lodash filter', function () {
+        return lodash(array)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .filter(item => (item % 2) == 0)
+        .value()
     })
     .add('10 native filter', function () {
         return array
