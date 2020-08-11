@@ -1,6 +1,6 @@
 {
   "name": "ursus-utilus-collections",
-  "version": "1.5.4",
+  "version": "2.0.0",
   "description": "Collections manipulation utils",
   "typings": "lib/index",
   "main": "lib/index.js",
