@@ -12,12 +12,12 @@ Simple library with useful utils for data manipulation
 
 Project is created with:
 
-* benchmark 2.1.47
+* benchmark 2.1.4
 * chai 4.2.0
 * mocha 8.1.0
 * ts-mocha 7.0.0
 * ts-node 8.10.2
-* typescript 3.9.
+* typescript 3.9.7
 
 ## Examples
 
