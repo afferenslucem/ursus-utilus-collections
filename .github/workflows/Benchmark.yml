@@ -24,5 +24,6 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+        output-file-path: output.txt
     - run: npm ci
     - run: npm run bench | tee output.txt
