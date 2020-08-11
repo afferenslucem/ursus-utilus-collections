@@ -207,57 +207,33 @@ export class GroupingCollection<T, K, V = ICollection<T>> extends Collection<IGr
     }
 
     public materialize(): IGroupedData<K, V>[] {
+        // aggregate items by key
         // @ts-ignore
-        const temp: T[] = super.materialize();
-
-        const storage = this.groupNativeItems(temp);
-
-        const result = this.mapGroups(storage);
-
-        Object.freeze(result);
-
-        return result;
-    }
-
-    private groupNativeItems(items: T[]): Map<K, T[]> {
-        const storage = new Map<K, T[]>();
-
-        items.forEach(item => {
+        const storage:Map<K, T[]> = this.inner.materialize().reduce((acc, item: T) => {
             const key = this.key(item);
+            const array = acc.get(key) || [];
+            array.push(item)
+            acc.set(key, array)
 
-            if (!storage.has(key)) {
-                storage.set(key, [item]);
-            } else {
-                const list = storage.get(key);
-                // @ts-ignore
-                list.push(item)
-            }
-        });
+            return acc;
+        }, new Map<K, T[]>());
 
-        return storage;
-    }
-
-    private mapGroups(storage: Map<K, T[]>): IGroupedData<K, V>[] {
-        const result: IGroupedData<K, V>[] = [];
-
-        const keys = Array.from(storage.keys());
-
-        keys.forEach(item => {
-            const group = storage.get(item);
-            result.push({
+        // convert storage to IGD
+        const temp = Array.from(storage.keys()).map(item => {
+            return {
                 key: item,
-
                 // @ts-ignore
-                group: _(group)
-            });
+                group: _(storage.get(item))
+            }
         })
 
-        return this.groupMapping ? 
-        result.map(item => {
+        const result = this.groupMapping ? temp.map(item => {
             // @ts-ignore
             item.group = this.groupMapping(item.group);
             return item;
-        }) : 
-        result;
+        }) : temp;
+
+        //@ts-ignore
+        return result;
     }
 }
