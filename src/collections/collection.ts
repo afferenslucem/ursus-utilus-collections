@@ -137,12 +137,12 @@ export class FilteringCollection<T> extends Collection<T> {
     where(condition: FilterCondition<T>): ICollection<T> {
         const copy = this.deepCopy();
         
-        copy.appendConndition(condition);
+        copy.appendCondition(condition);
 
         return copy;
     }
 
-    public appendConndition(condition: FilterCondition<T>) {
+    public appendCondition(condition: FilterCondition<T>) {
         this.conditions.push(condition);
     }
 
