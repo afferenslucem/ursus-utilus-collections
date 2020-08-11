@@ -38,6 +38,5 @@
     "@types/benchmark": "^1.0.33",
     "benchmark": "^2.1.4"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
