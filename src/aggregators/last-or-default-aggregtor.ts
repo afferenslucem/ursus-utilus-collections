@@ -1,6 +1,5 @@
 import { ICollection } from "../interfaces/i-collection";
 import { FilterCondition } from "../commands/delegates";
-import { FirstAggregator } from "./first-aggregator";
 import { Exception } from "../exceptions/exceptions";
 import { LastAggregator } from "./last-aggregtor";
 

@@ -1,10 +1,9 @@
-import { FilteringCollection, Collection } from "../../src/collections/collection";
+import { FilteringCollection, Collection, NativeArrayWrapper } from "../../src/collections/collection";
 import { assert } from "chai";
 import { Cat, cats } from "./cats.spec";
 import 'mocha-sinon';
 import sinon from 'sinon';
 import _ from '../../src/index'
-import { NativeArrayWrapper } from "../../src/collections/native-array-wrapper";
 
 
 describe('FilteringCollection', function () {  
@@ -13,7 +12,9 @@ describe('FilteringCollection', function () {
 
         const expected = [];
 
-        const collection = new FilteringCollection(items, cat => cat.age < 2);
+        const col = new NativeArrayWrapper(items);
+
+        const collection = new FilteringCollection(col, cat => cat.age < 2);
 
         const result = collection.toArray();
 

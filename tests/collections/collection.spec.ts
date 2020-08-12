@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import {Collection} from '../../src/collections/collection';
+import {Collection, NativeArrayWrapper} from '../../src/collections/collection';
 
 describe('Collection', function () {  
     it('should filter items by predicate', () => {
@@ -7,7 +7,9 @@ describe('Collection', function () {
 
         const expected = [6, 12];
 
-        const collection = new Collection<number>(items);
+        const col = new NativeArrayWrapper(items);
+
+        const collection = new Collection<number>(col);
 
         const filterCollection = collection
         .where(item => item % 2 == 0)
@@ -25,7 +27,9 @@ describe('Collection', function () {
 
         const expected = [3, 6, 11];
 
-        const collection = new Collection<number>(items);
+        const col = new NativeArrayWrapper(items);
+
+        const collection = new Collection<number>(col);
 
         const result = collection
         .select(item => item ** 2)
@@ -40,7 +44,9 @@ describe('Collection', function () {
 
         const expected = ['4'];
 
-        const collection = new Collection<number>(items);
+        const col = new NativeArrayWrapper(items);
+
+        const collection = new Collection<number>(col);
 
         const result = collection.select(item => (item ** 2).toString())
         .where(item => item.startsWith('4'))

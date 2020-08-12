@@ -2,9 +2,6 @@ import { Aggregator } from "./aggregator";
 import { ICollection } from "../interfaces/i-collection";
 import { FilterCondition } from "../commands/delegates";
 import { Exception } from "../exceptions/exceptions";
-import { IIteratorData } from "../interfaces/i-iterator-data";
-import { LAST_ITERATOR_ITEM } from "../iterators/last-iterator-item";
-import { IIterator } from "../interfaces/i-iterator";
 
 export class LastAggregator<T> extends Aggregator<T> {
     public constructor(private collection: ICollection<T>, protected predicate?: FilterCondition<T> | undefined){

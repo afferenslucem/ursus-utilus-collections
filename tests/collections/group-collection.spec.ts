@@ -1,4 +1,4 @@
-import { GroupingCollection } from "../../src/collections/collection";
+import { GroupingCollection, NativeArrayWrapper } from "../../src/collections/collection";
 import { assert } from "chai";
 import { IGroupedData } from "../../src/interfaces/i-grouped-data";
 import { Cat, cats } from "./cats.spec";
@@ -11,7 +11,9 @@ describe('GroupingCollection', function () {
 
         const expected = [];
 
-        const collection = new GroupingCollection(items, cat => cat.age);
+        const col = new NativeArrayWrapper(items);
+
+        const collection = new GroupingCollection(col, cat => cat.age);
 
         const result = collection.toArray();
 
@@ -58,7 +60,9 @@ describe('GroupingCollection', function () {
             }
         ];
 
-        const collection = new GroupingCollection(cats, cat => cat.age);
+        const col = new NativeArrayWrapper(cats);
+
+        const collection = new GroupingCollection(col, cat => cat.age);
 
         const result = collection.toArray();
 
@@ -78,8 +82,10 @@ describe('GroupingCollection', function () {
             key: 3,
             group: 'Feya'
         }];
+        
+        const col = new NativeArrayWrapper(cats);
 
-        const collection = new GroupingCollection(cats, cat => cat.age, group => group.first().name);
+        const collection = new GroupingCollection(col, cat => cat.age, group => group.first().name);
 
         const result = collection.toArray();
 

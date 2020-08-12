@@ -1,11 +1,10 @@
 import _, { ICollection } from '../../src';
-import { Collection } from '../../src/collections/collection';
 import { assert } from 'chai';
 import { IGroupedData } from '../../src/interfaces/i-grouped-data';
 
 describe('Index', function () {  
     it('should wrap native array', () => {
-        const expected = new Collection([1, 2, 3]);
+        const expected = _([1, 2, 3]);
 
         const result = _([1, 2, 3]);
 

@@ -1,4 +1,3 @@
-import { NativeArrayWrapper } from "./native-array-wrapper";
 import { IterableCollection } from "./iterable-collection";
 import { ICollection } from "../interfaces/i-collection";
 import { FilterCondition, MapCondition, SortCondition } from "../commands/delegates";
@@ -12,59 +11,58 @@ import { SortSettings, Comparer } from "../utils/comparer";
 import { IGroupedData } from "../interfaces/i-grouped-data";
 
 export class Collection<T> extends IterableCollection<T> implements ICollection<T> {
-    protected inner: IterableCollection<T>;
-    private _computed: T[] | null = null;
+    // @ts-ignore
+    protected inner: Collection<T>;
+    private _computed: T[] | null =  null;
 
-    public constructor(iterable: T[] | IterableCollection<T>) {
+    public constructor(iterable: Collection<T> | null) {
         super();
 
-        if(Array.isArray(iterable)) {
-            this.inner = new NativeArrayWrapper<T>(iterable);
-        } else {
+        if (iterable) {
             this.inner = iterable;
         }
     }
 
-    where(condition: FilterCondition<T>): ICollection<T> {
+    public where(condition: FilterCondition<T>): ICollection<T> {
         return new FilteringCollection<T>(this, condition);
     }
 
-    select<TOut>(condition: MapCondition<T, TOut>): ICollection<TOut> {                
+    public select<TOut>(condition: MapCondition<T, TOut>): ICollection<TOut> {                
         // @ts-ignore
         return new MappingCollection<T, TOut>(this, condition);
     }
 
-    skip(shouldSkip: number): ICollection<T> {
+    public skip(shouldSkip: number): ICollection<T> {
         return new SkippingCollection(this, shouldSkip);
     }
 
-    take(shouldTake: number): ICollection<T> {
+    public take(shouldTake: number): ICollection<T> {
         return new TakingCollection(this, shouldTake);
     }
 
-    first(predicate?: FilterCondition<T> | undefined): T {
+    public first(predicate?: FilterCondition<T> | undefined): T {
         return new FirstAggregator(this, predicate).aggregate();
     }
 
-    firstOrDefault(predicate?: FilterCondition<T> | undefined, $default?: T | null | undefined): T | null {
+    public firstOrDefault(predicate?: FilterCondition<T> | undefined, $default?: T | null | undefined): T | null {
         return new FirstOrDefaultAggregator(this, predicate, $default).aggregate();
     }
 
-    last(predicate?: FilterCondition<T> | undefined): T {
+    public last(predicate?: FilterCondition<T> | undefined): T {
         return new LastAggregator(this, predicate).aggregate();
     }
 
-    lastOrDefault(predicate?: FilterCondition<T> | undefined, $default?: T | null | undefined): T | null {
+    public lastOrDefault(predicate?: FilterCondition<T> | undefined, $default?: T | null | undefined): T | null {
         return new LastOrDefaultAggregator(this, predicate, $default).aggregate();
     }
 
-    sort(condition?: SortCondition<T> | undefined): ICollection<T> {
+    public sort(condition?: SortCondition<T> | undefined): ICollection<T> {
         return new SortingCollection<T>(this, {
             compare: condition
         })
     }
 
-    sortBy<E>(map: MapCondition<T, E>, condition?: SortCondition<E> | undefined): ISortingCollection<T> {
+    public sortBy<E>(map: MapCondition<T, E>, condition?: SortCondition<E> | undefined): ISortingCollection<T> {
         // @ts-ignore
         return new SortingCollection<T, E>(this, {
             mapping: map,
@@ -72,7 +70,7 @@ export class Collection<T> extends IterableCollection<T> implements ICollection<
         })
     }
     
-    groupBy<K, V>(key: MapCondition<T, K>, group?: MapCondition<ICollection<T>, V> | undefined): ICollection<IGroupedData<K, V>> {
+    public groupBy<K, V>(key: MapCondition<T, K>, group?: MapCondition<ICollection<T>, V> | undefined): ICollection<IGroupedData<K, V>> {
         return new GroupingCollection<T, K, V>(this, key, group);
     }
 
@@ -92,16 +90,39 @@ export class Collection<T> extends IterableCollection<T> implements ICollection<
     }
 
     public materialize(): T[] {
+        console.log(this.inner.materialize);
+        console.log(this.inner.constructor.name);
         return this.inner.materialize();
     }
 }
 
+export class NativeArrayWrapper<T> extends Collection<T> {
+    private items: T[];
+
+    public constructor(items: T[]) {
+        super(null);
+
+        this.items = items;
+    }
+
+    public getIterator(): IterableIterator<T> {
+       return this.items[Symbol.iterator]();
+    }
+
+    public materialize(): T[] {
+        return this.items;
+    }
+    public toArray(): T[] {
+        return this.items;
+    }
+}
+
 export class FilteringCollection<T> extends Collection<T> {
-    public constructor(iterable: IterableCollection<T> | T[], private condition: FilterCondition<T>) {
+    public constructor(iterable: Collection<T>, private condition: FilterCondition<T>) {
         super(iterable);
     }
     
-    where(condition: FilterCondition<T>): ICollection<T> { 
+    public where(condition: FilterCondition<T>): ICollection<T> { 
         const result = new FilteringCollection<T>(this.inner, (item: T) => this.condition(item) && condition(item));
 
         return result;
@@ -134,7 +155,7 @@ export class MappingCollection<T, V> extends Collection<T> {
 }
 
 class SkippingCollection<T> extends Collection<T> {
-    public constructor(iterable: IterableCollection<T>, private shouldSkip: number) {
+    public constructor(iterable: Collection<T>, private shouldSkip: number) {
         super(iterable);
     }
 
@@ -144,7 +165,7 @@ class SkippingCollection<T> extends Collection<T> {
 }
 
 class TakingCollection<T> extends Collection<T> {
-    public constructor(iterable: IterableCollection<T>, private shouldTake: number) {
+    public constructor(iterable: Collection<T>, private shouldTake: number) {
         super(iterable);
     }
 
@@ -156,14 +177,14 @@ class TakingCollection<T> extends Collection<T> {
 export class SortingCollection<T, V = T> extends Collection<T> implements ISortingCollection<T> {
     private sortSettings: SortSettings<T, V>[];
     
-    public constructor(iterable: T[] | IterableCollection<T>, ...sortSettings: SortSettings<T, V>[]) {
+    public constructor(iterable: Collection<T>, ...sortSettings: SortSettings<T, V>[]) {
         super(iterable);
         this.sortSettings = _(sortSettings)
         .where(item => !!item.compare || !!item.mapping)
         .toArray();
     }
 
-    thenBy<E>(map: MapCondition<T, E>, condition?: SortCondition<E>): ISortingCollection<T> {
+    public thenBy<E>(map: MapCondition<T, E>, condition?: SortCondition<E>): ISortingCollection<T> {
         // @ts-ignore
         return new SortingCollection<T, E>(this, ...this.sortSettings, {
             mapping: map,
@@ -195,7 +216,7 @@ export class SortingCollection<T, V = T> extends Collection<T> implements ISorti
 }
 
 export class GroupingCollection<T, K, V = ICollection<T>> extends Collection<IGroupedData<K, V>> {    
-    public constructor(iterable: T[] | IterableCollection<T>, private key: MapCondition<T, K>, private groupMapping?: MapCondition<ICollection<T>, V>) {
+    public constructor(iterable: IterableCollection<T>, private key: MapCondition<T, K>, private groupMapping?: MapCondition<ICollection<T>, V>) {
         // @ts-ignore
         super(iterable);
     }
