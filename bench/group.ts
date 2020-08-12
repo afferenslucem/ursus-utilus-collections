@@ -11,7 +11,7 @@ function addToSuite(suite: Benchmark.Suite) {
     }).add('Lodash GroupBy', function () {
         return lodash(array as any[])
         .groupBy(item => item[0])
-        .toArray();
+        .value();
     })
     .add('GroupBy with map', function () {
         return _(array as any[])
