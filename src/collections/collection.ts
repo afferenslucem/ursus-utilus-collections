@@ -90,8 +90,6 @@ export class Collection<T> extends IterableCollection<T> implements ICollection<
     }
 
     public materialize(): T[] {
-        console.log(this.inner.materialize);
-        console.log(this.inner.constructor.name);
         return this.inner.materialize();
     }
 }
