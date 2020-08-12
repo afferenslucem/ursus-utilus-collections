@@ -76,12 +76,6 @@ export class Collection<T> extends IterableCollection<T> implements ICollection<
         return new GroupingCollection<T, K, V>(this, key, group);
     }
 
-    protected deepCopy(): Collection<T> {
-        const result = new Collection<T>(this);
-
-        return result;
-    }
-
     public toArray(): T[] {
         return this.computed;
     }
@@ -109,7 +103,7 @@ export class FilteringCollection<T> extends Collection<T> {
     
     where(condition: FilterCondition<T>): ICollection<T> { 
         const result = new FilteringCollection<T>(this.inner, (item: T) => this.condition(item) && condition(item));
-        
+
         return result;
     }
 
