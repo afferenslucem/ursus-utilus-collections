@@ -85,11 +85,13 @@ export class Collection<T> implements ICollection<T> {
         return this.computed[Symbol.iterator]();
     }
 
+    // @ts-ignore
     public get computed(): T[] {
         if (this._computed == null) {
             this._computed = this.materialize();
-        }
-        return this._computed;
+        } else {
+            return this._computed
+        };
     }
 
     protected materialize(): T[] {

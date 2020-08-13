@@ -79,8 +79,6 @@ describe('GroupingCollection', function () {
             group: 'Feya'
         }];
         
-        const col = new NativeArrayWrapper(cats);
-
         const collection = new GroupingCollection(new Collection(cats), cat => cat.age, group => group.first().name);
 
         const result = collection.toArray();

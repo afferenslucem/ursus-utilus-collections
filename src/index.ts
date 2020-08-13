@@ -1,4 +1,4 @@
-import { NativeArrayWrapper } from './collections/collection';
+import { Collection } from './collections/collection';
 import { ICollection } from './interfaces/i-collection';
 
 export * from './interfaces/i-collection';
@@ -8,5 +8,5 @@ export * from './interfaces/i-collection';
  * @param items Array for converting to collection
  */
 export default function<T>(items: T[]): ICollection<T> {
-    return new NativeArrayWrapper<T>(items);
+    return new Collection(items);
 }
