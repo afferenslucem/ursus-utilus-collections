@@ -35,7 +35,7 @@ export function getArrayForGrouping(count: number, disp: number) {
 
 function onCycle(event: Benchmark.Event) {console.log(String(event.target))}
 
-function addEmptyLines(count: number = 1) {
+export function addEmptyLines(count: number = 1) {
     for(let i = 0; i < count; i++) {
         console.log();
     }

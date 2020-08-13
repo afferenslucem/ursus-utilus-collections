@@ -1,6 +1,6 @@
 import _ from '../src/index';
 import lodash from 'lodash';
-import { array, suite, getArrayDesc, split } from "./common/suite";
+import { array, suite, getArrayDesc, split, addEmptyLines } from "./common/suite";
 import Benchmark from 'benchmark';
 
 // @ts-ignore
@@ -8,6 +8,12 @@ let sortingArray = null;
 
 const sortOpt: Benchmark.Options = {
     onStart: () => sortingArray = Array.from(array)
+}
+const splitSort: Benchmark.Options = {
+    onStart: () => {
+        sortingArray = Array.from(array);
+        addEmptyLines();
+    },
 }
 
 function addToSuite(suite: Benchmark.Suite) {
@@ -17,7 +23,7 @@ function addToSuite(suite: Benchmark.Suite) {
         return _(sortingArray)
         .sort()
         .toArray();
-    }, Object.assign(sortOpt, split))
+    }, splitSort)
     .add('Lodash sort', function () {
         // @ts-ignore
         return lodash(sortingArray)
@@ -35,7 +41,7 @@ function addToSuite(suite: Benchmark.Suite) {
         // @ts-ignore
         .sortBy(item => item.toString())
         .toArray();
-    }, Object.assign(sortOpt, split))
+    }, splitSort)
     .add('Lodash SortBy', function () {
         // @ts-ignore
         return lodash(sortingArray)
