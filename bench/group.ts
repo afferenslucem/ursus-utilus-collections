@@ -1,6 +1,6 @@
 import _ from '../src/index';
 import lodash from 'lodash';
-import { array, suite, getArrayDesc, getArrayForGrouping } from "./common/suite";
+import { array, suite, getArrayForGrouping, split } from "./common/suite";
 import Benchmark from 'benchmark';
 
 function addToSuite(suite: Benchmark.Suite) {
@@ -17,7 +17,7 @@ function addToSuite(suite: Benchmark.Suite) {
         return _(array as any[])
         .groupBy(item => item[0], group => group.first())
         .toArray();
-    })
+    }, split)
 }
 
 export const group_1000000_10 = suite('Group for 1000000 with desp 10', 0, getArrayForGrouping(1000000, 10));

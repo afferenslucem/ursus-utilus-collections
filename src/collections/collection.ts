@@ -1,5 +1,5 @@
 import { ICollection } from "../interfaces/i-collection";
-import { FilterCondition, MapCondition, SortCondition } from "../commands/delegates";
+import { FilterCondition, MapCondition, CompareCondition, ReduceCondition } from "../commands/delegates";
 import { FirstAggregator } from "../aggregators/first-aggregator";
 import { FirstOrDefaultAggregator } from "../aggregators/first-or-default-aggregator";
 import { LastAggregator } from "../aggregators/last-aggregtor";
@@ -8,6 +8,8 @@ import { ISortingCollection } from "../interfaces/i-sorting-collection";
 import _ from '../index';
 import { SortSettings, Comparer } from "../utils/comparer";
 import { IGroupedData } from "../interfaces/i-grouped-data";
+import { MinAggregator } from "../aggregators/min-aggregator";
+import { MaxAggregator } from "../aggregators/max-aggregator";
 
 export class Collection<T> implements ICollection<T> {
     // @ts-ignore
@@ -55,13 +57,13 @@ export class Collection<T> implements ICollection<T> {
         return new LastOrDefaultAggregator(this, predicate, $default).aggregate();
     }
 
-    public sort(condition?: SortCondition<T> | undefined): ICollection<T> {
+    public sort(condition?: CompareCondition<T> | undefined): ICollection<T> {
         return new SortingCollection<T>(this, {
             compare: condition
         })
     }
 
-    public sortBy<E>(map: MapCondition<T, E>, condition?: SortCondition<E> | undefined): ISortingCollection<T> {
+    public sortBy<E>(map: MapCondition<T, E>, condition?: CompareCondition<E> | undefined): ISortingCollection<T> {
         // @ts-ignore
         return new SortingCollection<T, E>(this, {
             mapping: map,
@@ -71,6 +73,14 @@ export class Collection<T> implements ICollection<T> {
     
     public groupBy<K, V>(key: MapCondition<T, K>, group?: MapCondition<ICollection<T>, V> | undefined): ICollection<IGroupedData<K, V>> {
         return new GroupingCollection<T, K, V>(this, key, group);
+    }
+
+    public min(predicate?: CompareCondition<T> | undefined): T {
+        return new MinAggregator(this, predicate).aggregate();
+    }
+
+    public max(predicate?: CompareCondition<T> | undefined): T {
+        return new MaxAggregator(this, predicate).aggregate();
     }
 
     public toArray(): T[] {
@@ -90,6 +100,10 @@ export class Collection<T> implements ICollection<T> {
             this._computed = this.materialize();
         }
         return this._computed
+    }
+
+    public get materialized(): boolean {
+        return !!this._computed;
     }
 
     protected materialize(): T[] {
@@ -164,7 +178,7 @@ export class SortingCollection<T, V = T> extends Collection<T> implements ISorti
         .toArray();
     }
 
-    public thenBy<E>(map: MapCondition<T, E>, condition?: SortCondition<E>): ISortingCollection<T> {
+    public thenBy<E>(map: MapCondition<T, E>, condition?: CompareCondition<E>): ISortingCollection<T> {
         // @ts-ignore
         return new SortingCollection<T, E>(this, ...this.sortSettings, {
             mapping: map,

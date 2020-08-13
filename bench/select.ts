@@ -1,6 +1,6 @@
 import _ from '../src/index';
 import lodash from 'lodash';
-import { array, suite } from "./common/suite";
+import { array, suite, split } from "./common/suite";
 import Benchmark from 'benchmark';
 
 function addToSuite(suite: Benchmark.Suite) {
@@ -8,7 +8,7 @@ function addToSuite(suite: Benchmark.Suite) {
         return _(array)
         .select(item => item + 1)
         .toArray();
-    })
+    }, split)
     .add('Lodash map', function () {
         return lodash(array)
         .map(item => item + 1)
@@ -22,7 +22,7 @@ function addToSuite(suite: Benchmark.Suite) {
         .select(item => item + 1)
         .select(item => item + 1)
         .toArray();
-    })
+    }, split)
     .add('Lodash double map', function () {
         return lodash(array)
         .map(item => item + 1)
@@ -47,7 +47,7 @@ function addToSuite(suite: Benchmark.Suite) {
         .select(item => item + 1)
         .select(item => item + 1)
         .toArray();
-    })
+    }, split)
     .add('Lodash 10 map', function () {
         return lodash(array)
         .map(item => item + 1)

@@ -1,6 +1,7 @@
 import _, { ICollection } from '../../src';
 import { assert } from 'chai';
 import { IGroupedData } from '../../src/interfaces/i-grouped-data';
+import { cats } from '../collections/cats.spec';
 
 describe('Index', function () {  
     it('should wrap native array', () => {
@@ -23,6 +24,20 @@ describe('Index', function () {
         const expected = ['2', '4', '6', '8'];
 
         const result = _([1, 2, 3, 4]).select(item => (item * 2).toString()).toArray();
+
+        assert.deepEqual(expected, result);
+    });
+
+    it('should correct cascade', () => {
+        const expected = ['25', '9'];
+
+        const result = _([1, 2, 3, 4, 5, 6, 7, 8])
+        .where(item => !!(item % 2)) // [1, 3, 5, 7]
+        .select(item => (item ** 2).toString()) // ['1', '9', '25', '49']
+        .skip(1) // ['9', '25', '49']
+        .take(2) // ['9', '25']
+        .sort() // ['25', '9']
+        .toArray();
 
         assert.deepEqual(expected, result);
     });
@@ -193,5 +208,61 @@ describe('Index', function () {
         const grouped = collection.groupBy(item => item[0], group => group.first());
 
         assert.deepEqual(grouped, expected)
+    });
+
+    it('should generate range', () => {
+        const collection = _.range(0, 5);
+
+        const expected = _([0, 1, 2, 3, 4, 5]);
+
+        assert.deepEqual(collection, expected)
+    });
+
+    it('should find min', () => {
+        const collection = _([4, 3, 6, 9, 7, 1, 8]);
+
+        const expected = 1;
+
+        const result = collection.min();
+
+        assert.deepEqual(result, expected)
+    });
+
+    it('should find max', () => {
+        const collection = _([4, 3, 6, 9, 7, 1, 8]);
+
+        const expected = 9;
+
+        const result = collection.max();
+
+        assert.deepEqual(result, expected)
+    });
+
+    it('should find cat with min age', () => {
+        const collection = _(cats);
+
+        const expected = cats[1];
+
+        const result = collection.min((first, second) => first.age - second.age);
+
+        assert.deepEqual(result, expected)
+    });
+
+    it('should find max', () => {
+        const collection = _(cats);
+
+        const expected = cats[4];
+
+        const result = collection.max((first, second) => first.age - second.age);
+
+        assert.deepEqual(result, expected)
+    });
+
+    it('should generate range', () => {
+        const collection = _.range(0, 5);
+
+        const expected = _([0, 1, 2, 3, 4, 5]);
+
+        assert.deepEqual(collection, expected)
     });
 });

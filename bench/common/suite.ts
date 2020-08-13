@@ -35,15 +35,29 @@ export function getArrayForGrouping(count: number, disp: number) {
 
 function onCycle(event: Benchmark.Event) {console.log(String(event.target))}
 
+function addEmptyLines(count: number = 1) {
+    for(let i = 0; i < count; i++) {
+        console.log();
+    }
+}
+
+export const split = {
+    onStart: () => addEmptyLines(1)
+}
+
+export function addSplit() {
+    console.log('----------------------------------------------------')
+}
+
 export function suite(name: string, count = 1000000, arr?: any[]): Benchmark.Suite {
-    return new Benchmark.Suite('Filter for 1000000', {
+    return new Benchmark.Suite(name, {
         onCycle: onCycle,
         onStart: function () {
             array = arr != null ? arr : getArray(count);
+            addSplit();
             console.log(`${name}:`)
         },
         onComplete: function() {
-            console.log();
         },
         onError: function() {
             console.warn(...arguments)

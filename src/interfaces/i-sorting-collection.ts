@@ -1,5 +1,5 @@
 import { ICollection } from "./i-collection";
-import { SortCondition, MapCondition } from "../commands/delegates";
+import { CompareCondition, MapCondition } from "../commands/delegates";
 
 export interface ISortingCollection<T> extends ICollection<T> {
     
@@ -8,5 +8,5 @@ export interface ISortingCollection<T> extends ICollection<T> {
      * @param map Property taking function
      * @param condition Comparing function
      */
-    thenBy<E>(map: MapCondition<T, E>, condition?: SortCondition<E>): ISortingCollection<T>;
+    thenBy<E>(map: MapCondition<T, E>, condition?: CompareCondition<E>): ISortingCollection<T>;
 }

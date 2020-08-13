@@ -1,6 +1,6 @@
 import _ from '../src/index';
 import lodash from 'lodash';
-import { array, suite } from "./common/suite";
+import { array, suite, split } from "./common/suite";
 import Benchmark from 'benchmark';
 
 function addToSuite(suite: Benchmark.Suite) {
@@ -8,7 +8,7 @@ function addToSuite(suite: Benchmark.Suite) {
         return _(array)
         .where(item => (item % 2) == 0)
         .toArray();
-    })
+    }, split)
     .add('Lodash filter', function () {
         return lodash(array)
         .filter(item => (item % 2) == 0)
@@ -22,7 +22,7 @@ function addToSuite(suite: Benchmark.Suite) {
         .where(item => (item % 2) == 0)
         .where(item => (item % 2) == 0)
         .toArray();
-    })
+    }, split)
     .add('Double lodash filter', function () {
         return lodash(array)
         .filter(item => (item % 2) == 0)
@@ -47,7 +47,7 @@ function addToSuite(suite: Benchmark.Suite) {
         .where(item => (item % 2) == 0)
         .where(item => (item % 2) == 0)
         .toArray();
-    })
+    }, split)
     .add('10 lodash filter', function () {
         return lodash(array)
         .filter(item => (item % 2) == 0)

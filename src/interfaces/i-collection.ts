@@ -1,4 +1,4 @@
-import { FilterCondition, MapCondition, SortCondition } from "../commands/delegates";
+import { FilterCondition, MapCondition, CompareCondition, ReduceCondition } from "../commands/delegates";
 import { IIterable } from "./i-iterable";
 import { ISortingCollection } from "./i-sorting-collection";
 import { IGroupedData } from "./i-grouped-data";
@@ -62,14 +62,14 @@ export interface ICollection<T> extends IIterable<T> {
      * Sorts items
      * @param condition Comparing function
      */
-    sort(condition?: SortCondition<T> | undefined): ICollection<T>;
+    sort(condition?: CompareCondition<T> | undefined): ICollection<T>;
 
     /**
      * Sorts items
      * @param map Property taking function
      * @param condition Comparing function
      */
-    sortBy<E>(map: MapCondition<T, E>, condition?: SortCondition<E> | undefined): ISortingCollection<T>;
+    sortBy<E>(map: MapCondition<T, E>, condition?: CompareCondition<E> | undefined): ISortingCollection<T>;
 
     /**
      * Groups items
@@ -77,6 +77,18 @@ export interface ICollection<T> extends IIterable<T> {
      * @param group Group taking function
      */
     groupBy<K, E>(key: MapCondition<T, K>, group?: MapCondition<ICollection<T>, E> | undefined): ICollection<IGroupedData<K, E>>;
+
+    /**
+     * Finds min value
+     * @param predicate Predicate for values comparing
+     */
+    min(predicate?: CompareCondition<T> | undefined): T;
+
+    /**
+     * Finds max value
+     * @param predicate Predicate for values comparing
+     */
+    max(predicate?: CompareCondition<T> | undefined): T;
 
     /**
      * Converting method to array

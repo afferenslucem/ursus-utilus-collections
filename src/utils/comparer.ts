@@ -1,11 +1,11 @@
-import { MapCondition, SortCondition } from "../commands/delegates";
+import { MapCondition, CompareCondition } from "../commands/delegates";
 export interface SortSettings<T, E> {
     mapping?: MapCondition<T, E>;
-    compare?: SortCondition<E>;
+    compare?: CompareCondition<E>;
 }
 
 export class Comparer<T, E = T> {
-    public constructor(private sortSettings: SortSettings<T, E>[], private defaultCompare: SortCondition<E>){}
+    public constructor(private sortSettings: SortSettings<T, E>[], private defaultCompare: CompareCondition<E>){}
 
     public compare(first: T, second: T): number {
         for(let i = 0; i < this.sortSettings.length; i++) {

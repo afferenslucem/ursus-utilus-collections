@@ -1,6 +1,6 @@
 import _ from '../src/index';
 import lodash from 'lodash';
-import { array, suite, getArrayDesc } from "./common/suite";
+import { array, suite, getArrayDesc, split } from "./common/suite";
 import Benchmark from 'benchmark';
 
 // @ts-ignore
@@ -17,7 +17,7 @@ function addToSuite(suite: Benchmark.Suite) {
         return _(sortingArray)
         .sort()
         .toArray();
-    }, sortOpt)
+    }, Object.assign(sortOpt, split))
     .add('Lodash sort', function () {
         // @ts-ignore
         return lodash(sortingArray)
@@ -35,7 +35,7 @@ function addToSuite(suite: Benchmark.Suite) {
         // @ts-ignore
         .sortBy(item => item.toString())
         .toArray();
-    }, sortOpt)
+    }, Object.assign(sortOpt, split))
     .add('Lodash SortBy', function () {
         // @ts-ignore
         return lodash(sortingArray)
