@@ -4,10 +4,12 @@ import { array, suite, getArrayForGrouping, split } from "./common/suite";
 import Benchmark from 'benchmark';
 
 function addToSuite(suite: Benchmark.Suite) {
-    suite.add('Min', function () {
+    suite
+    .add('Min', function () {
         return _(array)
         .min();
-    }).add('Lodash Min', function () {
+    })
+    .add('Lodash Min', function () {
         return lodash(array)
         .min();
     })
@@ -46,6 +48,18 @@ function addToSuite(suite: Benchmark.Suite) {
     .add('Native some', function () {
         return array
         .some(item => (item % 9) == 0);
+    })
+    .add('Sum', function () {
+        return _(array)
+        .sum()
+    }, split)
+    .add('Lodash sum', function () {
+        return lodash(array)
+        .sum();
+    })
+    .add('Native reduce', function () {
+        return array
+        .reduce((a, b) => a + b);
     })
 }
 

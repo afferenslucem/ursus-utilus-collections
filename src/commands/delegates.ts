@@ -4,4 +4,4 @@ export type MapCondition<T, E> = (item: T) => E;
 
 export type CompareCondition<T> = (first: T, second: T) => number;
 
-export type ReduceCondition<T> = (first: T, second: T) => T;
+export type ReduceCondition<T, V = T> = (first: T | V, second: T) => V;

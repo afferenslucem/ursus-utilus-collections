@@ -11,6 +11,7 @@ import { IGroupedData } from "../interfaces/i-grouped-data";
 import { MinAggregator } from "../aggregators/min-aggregator";
 import { MaxAggregator } from "../aggregators/max-aggregator";
 import { ExistsAggregator } from "../aggregators/exists-aggregator";
+import { SumAggregator } from "../aggregators/sum-aggregator";
 
 export class Collection<T> implements ICollection<T> {
     // @ts-ignore
@@ -86,6 +87,10 @@ export class Collection<T> implements ICollection<T> {
 
     public exists(predicate: FilterCondition<T>): boolean {
         return new ExistsAggregator(this, predicate).aggregate();
+    }
+
+    public sum<V>(predicate?: ReduceCondition<T, V>): V {
+        return new SumAggregator(this, predicate).aggregate();
     }
 
     public toArray(): T[] {

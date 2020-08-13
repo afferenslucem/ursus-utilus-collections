@@ -283,4 +283,34 @@ describe('Index', function () {
 
         assert.equal(result, expected)
     });
+
+    it('should returns sum', () => {
+        const collection = _.range(1, 9);
+
+        const expected = 45;
+
+        const result = collection.sum();
+
+        assert.equal(result, expected)
+    });
+    
+    it('should returns sum', () => {
+        const collection = _(['a', 'b', 'c',]);
+
+        const expected = 'abc';
+
+        const result = collection.sum();
+
+        assert.equal(result, expected)
+    });
+    
+    it('should returns sum', () => {
+        const collection = _(['1', '2', '3',]);
+
+        const expected = '6';
+
+        const result = collection.sum((a, b) => Number(a) + Number(b));
+
+        assert.equal(result, expected)
+    });
 });

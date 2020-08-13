@@ -97,6 +97,12 @@ export interface ICollection<T> extends IIterable<T> {
     exists(predicate: FilterCondition<T>): boolean;
 
     /**
+     * Sums element of collection
+     * @param predicate Sum rule
+     */
+    sum<V>(predicate?: ReduceCondition<T, V>): V;
+
+    /**
      * Converting method to array
      * Triggers computation
      * Array is freezed
