@@ -1,6 +1,8 @@
 src
 tests
+bench
 coverage
 .vscode
 tsconfig.json
+benchmark.ts
 ursus-utilus-*.tgz
