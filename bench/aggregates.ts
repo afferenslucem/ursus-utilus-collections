@@ -35,6 +35,18 @@ function addToSuite(suite: Benchmark.Suite) {
         return lodash(array)
         .last();
     })
+    .add('Exists', function () {
+        return _(array)
+        .exists(item => (item % 9) == 0)
+    }, split)
+    .add('Lodash some', function () {
+        return lodash(array)
+        .some(item => (item % 9) == 0);
+    })
+    .add('Native some', function () {
+        return array
+        .some(item => (item % 9) == 0);
+    })
 }
 
 export const agg_1000000 = suite('Aggregate for 1000000', 1000000);

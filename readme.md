@@ -260,6 +260,18 @@ const result = collection.max();
 assert.deepEqual(result, expected)
 ```
 
+### Exists
+
+```typescript
+const collection = _.range(1, 9);
+
+const expected = true;
+
+const result = collection.exists(item => (item % 7) == 0);
+
+assert.equal(result, expected)
+```
+
 ### Range
 
 ```typescript

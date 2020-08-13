@@ -273,4 +273,14 @@ describe('Index', function () {
 
         assert.deepEqual(collection, expected)
     });
+
+    it('should check existings', () => {
+        const collection = _.range(1, 9);
+
+        const expected = true;
+
+        const result = collection.exists(item => (item % 7) == 0);
+
+        assert.equal(result, expected)
+    });
 });

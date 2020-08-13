@@ -1,6 +1,6 @@
 {
   "name": "ursus-utilus-collections",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "description": "Collections manipulation utils",
   "typings": "lib/index",
   "main": "lib/index.js",
@@ -19,7 +19,8 @@
     "filtering",
     "mapping",
     "LINQ",
-    "sorting"
+    "sorting",
+    "grouping"
   ],
   "author": "afferenslucem",
   "license": "ISC",

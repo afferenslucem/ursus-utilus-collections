@@ -10,6 +10,7 @@ import { SortSettings, Comparer } from "../utils/comparer";
 import { IGroupedData } from "../interfaces/i-grouped-data";
 import { MinAggregator } from "../aggregators/min-aggregator";
 import { MaxAggregator } from "../aggregators/max-aggregator";
+import { ExistsAggregator } from "../aggregators/exists-aggregator";
 
 export class Collection<T> implements ICollection<T> {
     // @ts-ignore
@@ -83,6 +84,10 @@ export class Collection<T> implements ICollection<T> {
         return new MaxAggregator(this, predicate).aggregate();
     }
 
+    public exists(predicate: FilterCondition<T>): boolean {
+        return new ExistsAggregator(this, predicate).aggregate();
+    }
+
     public toArray(): T[] {
         return this.computed;
     }
@@ -97,7 +102,11 @@ export class Collection<T> implements ICollection<T> {
 
     public get computed(): T[] {
         if (this._computed == null) {
-            this._computed = this.materialize();
+            const result = this.materialize();
+
+            Object.freeze(result);
+
+            this._computed = result;
         }
         return this._computed
     }
