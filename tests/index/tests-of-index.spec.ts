@@ -265,4 +265,12 @@ describe('Index', function () {
 
         assert.deepEqual(collection, expected)
     });
+
+    it('should generate range with step', () => {
+        const collection = _.range(0, 6, 2);
+
+        const expected = _([0, 2, 4, 6]);
+
+        assert.deepEqual(collection, expected)
+    });
 });

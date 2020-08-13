@@ -260,9 +260,28 @@ const result = collection.max();
 assert.deepEqual(result, expected)
 ```
 
+### Range
+
+```typescript
+const collection = _.range(0, 5);
+
+const expected = _([0, 1, 2, 3, 4, 5]);
+
+assert.deepEqual(collection, expected)
+```
+
+##### Generating with step
+
+```typescript
+const collection = _.range(0, 6, 2);
+
+const expected = _([0, 2, 4, 6]);
+
+assert.deepEqual(collection, expected)
+```
+
 ## Setup
 
 ``````bash
 $npm install ursus-utilus-collections
 ``````
-
