@@ -53,5 +53,25 @@ describe('Collection', function () {
         const items = [1, 2, 3];
         const collection = new Collection(items)
         assert.isTrue(collection.materialized, 'Is not materialized');
+    }); 
+
+    it('should reverse array', () => {
+        const items = [1, 2, 3];
+        const collection = new Collection(items)
+
+        const result = collection.reverse().toArray();
+
+        assert.deepEqual(result, [3, 2, 1], 'Didn\'t reverce');
+        assert.deepEqual(items, [1, 2, 3], 'Changed array');
+    });  
+
+    it('should sort array', () => {
+        const items = [3, 2, 1];
+        const collection = new Collection(items)
+
+        const result = collection.reverse().toArray();
+
+        assert.deepEqual(items, [3, 2, 1], 'Changed array');
+        assert.deepEqual(result, [1, 2, 3], 'Didn\'t sort');
     });  
 });

@@ -93,6 +93,10 @@ export class Collection<T> implements ICollection<T> {
         return new SumAggregator(this, predicate).aggregate();
     }
 
+    public reverse(): ICollection<T> {
+        return new ReverseCollection(this);
+    }
+
     public toArray(): T[] {
         return this.computed;
     }
@@ -258,5 +262,20 @@ export class GroupingCollection<T, K, V = ICollection<T>> extends Collection<IGr
 
         //@ts-ignore
         return result;
+    }
+}
+
+export class ReverseCollection<T> extends Collection<T> {    
+    public constructor(iterable: Collection<T>) {
+        // @ts-ignore
+        super(iterable);
+    }
+
+    protected materialize(): T[] {
+        const result = this.inner.toArray();
+
+        const copy = Array.from(result);
+
+        return copy.reverse();
     }
 }

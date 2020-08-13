@@ -26,7 +26,7 @@ function addToSuite(suite: Benchmark.Suite) {
     }, splitSort)
     .add('Lodash sort', function () {
         // @ts-ignore
-        return lodash(sortingArray)
+        return lodash(Array.from(sortingArray))
         .sort()
         .value();
     }, sortOpt)
@@ -44,7 +44,7 @@ function addToSuite(suite: Benchmark.Suite) {
     }, splitSort)
     .add('Lodash SortBy', function () {
         // @ts-ignore
-        return lodash(sortingArray)
+        return lodash(Array.from(sortingArray))
         // @ts-ignore
         .sortBy(item => item.toString())
         .value();

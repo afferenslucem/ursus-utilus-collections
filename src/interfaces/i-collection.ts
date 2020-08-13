@@ -103,6 +103,11 @@ export interface ICollection<T> extends IIterable<T> {
     sum<V>(predicate?: ReduceCondition<T, V>): V;
 
     /**
+     * Retrns reversed collection
+     */
+    reverse(): ICollection<T>;
+
+    /**
      * Converting method to array
      * Triggers computation
      * Array is freezed

@@ -296,6 +296,18 @@ const result = collection.sum((a, b) => Number(a) + Number(b));
 assert.equal(result, expected)
 ```
 
+### Reverse
+
+```typescript
+const collection = _([1, 2, 3]);
+
+const expected = [3, 2, 1];
+
+const result = collection.reverse().toArray();
+
+assert.deepEqual(result, expected)~~~~
+```
+
 ### Range
 
 ```typescript

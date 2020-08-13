@@ -6,6 +6,7 @@ import { group_1000000_10, group_1000000_25, group_1000000_50, group_1000_10, gr
 import { agg_1000000, agg_1000, agg_10 } from "./bench/aggregates";
 import { agg_by_1000000, agg_by_1000, agg_by_100 } from "./bench/aggregates-by";
 import { comp_1000000, comp_1000, comp_10 } from "./bench/composites";
+import { reverse_1000000, reverse_1000, reverse_10 } from './bench/reverse';
 
 filterSuite_1000000.run({
     async: false
@@ -114,3 +115,15 @@ comp_1000.run({
 comp_10.run({
     async: false
 });
+
+reverse_1000000.run({
+    async: false
+})
+
+reverse_1000.run({
+    async: false
+})
+
+reverse_10.run({
+    async: false
+})
