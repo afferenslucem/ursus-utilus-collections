@@ -1,4 +1,3 @@
-import { IterableCollection } from "./iterable-collection";
 import { ICollection } from "../interfaces/i-collection";
 import { FilterCondition, MapCondition, SortCondition } from "../commands/delegates";
 import { FirstAggregator } from "../aggregators/first-aggregator";
@@ -10,15 +9,15 @@ import _ from '../index';
 import { SortSettings, Comparer } from "../utils/comparer";
 import { IGroupedData } from "../interfaces/i-grouped-data";
 
-export class Collection<T> extends IterableCollection<T> implements ICollection<T> {
+export class Collection<T> implements ICollection<T> {
     // @ts-ignore
     protected inner: Collection<T>;
-    private _computed: T[] | null =  null;
+    private _computed: T[] | null = null;
 
-    public constructor(iterable: Collection<T> | null) {
-        super();
-
-        if (iterable) {
+    public constructor(iterable: T[] | Collection<T>) {
+        if(Array.isArray(iterable)) {
+            this._computed = iterable;
+        } else {
             this.inner = iterable;
         }
     }
@@ -78,6 +77,10 @@ export class Collection<T> extends IterableCollection<T> implements ICollection<
         return this.computed;
     }
 
+    public [Symbol.iterator](): IterableIterator<T> {
+        return this.getIterator();
+    }
+
     public getIterator(): IterableIterator<T> {
         return this.computed[Symbol.iterator]();
     }
@@ -89,50 +92,35 @@ export class Collection<T> extends IterableCollection<T> implements ICollection<
         return this._computed;
     }
 
-    public materialize(): T[] {
-        return this.inner.materialize();
-    }
-}
-
-export class NativeArrayWrapper<T> extends Collection<T> {
-    private items: T[];
-
-    public constructor(items: T[]) {
-        super(null);
-
-        this.items = items;
-    }
-
-    public getIterator(): IterableIterator<T> {
-       return this.items[Symbol.iterator]();
-    }
-
-    public materialize(): T[] {
-        return this.items;
-    }
-    public toArray(): T[] {
-        return this.items;
+    protected materialize(): T[] {
+        return this.inner.toArray();
     }
 }
 
 export class FilteringCollection<T> extends Collection<T> {
-    public constructor(iterable: Collection<T>, private condition: FilterCondition<T>) {
+    public constructor(iterable: Collection<T> | T[], private condition: FilterCondition<T>) {
         super(iterable);
     }
     
     public where(condition: FilterCondition<T>): ICollection<T> { 
-        const result = new FilteringCollection<T>(this.inner, (item: T) => this.condition(item) && condition(item));
+        const result = new FilteringCollection<T>(this.inner, (item: T) => { 
+            if(condition(item)){
+                return this.condition(item)
+            } else {
+                return false;
+            }
+        });
 
         return result;
     }
 
-    public materialize(): T[] {
-        return this.inner.materialize().filter(item => this.condition(item));
+    protected materialize(): T[] {
+        return this.inner.toArray().filter(item => this.condition(item));
     }
 }
 
 export class MappingCollection<T, V> extends Collection<T> {
-    public constructor(iterable: IterableCollection<T> | T[], private condition: MapCondition<T, V>) {
+    public constructor(iterable: Collection<T> | T[], private condition: MapCondition<T, V>) {
         // @ts-ignore
         super(iterable);
     }
@@ -147,8 +135,8 @@ export class MappingCollection<T, V> extends Collection<T> {
     }
 
     // @ts-ignore
-    public materialize(): V[] {
-        return this.inner.materialize().map(item => this.condition(item));
+    protected materialize(): V[] {
+        return this.inner.toArray().map(item => this.condition(item));
     }
 }
 
@@ -157,8 +145,8 @@ class SkippingCollection<T> extends Collection<T> {
         super(iterable);
     }
 
-    public materialize(): T[] {
-        return this.inner.materialize().slice(this.shouldSkip);
+    protected materialize(): T[] {
+        return this.inner.toArray().slice(this.shouldSkip);
     }
 }
 
@@ -167,8 +155,8 @@ class TakingCollection<T> extends Collection<T> {
         super(iterable);
     }
 
-    public materialize(): T[] {
-        return this.inner.materialize().slice(0, this.shouldTake);
+    protected materialize(): T[] {
+        return this.inner.toArray().slice(0, this.shouldTake);
     }
 }
 
@@ -190,8 +178,8 @@ export class SortingCollection<T, V = T> extends Collection<T> implements ISorti
         })
     }
 
-    public materialize(): T[] {
-        const copy = Array.from(this.inner.materialize());
+    protected materialize(): T[] {
+        const copy = Array.from(this.inner.toArray());
 
         const comparer = new Comparer(this.sortSettings, this.defaultCompare);
 
@@ -214,15 +202,15 @@ export class SortingCollection<T, V = T> extends Collection<T> implements ISorti
 }
 
 export class GroupingCollection<T, K, V = ICollection<T>> extends Collection<IGroupedData<K, V>> {    
-    public constructor(iterable: IterableCollection<T>, private key: MapCondition<T, K>, private groupMapping?: MapCondition<ICollection<T>, V>) {
+    public constructor(iterable: Collection<T>, private key: MapCondition<T, K>, private groupMapping?: MapCondition<ICollection<T>, V>) {
         // @ts-ignore
         super(iterable);
     }
 
-    public materialize(): IGroupedData<K, V>[] {
+    protected materialize(): IGroupedData<K, V>[] {
         // aggregate items by key
         // @ts-ignore
-        const storage:Map<K, T[]> = this.inner.materialize().reduce((acc, item: T) => {
+        const storage:Map<K, T[]> = this.inner.toArray().reduce((acc, item: T) => {
             const key = this.key(item);
             const array = acc.get(key) || [];
             array.push(item)
