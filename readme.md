@@ -234,6 +234,32 @@ const grouped = collection.groupBy(item => item[0], group => group.first());
 assert.deepEqual(grouped, expected);
 ```
 
+### Min & Max
+
+##### Min
+
+```typescript
+const collection = _([4, 3, 6, 9, 7, 1, 8]);
+
+const expected = 1;
+
+const result = collection.min();
+
+assert.deepEqual(result, expected)
+```
+
+##### Max
+
+```typescript
+const collection = _([4, 3, 6, 9, 7, 1, 8]);
+
+const expected = 9;
+
+const result = collection.max();
+
+assert.deepEqual(result, expected)
+```
+
 ## Setup
 
 ``````bash

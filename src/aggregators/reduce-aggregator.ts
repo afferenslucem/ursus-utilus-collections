@@ -8,6 +8,6 @@ export class ReduceAggregator<T> extends Aggregator<T> {
     }
 
     public aggregate(): T {
-        return this.collection.toArray().reduce(this.predicate)
+        return this.collection.toArray().reduce((first, second) => this.predicate(first, second))
     }
 }
