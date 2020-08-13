@@ -103,13 +103,7 @@ export class FilteringCollection<T> extends Collection<T> {
     }
     
     public where(condition: FilterCondition<T>): ICollection<T> { 
-        const result = new FilteringCollection<T>(this.inner, (item: T) => { 
-            if(condition(item)){
-                return this.condition(item)
-            } else {
-                return false;
-            }
-        });
+        const result = new FilteringCollection<T>(this.inner, (item: T) => condition(item) && this.condition(item));
 
         return result;
     }
