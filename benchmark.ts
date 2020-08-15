@@ -9,17 +9,17 @@ import { comp_1000000, comp_1000, comp_10 } from "./bench/composites";
 import { reverse_1000000, reverse_1000, reverse_10 } from './bench/reverse';
 import { distinctSuite_1000000, distinctSuite_1000, distinctSuite_10 } from './bench/distinct';
 
-// filterSuite_1000000.run();
+filterSuite_1000000.run();
 
-// filterSuite_1000.run();
+filterSuite_1000.run();
 
-// filterSuite_10.run();
+filterSuite_10.run();
 
-// select_1000000.run();
+select_1000000.run();
 
-// select_1000.run();
+select_1000.run();
 
-// select_10.run();
+select_10.run();
 
 sort_1000000.run();
 
