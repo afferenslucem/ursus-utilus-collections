@@ -118,7 +118,7 @@ export class Collection<T> implements ICollection<T> {
         return this.computed[Symbol.iterator]();
     }
 
-    public get computed(): T[] {
+    private get computed(): T[] {
         if (this._computed == null) {
             const result = this.materialize();
 
@@ -144,9 +144,7 @@ export class FilteringCollection<T> extends Collection<T> {
     }
     
     public where(condition: FilterCondition<T>): ICollection<T> { 
-        const that = this;
-
-        const result = new FilteringCollection<T>(this.inner, item => condition(item) && that.condition(item));
+        const result = new FilteringCollection<T>(this.inner, item => condition(item) && this.condition(item));
 
         return result;
     }
