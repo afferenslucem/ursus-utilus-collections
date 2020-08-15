@@ -216,11 +216,7 @@ export class SortingCollection<T, V = T> extends Collection<T> implements ISorti
     protected materialize(): T[] {
         const comparer = new Comparer(this.sortSettings, this.defaultCompare);
 
-        const result = Array.from(this.inner.toArray()).sort(this.sortSettings.length ? (first, second) => comparer.compare(first, second) : undefined);
-
-        Object.freeze(result);
-
-        return result;
+        return Array.from(this.inner.toArray()).sort(this.sortSettings.length ? (first, second) => comparer.compare(first, second) : undefined);
     }
 
     private defaultCompare(first: V, second: V): number {
