@@ -114,6 +114,11 @@ export interface ICollection<T> extends IIterable<T> {
     distinct<K>(mapping?: MapCondition<T, K>): ICollection<T>;
 
     /**
+     * Returns new collection with new elements at end
+     */
+    concat(items: T[] | ICollection<T>): ICollection<T>;
+
+    /**
      * Converting method to array
      * Triggers computation
      * Array is freezed

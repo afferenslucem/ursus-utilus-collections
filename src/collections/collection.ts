@@ -12,6 +12,7 @@ import { MinAggregator } from "../aggregators/min-aggregator";
 import { MaxAggregator } from "../aggregators/max-aggregator";
 import { ExistsAggregator } from "../aggregators/exists-aggregator";
 import { SumAggregator } from "../aggregators/sum-aggregator";
+import { iteratee } from "lodash";
 
 export class Collection<T> implements ICollection<T> {
     // @ts-ignore
@@ -99,6 +100,10 @@ export class Collection<T> implements ICollection<T> {
 
     public distinct<K>(mapping?: MapCondition<T, K>): ICollection<T> {
         return new DistinctCollection(this, mapping);
+    }
+
+    public concat(items: T[] | ICollection<T>): ICollection<T> {
+        return new ConcatCollection<T>(this, Array.isArray(items) ? new Collection(items) : items);
     }
 
     public toArray(): T[] {
@@ -309,5 +314,16 @@ export class DistinctCollection<T, K = T> extends Collection<T> {
         }
 
         return Array.from(storage.values());
+    }
+}
+
+export class ConcatCollection<T> extends Collection<T> {    
+    public constructor(iterable: Collection<T>, private additional: ICollection<T>) {
+        // @ts-ignore
+        super(iterable);
+    }
+
+    protected materialize(): T[] {
+        return this.inner.toArray().concat(this.additional.toArray());
     }
 }
