@@ -103,9 +103,15 @@ export interface ICollection<T> extends IIterable<T> {
     sum<V>(predicate?: ReduceCondition<T, V>): V;
 
     /**
-     * Retrns reversed collection
+     * Returns reversed collection
      */
     reverse(): ICollection<T>;
+
+    /**
+     * Returns collection with unique elements
+     * @param mapping Condition for distinct by field
+     */
+    distinct<K>(mapping?: MapCondition<T, K>): ICollection<T>;
 
     /**
      * Converting method to array

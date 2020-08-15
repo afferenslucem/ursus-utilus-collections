@@ -1,4 +1,5 @@
-import Benchmark from "benchmark";
+import Benchmark, { Suite } from "benchmark";
+import { Function } from "lodash";
 
 // @ts-ignore
 export let array: number[] = null;

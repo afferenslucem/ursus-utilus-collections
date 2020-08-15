@@ -308,6 +308,30 @@ const result = collection.reverse().toArray();
 assert.deepEqual(result, expected)
 ```
 
+### Distinct
+
+```typescript
+const collection = _([1, 1, 2, 1, 3, 2, 3]);
+
+const expected = [1, 2, 3];
+
+const result = collection.distinct().toArray();
+
+assert.deepEqual(result, expected)
+```
+
+##### Distinct by
+
+```typescript
+const collection = _([[1, 1], [2, 1], [3, 2]]);
+
+const expected = [[1, 1], [3, 2]];
+
+const result = collection.distinct(item => item[1]).toArray();
+
+assert.deepEqual(result, expected)
+```
+
 ### Range
 
 ```typescript

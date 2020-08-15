@@ -97,6 +97,10 @@ export class Collection<T> implements ICollection<T> {
         return new ReverseCollection(this);
     }
 
+    public distinct<K>(mapping?: MapCondition<T, K>): ICollection<T> {
+        return new DistinctCollection(this, mapping);
+    }
+
     public toArray(): T[] {
         return this.computed;
     }
@@ -207,11 +211,9 @@ export class SortingCollection<T, V = T> extends Collection<T> implements ISorti
     }
 
     protected materialize(): T[] {
-        const copy = Array.from(this.inner.toArray());
-
         const comparer = new Comparer(this.sortSettings, this.defaultCompare);
 
-        const result = copy.sort(this.sortSettings.length ? (first, second) => comparer.compare(first, second) : undefined);
+        const result = Array.from(this.inner.toArray()).sort(this.sortSettings.length ? (first, second) => comparer.compare(first, second) : undefined);
 
         Object.freeze(result);
 
@@ -274,10 +276,38 @@ export class ReverseCollection<T> extends Collection<T> {
     }
 
     protected materialize(): T[] {
-        const result = this.inner.toArray();
+        return Array.from(this.inner.toArray()).reverse();
+    }
+}
 
-        const copy = Array.from(result);
+export class DistinctCollection<T, K = T> extends Collection<T> {    
+    public constructor(iterable: Collection<T>, private map?: MapCondition<T, K>) {
+        // @ts-ignore
+        super(iterable);
+    }
 
-        return copy.reverse();
+    protected materialize(): T[] {
+        if(!this.map){
+            return Array.from(new Set(this.inner.toArray()));
+        } else {
+            return this.getDistinctBy();
+        }
+    }
+
+    protected getDistinctBy(): T[] {
+        const storage = new Map<K, T>();
+
+        const array = this.inner.toArray();
+
+        for(let i = 0, len = array.length; i < len; i++) {
+            // @ts-ignore
+            const key = this.map(array[i]);
+
+            if(storage.has(key)) continue;
+
+            storage.set(key, array[i])
+        }
+
+        return Array.from(storage.values());
     }
 }

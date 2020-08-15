@@ -284,7 +284,7 @@ describe('Index', function () {
         assert.equal(result, expected)
     });
 
-    it('should returns sum', () => {
+    it('should return sum', () => {
         const collection = _.range(1, 9);
 
         const expected = 45;
@@ -294,7 +294,7 @@ describe('Index', function () {
         assert.equal(result, expected)
     });
     
-    it('should returns sum', () => {
+    it('should return sum', () => {
         const collection = _(['a', 'b', 'c',]);
 
         const expected = 'abc';
@@ -304,7 +304,7 @@ describe('Index', function () {
         assert.equal(result, expected)
     });
     
-    it('should returns sum', () => {
+    it('should return sum', () => {
         const collection = _(['1', '2', '3',]);
 
         const expected = '6';
@@ -320,6 +320,26 @@ describe('Index', function () {
         const expected = [3, 2, 1];
 
         const result = collection.reverse().toArray();
+
+        assert.deepEqual(result, expected)
+    });
+    
+    it('should return distinct', () => {
+        const collection = _([1, 1, 2, 1, 3, 2, 3]);
+
+        const expected = [1, 2, 3];
+
+        const result = collection.distinct().toArray();
+
+        assert.deepEqual(result, expected)
+    });
+    
+    it('should return distinctBy', () => {
+        const collection = _([[1, 1], [2, 1], [3, 2]]);
+
+        const expected = [[1, 1], [3, 2]];
+
+        const result = collection.distinct(item => item[1]).toArray();
 
         assert.deepEqual(result, expected)
     });
