@@ -135,13 +135,15 @@ export class FilteringCollection<T> extends Collection<T> {
     }
     
     public where(condition: FilterCondition<T>): ICollection<T> { 
-        const result = new FilteringCollection<T>(this.inner, (item: T) => condition(item) && this.condition(item));
+        const that = this;
+
+        const result = new FilteringCollection<T>(this.inner, item => condition(item) && that.condition(item));
 
         return result;
     }
 
     protected materialize(): T[] {
-        return this.inner.toArray().filter(item => this.condition(item));
+        return this.inner.toArray().filter(this.condition);
     }
 }
 
@@ -162,7 +164,7 @@ export class MappingCollection<T, V> extends Collection<T> {
 
     // @ts-ignore
     protected materialize(): V[] {
-        return this.inner.toArray().map(item => this.condition(item));
+        return this.inner.toArray().map(this.condition);
     }
 }
 

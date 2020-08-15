@@ -3,7 +3,7 @@ import Benchmark from "benchmark";
 // @ts-ignore
 export let array: number[] = null;
 
-function getArray(count: number) {
+export function getArray(count: number) {
     const array = [];
 
     for(let i = 0; i < count; i++) {
@@ -33,7 +33,7 @@ export function getArrayForGrouping(count: number, disp: number) {
     return array;
 }
 
-function onCycle(event: Benchmark.Event) {console.log(String(event.target))}
+export function onCycle(event: Benchmark.Event) {console.log(String(event.target))}
 
 export function addEmptyLines(count: number = 1) {
     for(let i = 0; i < count; i++) {
