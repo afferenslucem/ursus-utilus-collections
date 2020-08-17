@@ -1,11 +1,11 @@
 {
   "name": "ursus-utilus-collections",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "Collections manipulation utils",
   "typings": "lib/index",
   "main": "lib/index.js",
   "scripts": {
-    "test": "ts-mocha -p tsconfig.json tests/**/*.spec.ts",
+    "test": "ts-mocha -p tsconfig.json src/**/*.spec.ts",
     "build": "tsc --p tsconfig.json",
     "pack": "npm run build && npm pack",
     "bench": "ts-node benchmark.ts --project tsconfig.json",
