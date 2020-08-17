@@ -1,5 +1,3 @@
-import { ReduceAggregator } from "./reduce-aggregator";
-import { CompareCondition, FilterCondition } from "../commands/delegates";
 import { ICollection } from "../interfaces/i-collection";
 import { Aggregator } from "./aggregator";
 

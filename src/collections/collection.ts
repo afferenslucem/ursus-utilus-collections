@@ -13,6 +13,7 @@ import { MaxAggregator } from "../aggregators/max-aggregator";
 import { ExistsAggregator } from "../aggregators/exists-aggregator";
 import { SumAggregator } from "../aggregators/sum-aggregator";
 import { CountAggregator } from "../aggregators/count-aggregator";
+import { Exception } from "../exceptions/exceptions";
 
 export class Collection<T> implements ICollection<T> {
     // @ts-ignore
@@ -135,7 +136,7 @@ export class Collection<T> implements ICollection<T> {
 }
 
 export class FilteringCollection<T> extends Collection<T> {
-    public constructor(iterable: Collection<T> | T[], private condition: FilterCondition<T>) {
+    public constructor(iterable: Collection<T>, private condition: FilterCondition<T>) {
         super(iterable);
     }
     
@@ -162,7 +163,7 @@ export class FilteringCollection<T> extends Collection<T> {
 }
 
 export class MappingCollection<T, V> extends Collection<T> {
-    public constructor(iterable: Collection<T> | T[], private condition: MapCondition<T, V>) {
+    public constructor(iterable: Collection<T>, private condition: MapCondition<T, V>) {
         // @ts-ignore
         super(iterable);
     }
@@ -190,17 +191,23 @@ export class MappingCollection<T, V> extends Collection<T> {
     }
 }
 
-class SkippingCollection<T> extends Collection<T> {
+export class SkippingCollection<T> extends Collection<T> {
     public constructor(iterable: Collection<T>, private shouldSkip: number) {
         super(iterable);
     }
 
     protected materialize(): T[] {
+        const array = this.inner.toArray();
+
+        if(array.length < this.shouldSkip) {
+            throw Exception.SoManySkipping;
+        }
+
         return this.inner.toArray().slice(this.shouldSkip);
     }
 }
 
-class TakingCollection<T> extends Collection<T> {
+export class TakingCollection<T> extends Collection<T> {
     public constructor(iterable: Collection<T>, private shouldTake: number) {
         super(iterable);
     }
