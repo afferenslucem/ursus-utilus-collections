@@ -87,13 +87,13 @@ describe('Index', function () {
         const first = collection.firstOrDefault(); // returns 1
         assert.equal(first, 1, 'Return wrong first value');
         
-        const firstByCondition = collection.firstOrDefault(item => item > 10); // returns 11
+        const firstByCondition = collection.firstOrDefault(null, item => item > 10); // returns 11
         assert.equal(firstByCondition, 11, 'Return wrong first filtered value');
         
-        const emptyFirst = collection.firstOrDefault(item => item > 12); // returns null
+        const emptyFirst = collection.firstOrDefault(null, item => item > 12); // returns null
         assert.equal(emptyFirst, null, 'Return wrong default value');
         
-        const defaultFirst = collection.firstOrDefault(item => item > 12, 0); // returns null
+        const defaultFirst = collection.firstOrDefault(0, item => item > 12); // returns null
         assert.equal(defaultFirst, 0, 'Return wrong overrided default value');
     });
 
@@ -117,13 +117,13 @@ describe('Index', function () {
         const last = collection.lastOrDefault(); // returns 12
         assert.equal(last, 12, 'Return wrong last value');
 
-        const lastByCondition = collection.lastOrDefault(item => item < 3); // returns 2
+        const lastByCondition = collection.lastOrDefault(null, item => item < 3); // returns 2
         assert.equal(lastByCondition, 2, 'Return wrong last filtered value');
 
-        const emptylast = collection.lastOrDefault(item => item < 1); // returns null
+        const emptylast = collection.lastOrDefault(null, item => item < 1); // returns null
         assert.equal(emptylast, null, 'Return wrong default');
 
-        const defaultlast = collection.lastOrDefault(item => item < 1, 0); // returns null
+        const defaultlast = collection.lastOrDefault(0, item => item < 1); // returns null
         assert.equal(defaultlast, 0, 'Return wrong overrided default');
     });
 
