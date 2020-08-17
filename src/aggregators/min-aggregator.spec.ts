@@ -12,6 +12,15 @@ describe('MinAggregator', function () {
         assert.deepEqual(result, expected);
     });
 
+    it('should find min at array by comparing', () => {
+        const collection = _([[1, 2], [1, 3], [3, 0]]);
+
+        const result = new MinAggregator(collection, (a, b) => a[1] - b[1]).aggregate();
+        const expected = [3, 0];
+
+        assert.deepEqual(result, expected);
+    });
+
     it('should find min at array after select', () => {
         const collection = _([8, 5, 4, 2, 9, 1, 4]).select(item => item ** 2);
 
@@ -48,6 +57,13 @@ describe('MinAggregator', function () {
         .min();
         
         const expected = -5;
+
+        assert.deepEqual(result, expected);
+    });
+
+    it('should find min at array by comparing in chaining', () => {
+        const result = _([[1, 2], [1, 3], [3, 0]]).min((a, b) => a[1] - b[1]);
+        const expected = [3, 0];
 
         assert.deepEqual(result, expected);
     });

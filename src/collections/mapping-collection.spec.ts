@@ -35,6 +35,13 @@ describe('MappingCollection', function () {
         assert.deepEqual(result, expected);
     });
 
+    it('should maps to other type from chaining', () => {
+        const result = _([8, 5, 4, 2, 9, 1, 4]).select(item => item ** 2).select(item => item.toString()).where(item => item.startsWith('1')).toArray();
+        const expected = ['16', '1', '16'];
+
+        assert.deepEqual(result, expected);
+    });
+
     it('should return double mapped from toArray()', () => {
         const result = _([8, 5, 4, 2, 9, 1, 4]).select(item => item + 1).select(item => item / 2).toArray();
         const expected = [4.5, 3, 2.5, 1.5, 5, 1, 2.5];

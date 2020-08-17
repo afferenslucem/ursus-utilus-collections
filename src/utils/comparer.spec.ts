@@ -1,4 +1,4 @@
-import { Comparer } from "../../src/utils/comparer";
+import { Comparer } from "./comparer";
 import { assert } from "chai";
 
 
