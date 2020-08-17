@@ -13,7 +13,7 @@ describe('SumAggregator', function () {
         assert.equal(result, expected)
     });
 
-    it('should return sum', () => {
+    it('aggregator should returns sum of range', () => {
         const collection = _.range(1, 9);
 
         const expected = 45;
@@ -23,7 +23,7 @@ describe('SumAggregator', function () {
         assert.equal(result, expected)
     });
     
-    it('should return sum', () => {
+    it('aggregator should returns sum of strings', () => {
         const collection = _(['a', 'b', 'c',]);
 
         const expected = 'abc';
@@ -33,7 +33,7 @@ describe('SumAggregator', function () {
         assert.equal(result, expected)
     });
     
-    it('should return sum', () => {
+    it('aggregator should returns sum of strings with condition', () => {
         const collection = _(['1', '2', '3',]);
 
         const expected = '6';
@@ -43,7 +43,7 @@ describe('SumAggregator', function () {
         assert.equal(result, expected)
     });
 
-    it('should return sum', () => {
+    it('should returns sum of range', () => {
         const collection = _.range(1, 9);
 
         const expected = 45;
@@ -53,7 +53,7 @@ describe('SumAggregator', function () {
         assert.equal(result, expected)
     });
     
-    it('should return sum', () => {
+    it('should returns sum of strings', () => {
         const collection = _(['a', 'b', 'c',]);
 
         const expected = 'abc';
@@ -63,7 +63,7 @@ describe('SumAggregator', function () {
         assert.equal(result, expected)
     });
     
-    it('should return sum', () => {
+    it('should returns sum of strings with condition', () => {
         const collection = _(['1', '2', '3',]);
 
         const expected = '6';
