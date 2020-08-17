@@ -353,4 +353,24 @@ describe('Index', function () {
 
         assert.deepEqual(result, expected)
     });
+    
+    it('should count', () => {
+        const collection = _([1, 2, 3, 4, 5, 6]);
+
+        const expected = 6;
+
+        const result = collection.count();
+
+        assert.deepEqual(result, expected)
+    });
+    
+    it('should count odd', () => {
+        const collection = _([1, 2, 3, 4, 5, 6]);
+
+        const expected = 3;
+
+        const result = collection.count(item => !!(item % 2));
+
+        assert.deepEqual(result, expected)
+    });
 });

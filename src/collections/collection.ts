@@ -12,6 +12,7 @@ import { MinAggregator } from "../aggregators/min-aggregator";
 import { MaxAggregator } from "../aggregators/max-aggregator";
 import { ExistsAggregator } from "../aggregators/exists-aggregator";
 import { SumAggregator } from "../aggregators/sum-aggregator";
+import { CountAggregator } from "../aggregators/count-aggregator";
 
 export class Collection<T> implements ICollection<T> {
     // @ts-ignore
@@ -103,6 +104,10 @@ export class Collection<T> implements ICollection<T> {
 
     public concat(items: T[] | ICollection<T>): ICollection<T> {
         return new ConcatCollection<T>(this, Array.isArray(items) ? new Collection(items) : items);
+    }
+
+    public count(predicate?: FilterCondition<T>): number {
+        return new CountAggregator(this, predicate).aggregate();
     }
 
     public toArray(): T[] {

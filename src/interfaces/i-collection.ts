@@ -119,6 +119,12 @@ export interface ICollection<T> extends IIterable<T> {
     concat(items: T[] | ICollection<T>): ICollection<T>;
 
     /**
+     * Returns counts of elements
+     * @param predicate Predicate for counting elements by condition
+     */
+    count(predicate?: FilterCondition<T>): number;
+
+    /**
      * Converting method to array
      * Triggers computation
      * Array is freezed
