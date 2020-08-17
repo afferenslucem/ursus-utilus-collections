@@ -48,7 +48,7 @@ export class Collection<T> implements ICollection<T> {
         return new FirstAggregator(this, predicate).aggregate();
     }
 
-    public firstOrDefault(predicate?: FilterCondition<T> | undefined, $default?: T | null | undefined): T | null {
+    public firstOrDefault($default?: T | null, predicate?: FilterCondition<T> | undefined): T | null {
         return new FirstOrDefaultAggregator(this, predicate, $default).aggregate();
     }
 
