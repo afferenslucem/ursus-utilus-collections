@@ -1,7 +1,7 @@
 import { ICollection } from "../interfaces/i-collection";
 import { FilterCondition } from "../commands/delegates";
 import { Exception } from "../exceptions/exceptions";
-import { LastAggregator } from "./last-aggregtor";
+import { LastAggregator } from "./last-aggregator";
 
 export class LastOrDefaultAggregator<T> extends LastAggregator<T> {
     public constructor(collection: ICollection<T>, predicate?: FilterCondition<T> | undefined, private $default?: T | null | undefined){

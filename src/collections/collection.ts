@@ -2,8 +2,8 @@ import { ICollection } from "../interfaces/i-collection";
 import { FilterCondition, MapCondition, CompareCondition, ReduceCondition } from "../commands/delegates";
 import { FirstAggregator } from "../aggregators/first-aggregator";
 import { FirstOrDefaultAggregator } from "../aggregators/first-or-default-aggregator";
-import { LastAggregator } from "../aggregators/last-aggregtor";
-import { LastOrDefaultAggregator } from "../aggregators/last-or-default-aggregtor";
+import { LastAggregator } from "../aggregators/last-aggregator";
+import { LastOrDefaultAggregator } from "../aggregators/last-or-default-aggregator";
 import { ISortingCollection } from "../interfaces/i-sorting-collection";
 import _ from '../index';
 import { SortSettings, Comparer } from "../utils/comparer";
@@ -56,7 +56,7 @@ export class Collection<T> implements ICollection<T> {
         return new LastAggregator(this, predicate).aggregate();
     }
 
-    public lastOrDefault(predicate?: FilterCondition<T> | undefined, $default?: T | null | undefined): T | null {
+    public lastOrDefault($default?: T | null, predicate?: FilterCondition<T>): T | null {
         return new LastOrDefaultAggregator(this, predicate, $default).aggregate();
     }
 

@@ -56,7 +56,7 @@ export interface ICollection<T> extends IIterable<T> {
      * @param predicate Predicate for searching element
      * @param $default Default value for returning if sequence hasn't tgot matches
      */
-    lastOrDefault(predicate?: FilterCondition<T>, $default?: T | null): T | null;
+    lastOrDefault($default?: T | null, predicate?: FilterCondition<T>): T | null;
 
     /**
      * Sorts items
