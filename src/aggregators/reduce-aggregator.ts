@@ -8,6 +8,13 @@ export class ReduceAggregator<T> extends Aggregator<T> {
     }
 
     public aggregate(): T {
-        return this.collection.toArray().reduce((first, second) => this.predicate(first, second))
+        const array = this.collection.toArray();
+        let result = array[0];
+
+        for(let i = 1, len = array.length; i < len; i++) {
+            result = this.predicate(result, array[i])
+        }
+
+        return result;
     }
 }

@@ -55,6 +55,7 @@ export function suite(name: string, count = 1000000, arr?: any[]): Benchmark.Sui
         onCycle: onCycle,
         onStart: function () {
             array = arr != null ? arr : getArray(count);
+            console.log('Привет максим')
             addSplit();
             console.log(`${name}:`)
         },
