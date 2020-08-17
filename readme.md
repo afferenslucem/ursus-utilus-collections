@@ -344,6 +344,24 @@ const result = collection.concat([3, 4]).concat(_([5, 6, 7])).concat([8, 9]).toA
 assert.deepEqual(result, expected)
 ```
 
+### Count
+
+```typescript
+const result = _([8, 5, 4, 2, 9, 1, 4]).count();
+const expected = 7;
+
+assert.deepEqual(result, expected);
+```
+
+##### By condition
+
+```typescript
+const result = _([8, 5, 4, 2, 9, 1, 4]).count(item => (item % 2) == 0);
+const expected = 4;
+
+assert.deepEqual(result, expected);
+```
+
 ### Range
 
 ```typescript
