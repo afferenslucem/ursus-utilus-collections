@@ -23,7 +23,7 @@ Project is created with:
 
 ###### Pay attention
 
-> ⚠️ Method toArray returns freezed array
+> ⚠️ Do not change returned array if u want to reuse owned collection
 
 ### Filtering
 

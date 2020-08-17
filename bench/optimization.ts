@@ -68,11 +68,39 @@ function addToIteratingSuite(suite: Benchmark.Suite) {
     })
 }
 
+function addToDiscoveringSuite(suite: Benchmark.Suite) {
+    suite
+    .add('Filter', function () {
+        return array.filter(item => !!(item % 2));
+    }, split)
+    .add('Lodash', function () {
+        return lodash(array).filter(item => !!(item % 2)).value();
+    }, split)
+    .add('For', function () {
+        const result = [];
+        const condition = (item: any)=> !!(item % 2);
+
+        for(let i = 0, len = array.length; i < len; i++) {
+            let item = array[i];
+            if(condition(item)) {
+                result.push(item);
+            }
+        }
+
+        return result;
+    })
+}
+
+/* Discovering */
+
+const discovering_1000000 = suite('Discovering', 1000000);
+addToDiscoveringSuite(discovering_1000000);
+discovering_1000000.run();
+
 /* Creation */
 
 const creation_1000000 = suite('Creation', 1000000);
-addToCreationSuite(creation_1000000);
-
+addToCreationSuite(discovering_1000000);
 creation_1000000.run();
 
 /* Returning */

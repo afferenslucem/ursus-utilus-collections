@@ -12,16 +12,15 @@ import { MinAggregator } from "../aggregators/min-aggregator";
 import { MaxAggregator } from "../aggregators/max-aggregator";
 import { ExistsAggregator } from "../aggregators/exists-aggregator";
 import { SumAggregator } from "../aggregators/sum-aggregator";
-import { iteratee } from "lodash";
 
 export class Collection<T> implements ICollection<T> {
     // @ts-ignore
     protected inner: Collection<T>;
-    private _computed: T[] | null = null;
+    private computed: T[] | null = null;
 
     public constructor(iterable: T[] | Collection<T>) {
         if(Array.isArray(iterable)) {
-            this._computed = iterable;
+            this.computed = iterable;
         } else {
             this.inner = iterable;
         }
@@ -107,7 +106,10 @@ export class Collection<T> implements ICollection<T> {
     }
 
     public toArray(): T[] {
-        return this.computed;
+        if (this.computed == null) {
+            this.computed = this.materialize();
+        }
+        return this.computed
     }
 
     public [Symbol.iterator](): IterableIterator<T> {
@@ -115,22 +117,11 @@ export class Collection<T> implements ICollection<T> {
     }
 
     public getIterator(): IterableIterator<T> {
-        return this.computed[Symbol.iterator]();
-    }
-
-    public get computed(): T[] {
-        if (this._computed == null) {
-            const result = this.materialize();
-
-            Object.freeze(result);
-
-            this._computed = result;
-        }
-        return this._computed
+        return this.toArray()[Symbol.iterator]();
     }
 
     public get materialized(): boolean {
-        return !!this._computed;
+        return !!this.computed;
     }
 
     protected materialize(): T[] {
@@ -152,7 +143,18 @@ export class FilteringCollection<T> extends Collection<T> {
     }
 
     protected materialize(): T[] {
-        return this.inner.toArray().filter(this.condition);
+        const array = this.inner.toArray();
+
+        const result = [];
+
+        for(let i = 0, len = array.length; i < len; i++) {
+            let item = array[i];
+            if(this.condition(item)) {
+                result.push(item);
+            }
+        }
+
+        return result;
     }
 }
 
@@ -173,7 +175,15 @@ export class MappingCollection<T, V> extends Collection<T> {
 
     // @ts-ignore
     protected materialize(): V[] {
-        return this.inner.toArray().map(this.condition);
+        const array = this.inner.toArray();
+
+        const result: V[] = [];
+
+        for(let i = 0, len = array.length; i < len; i++) {
+            result.push(this.condition(array[i]));
+        }
+
+        return result;
     }
 }
 
