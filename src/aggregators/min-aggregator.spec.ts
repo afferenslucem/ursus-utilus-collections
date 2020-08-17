@@ -67,4 +67,11 @@ describe('MinAggregator', function () {
 
         assert.deepEqual(result, expected);
     });
+
+    it('should find min at array by comparing in chaining', () => {
+        const result = _.range(1, 1000, 1).reverse().concat(_.range(1, 1000)).min();
+        const expected = 1;
+
+        assert.deepEqual(result, expected);
+    });
 });
