@@ -1,5 +1,6 @@
 src
-src/**/*.spec.ts
+lib/**/*.spec.ts
+lib/**/*.spec.*.js
 tests
 bench
 coverage
@@ -7,3 +8,4 @@ coverage
 tsconfig.json
 benchmark.ts
 ursus-utilus-*.tgz
+.github
