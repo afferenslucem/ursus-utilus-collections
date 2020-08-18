@@ -8,17 +8,8 @@ export function getArray(count: number) {
     const array = [];
 
     for(let i = 0; i < count; i++) {
-        array.push(i);
-    }
-
-    return array;
-}
-
-export function getArrayDesc(count: number) {
-    const array = [];
-
-    for(let i = count; i >= 0; i--) {
-        array.push(i);
+        const item = (Math.random() * Math.pow(count, 2)) % count + 1
+        array.push(item);
     }
 
     return array;

@@ -1,6 +1,6 @@
 import _ from '../src/index';
 import lodash from 'lodash';
-import { array, suite, getArrayDesc, split, addEmptyLines } from "./common/suite";
+import { array, suite, addEmptyLines, getArray } from "./common/suite";
 import Benchmark from 'benchmark';
 
 // @ts-ignore
@@ -58,11 +58,11 @@ function addToSuite(suite: Benchmark.Suite) {
     }, sortOpt)
 }
 
-export const sort_1000000 = suite('Sort for 1000000', 0, getArrayDesc(1000000));
+export const sort_1000000 = suite('Sort for 1000000', 1_000_000);
 addToSuite(sort_1000000);
 
-export const sort_1000 = suite('Sort for 1000', 0, getArrayDesc(1000));
+export const sort_1000 = suite('Sort for 1000', 1_000);
 addToSuite(sort_1000);
 
-export const sort_10 = suite('Sort for 10', 0, getArrayDesc(10));
+export const sort_10 = suite('Sort for 10', 10);
 addToSuite(sort_10);
