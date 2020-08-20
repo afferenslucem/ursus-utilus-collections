@@ -14,6 +14,7 @@ import { ExistsAggregator } from "../aggregators/exists-aggregator";
 import { SumAggregator } from "../aggregators/sum-aggregator";
 import { CountAggregator } from "../aggregators/count-aggregator";
 import { Exception } from "../exceptions/exceptions";
+import { SumByAggregator } from "../aggregators/sum-by-aggregator";
 
 export class Collection<T> implements ICollection<T> {
     // @ts-ignore
@@ -94,7 +95,12 @@ export class Collection<T> implements ICollection<T> {
     }
 
     public sum<V>(predicate?: ReduceCondition<T, V>): V {
-        return new SumAggregator(this, predicate).aggregate();
+        if(predicate) {
+            return new SumByAggregator(this, predicate).aggregate();
+        } else {
+            // @ts-ignore
+            return new SumAggregator(this).aggregate();
+        }
     }
 
     public reverse(): ICollection<T> {

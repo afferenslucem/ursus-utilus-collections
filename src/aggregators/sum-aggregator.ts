@@ -3,18 +3,20 @@ import { ReduceCondition } from "../commands/delegates";
 import { ICollection } from "../interfaces/i-collection";
 import { ReduceAggregator } from "./reduce-aggregator";
 
-function getDefaultFunc<T, V>(arg: T | undefined): ReduceCondition<T, V> {
-    switch(typeof arg) {
-        default: {
-            //@ts-ignore
-            return (a, b) => a + b
-        }
-    }
-}
+export class SumAggregator<T, V = T> extends Aggregator<T> {
+    public constructor(private collection: ICollection<T>){
+        super();
+    }    
 
-export class SumAggregator<T, V = T> extends ReduceAggregator<V> {
-    public constructor(collection: ICollection<T>, predicate?: ReduceCondition<T, V>){
-        // @ts-ignore
-        super(collection, predicate ? predicate : getDefaultFunc(undefined));
+    public aggregate(): T {
+        const array = this.collection.toArray();
+        let result = array[0];
+
+        for(let i = 1, len = array.length; i < len; i++) {
+            // @ts-ignore
+            result = result + array[i]
+        }
+
+        return result;
     }
 }
