@@ -21,10 +21,12 @@ export class Collection<T> implements ICollection<T> {
     private computed: T[] | null = null;
 
     public constructor(iterable: T[] | Collection<T>) {
-        if(Array.isArray(iterable)) {
+        if (iterable instanceof Collection) {
+            this.inner = iterable;
+        } else if (Array.isArray(iterable)) {
             this.computed = iterable;
         } else {
-            this.inner = iterable;
+            throw Exception.WrongCollectionException
         }
     }
 

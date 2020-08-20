@@ -1,5 +1,7 @@
 import _, { ICollection } from '.';
 import { assert } from 'chai';
+import { Collection } from './collections/collection';
+import { Exception } from './exceptions/exceptions';
 
 describe('Index', function () {  
     it('should wrap native array', () => {
@@ -47,5 +49,31 @@ describe('Index', function () {
         const expected = _([0, 2, 4, 6]);
 
         assert.deepEqual(collection, expected)
-    });        
+    });   
+         
+    it('should create collection by array', () => {
+        const items = [1, 2, 3];
+        const collection = _(items)
+    });
+
+    it('should throw error by creation from object', () => {
+        assert.throws(() => {
+            // @ts-ignore
+            const collection = _({});
+        }, Exception.WrongCollectionException)
+    });
+
+    it('should throw error by creation from string', () => {
+        assert.throws(() => {
+            // @ts-ignore
+            const collection = _('hello');
+        }, Exception.WrongCollectionException)
+    });
+
+    it('should throw error by creation from number', () => {
+        assert.throws(() => {
+            // @ts-ignore
+            const collection = _(1);
+        }, Exception.WrongCollectionException)
+    });
 });
