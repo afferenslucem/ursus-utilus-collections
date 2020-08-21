@@ -12,6 +12,15 @@ describe('MaxAggregator', function () {
         assert.deepEqual(result, expected);
     });
 
+    it('should find max at 150k array', () => {
+        const collection = _.range(1, 150_000);
+
+        const result = new MaxAggregator(collection).aggregate();
+        const expected = 150_000;
+
+        assert.deepEqual(result, expected);
+    });
+
     it('should find max at array by comparing', () => {
         const collection = _([[1, 3], [2, 0], [3, 0]]);
 

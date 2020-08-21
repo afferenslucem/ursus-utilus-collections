@@ -14,6 +14,15 @@ describe('MappingCollection', function () {
         assert.deepEqual(result, expected);
     });
 
+
+    it('should return mapped from toArray() for 150k array', () => {
+        const array = _.range(1, 150_000).toArray();
+        const result = new MappingCollection(new Collection(array), item => item + 1).toArray();
+        const expected = array.map(item => item + 1);
+
+        assert.deepEqual(result, expected);
+    });
+
     it('should return double mapped from toArray()', () => {
         const result = new MappingCollection(new Collection([8, 5, 4, 2, 9, 1, 4]), item => item + 1).select(item => item / 2).toArray();
         const expected = [4.5, 3, 2.5, 1.5, 5, 1, 2.5];
