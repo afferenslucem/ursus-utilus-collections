@@ -21,7 +21,7 @@ exp.random = function(count: number, max = Number.MAX_SAFE_INTEGER): ICollection
     const result = [];
 
     for(let i = 0; i <= count; i++) {
-        const item = (Math.random() * Number.MAX_SAFE_INTEGER) % max;
+        const item = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER) % max;
         result.push(item);
     }
 
