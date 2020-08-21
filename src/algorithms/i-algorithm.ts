@@ -1,3 +1,3 @@
 export interface IAlgorithm<T> {
-    run(...arg: any[]): any;
+    run(...arg: any[]): T;
 }
