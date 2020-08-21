@@ -14,6 +14,8 @@ import { ExistsAggregator } from "../aggregators/exists-aggregator";
 import { SumAggregator } from "../aggregators/sum-aggregator";
 import { CountAggregator } from "../aggregators/count-aggregator";
 import { Exception } from "../exceptions/exceptions";
+import { ReduceAggregator } from "../aggregators/reduce-aggregator";
+import { MATERIALIZE_TYPE_TRESHOLD } from "../MATERIALIZE_TYPE_TRESHOLD";
 
 export class Collection<T> implements ICollection<T> {
     // @ts-ignore
@@ -111,6 +113,11 @@ export class Collection<T> implements ICollection<T> {
         return new CountAggregator(this, predicate).aggregate();
     }
 
+    public aggregate<V>(predicate: ReduceCondition<T, V>, accumulator?: V): V {
+        // @ts-ignore
+        return new ReduceAggregator<V>(this, predicate).aggregate(accumulator);
+    }
+
     public toArray(): T[] {
         if (this.computed == null) {
             this.computed = this.materialize();
@@ -146,9 +153,17 @@ export class FilteringCollection<T> extends Collection<T> {
         return result;
     }
 
-    protected materialize(): T[] {
+    protected materialize(): T[] {        
         const array = this.inner.toArray();
 
+        if(array.length > MATERIALIZE_TYPE_TRESHOLD) {
+            return this.materializeByFor(array);
+        } else {
+            return this.materializeNative(array);
+        }
+    }
+
+    private materializeByFor(array: T[]): T[] {
         const result = [];
 
         for(let i = 0, len = array.length; i < len; i++) {
@@ -159,6 +174,10 @@ export class FilteringCollection<T> extends Collection<T> {
         }
 
         return result;
+    }
+
+    private materializeNative(array: T[]): T[] {
+        return array.filter(this.condition);
     }
 }
 
@@ -178,9 +197,17 @@ export class MappingCollection<T, V> extends Collection<T> {
     }
 
     // @ts-ignore
-    protected materialize(): V[] {
+    protected materialize(): V[] {        
         const array = this.inner.toArray();
 
+        if(array.length > MATERIALIZE_TYPE_TRESHOLD) {
+            return this.materializeByFor(array);
+        } else {
+            return this.materializeNative(array);
+        }
+    }
+
+    private materializeByFor(array: T[]): V[] {
         const result: V[] = [];
 
         for(let i = 0, len = array.length; i < len; i++) {
@@ -188,6 +215,10 @@ export class MappingCollection<T, V> extends Collection<T> {
         }
 
         return result;
+    }
+
+    private materializeNative(array: T[]): V[] {
+        return array.map(this.condition);
     }
 }
 

@@ -362,6 +362,37 @@ const expected = 4;
 assert.deepEqual(result, expected);
 ```
 
+### Aggregate
+
+Sum by aggregate
+
+```typescript
+const collection = _.range(1, 9);
+const expected = 45;
+const result = collection.sum();
+assert.equal(result, expected)
+```
+
+Aggregation collection to object
+
+```typescript
+const collection = _([
+    { name: 'first', value: 1 },
+    { name: 'second', value: 2 },
+    { name: 'third', value: 3 },
+]);
+const expected = {
+    'first': 1,
+    'second': 2,
+    'third': 3
+};
+const result = collection.aggregate((acc, item) => {
+    acc[item.name] = item.value
+    return acc;
+}, {});
+assert.deepEqual(result, expected)
+```
+
 ### Range
 
 ```typescript

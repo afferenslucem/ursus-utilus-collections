@@ -1,0 +1,1 @@
+export const MATERIALIZE_TYPE_TRESHOLD = 25000;

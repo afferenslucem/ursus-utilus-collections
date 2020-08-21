@@ -14,6 +14,14 @@ describe('FilteringCollection', function () {
         assert.deepEqual(result, expected);
     });
 
+    it('should return filtered from toArray() for 150k array', () => {
+        const array = _.range(1, 150_000).toArray();
+        const result = new FilteringCollection(new Collection(array), item => (item % 2) == 0).toArray();
+        const expected = array.filter(item => (item % 2) == 0);
+
+        assert.deepEqual(result, expected);
+    });
+
     it('should return double filtered from toArray()', () => {
         const result = new FilteringCollection(new Collection([8, 5, 4, 2, 9, 1, 4]), item => (item % 2) == 0).where(item => ((item + 1) % 5 == 0)).toArray();
         const expected = [4, 4];

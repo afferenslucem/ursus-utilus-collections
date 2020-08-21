@@ -11,6 +11,14 @@ describe('MinAggregator', function () {
 
         assert.deepEqual(result, expected);
     });
+    it('should find min at 150k array', () => {
+        const collection = _.range(1, 150_000);
+
+        const result = new MinAggregator(collection).aggregate();
+        const expected = 1;
+
+        assert.deepEqual(result, expected);
+    });
 
     it('should find min at array by comparing', () => {
         const collection = _([[1, 2], [1, 3], [3, 0]]);

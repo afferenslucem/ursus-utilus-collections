@@ -125,6 +125,12 @@ export interface ICollection<T> extends IIterable<T> {
     count(predicate?: FilterCondition<T>): number;
 
     /**
+     * Returns aggregated value
+     * @param predicate Predicate for aggregating
+     */
+    aggregate<V = T>(predicate: ReduceCondition<T, V>, accumulator?: V): V;
+
+    /**
      * Converting method to array
      * Triggers computation
      * Array is freezed
