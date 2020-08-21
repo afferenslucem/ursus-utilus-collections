@@ -339,17 +339,18 @@ export class DistinctCollection<T, K = T> extends Collection<T> {
     }
 
     protected materialize(): T[] {
+        const array = this.inner.toArray();
         if(!this.map){
-            return Array.from(new Set(this.inner.toArray()));
+            return Array.from(new Set(array));
+        } else if (array.length > MATERIALIZE_TYPE_TRESHOLD) {
+            return this.distinctByFor(array);
         } else {
-            return this.getDistinctBy();
+            return this.distinctByReduceNative(array);
         }
     }
 
-    protected getDistinctBy(): T[] {
+    private distinctByFor(array: T[]): T[] {
         const storage = new Map<K, T>();
-
-        const array = this.inner.toArray();
 
         for(let i = 0, len = array.length; i < len; i++) {
             // @ts-ignore
@@ -361,6 +362,20 @@ export class DistinctCollection<T, K = T> extends Collection<T> {
         }
 
         return Array.from(storage.values());
+    }
+
+    protected distinctByReduceNative(array: T[]): T[] {
+        const storage = new Map<K, T>();
+        return Array.from(array.reduce((store, item) => {
+            // @ts-ignore
+            const key = this.map(item);
+
+            if(store.has(key)) return store;
+
+            store.set(key, item);
+
+            return store
+        }, storage).values());
     }
 }
 

@@ -23,6 +23,22 @@ describe('DistinctCollection', function () {
         assert.deepEqual(result, expected)
     });
 
+    it('should return distinctBy for 150k array', () => {
+        const expected = [[1, 1], [3, 2]];
+
+        let pattern = [[1, 1], [3, 2]]
+
+        let array = [];
+
+        for(let i = 0; i < 75000; i++) {
+            array.push(...pattern);
+        }
+
+        const result = new DistinctCollection(new Collection(array), item => item[1]).toArray();
+
+        assert.deepEqual(result, expected)
+    });
+
     it('should return distinct in chaining', () => {
         const collection = _([1, 1, 2, 1, 3, 2, 3]);
 
