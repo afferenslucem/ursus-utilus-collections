@@ -16,6 +16,9 @@ import { CountAggregator } from "../aggregators/count-aggregator";
 import { Exception } from "../exceptions/exceptions";
 import { ReduceAggregator } from "../aggregators/reduce-aggregator";
 import { MATERIALIZE_TYPE_TRESHOLD } from "../MATERIALIZE_TYPE_TRESHOLD";
+import { AlgorithmSolver } from "../algorithms/algoritm-solver";
+import { DistinctByCustomAlgorithm } from "../algorithms/distinct/distinct-by.custom";
+import { DistinctByNativeAlgorithm } from "../algorithms/distinct/distinct-by.native";
 
 export class Collection<T> implements ICollection<T> {
     // @ts-ignore
@@ -342,40 +345,11 @@ export class DistinctCollection<T, K = T> extends Collection<T> {
         const array = this.inner.toArray();
         if(!this.map){
             return Array.from(new Set(array));
-        } else if (array.length > MATERIALIZE_TYPE_TRESHOLD) {
-            return this.distinctByFor(array);
         } else {
-            return this.distinctByReduceNative(array);
+            const algo = AlgorithmSolver.solve(new DistinctByCustomAlgorithm<T>(), new DistinctByNativeAlgorithm<T>(), array);
+
+            return algo.run(array, this.map);
         }
-    }
-
-    private distinctByFor(array: T[]): T[] {
-        const storage = new Map<K, T>();
-
-        for(let i = 0, len = array.length; i < len; i++) {
-            // @ts-ignore
-            const key = this.map(array[i]);
-
-            if(storage.has(key)) continue;
-
-            storage.set(key, array[i])
-        }
-
-        return Array.from(storage.values());
-    }
-
-    protected distinctByReduceNative(array: T[]): T[] {
-        const storage = new Map<K, T>();
-        return Array.from(array.reduce((store, item) => {
-            // @ts-ignore
-            const key = this.map(item);
-
-            if(store.has(key)) return store;
-
-            store.set(key, item);
-
-            return store
-        }, storage).values());
     }
 }
 
