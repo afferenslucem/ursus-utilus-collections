@@ -17,11 +17,13 @@ exp.range = function(from: number, to: number, step = 1): ICollection<number> {
     return new Collection(result);
 }
 
-exp.random = function(count: number, max = Number.MAX_SAFE_INTEGER): ICollection<number> {
+const RANDOM_MAX = 10e10;
+
+exp.random = function(count: number, max = RANDOM_MAX): ICollection<number> {
     const result = [];
 
     for(let i = 0; i <= count; i++) {
-        const item = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER) % max;
+        const item = Math.floor(Math.random() * RANDOM_MAX) % max;
         result.push(item);
     }
 
