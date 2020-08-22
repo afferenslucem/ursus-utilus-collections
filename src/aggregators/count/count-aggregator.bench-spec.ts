@@ -10,8 +10,8 @@ function bench(name: string, array: number[]): Suite {
     .add('ursus.count', () => {
         _(array).count(count);
     })
-    .add('lodash.some', () => {
-        lodash(array).countBy(count);
+    .add('lodash.countBy', () => {
+        lodash(array).countBy(count).value();
     })
 }
 

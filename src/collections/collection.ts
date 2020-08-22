@@ -9,7 +9,6 @@ import { MaxAggregator } from "../aggregators/max/max-aggregator";
 import { SumAggregator } from "../aggregators/sum/sum-aggregator";
 import { CountAggregator } from "../aggregators/count/count-aggregator";
 import { Exception } from "../exceptions/exceptions";
-import { AlgorithmSolver } from "../algorithms/algoritm-solver";
 import { DistinctByCustomAlgorithm } from "../algorithms/distinct/distinct-by.custom/distinct-by.algorithm.custom";
 import { DistinctByNativeAlgorithm } from "../algorithms/distinct/distinct-by.native/distinct-by.algorithm.native";
 import { DistinctAlgorithm } from "../algorithms/distinct/distinct/distinct.algorithm";
@@ -24,6 +23,7 @@ import { LastAggregator } from "../aggregators/last/last-aggregator";
 import { LastOrDefaultAggregator } from "../aggregators/last-or-default/last-or-default-aggregator";
 import { MinAggregator } from "../aggregators/min/min-aggregator";
 import { ReduceAggregator } from "../aggregators/reduce/reduce-aggregator";
+import { AlgorithmSolver } from "../algorithms/solvers/algoritm-solver";
 
 export class Collection<T> implements ICollection<T> {
     // @ts-ignore
@@ -170,7 +170,7 @@ export class FilteringCollection<T> extends Collection<T> {
     }
 
     protected chooseAlgorithm(array: T[]): IAlgorithm<T[]> {
-        return AlgorithmSolver.solve(new FilterCustomAlgorithm<T>(), new FilterNativeAlgorithm<T>(), array);
+        return new AlgorithmSolver().solve(new FilterCustomAlgorithm<T>(), new FilterNativeAlgorithm<T>(), array);
     }
 }
 
@@ -199,7 +199,7 @@ export class MappingCollection<T, V> extends Collection<T> {
     }
 
     protected chooseAlgorithm<V>(array: T[]): IAlgorithm<V[]> {
-        return AlgorithmSolver.solve(new MapCustomAlgorithm<T, V>(), new MapNativeAlgorithm<T, V>(), array);
+        return new AlgorithmSolver().solve(new MapCustomAlgorithm<T, V>(), new MapNativeAlgorithm<T, V>(), array);
     }
 }
 
@@ -331,9 +331,7 @@ export class DistinctCollection<T, K = T> extends Collection<T> {
         if(!this.map){
             return new DistinctAlgorithm<T>();
         } else {
-            const algo = AlgorithmSolver.solve(new DistinctByCustomAlgorithm<T>(), new DistinctByNativeAlgorithm<T>(), array);
-
-            return algo;
+            return new AlgorithmSolver().solve(new DistinctByCustomAlgorithm<T>(), new DistinctByNativeAlgorithm<T>(), array);
         }
     }
 }
