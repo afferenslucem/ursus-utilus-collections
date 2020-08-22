@@ -1,22 +1,30 @@
 import { ICollection } from "../interfaces/i-collection";
 import { FilterCondition, MapCondition, CompareCondition, ReduceCondition } from "../commands/delegates";
-import { FirstAggregator } from "../aggregators/first-aggregator";
-import { FirstOrDefaultAggregator } from "../aggregators/first-or-default-aggregator";
-import { LastAggregator } from "../aggregators/last-aggregator";
-import { LastOrDefaultAggregator } from "../aggregators/last-or-default-aggregator";
+import { FirstAggregator } from "../aggregators/first/first-aggregator";
 import { ISortingCollection } from "../interfaces/i-sorting-collection";
 import _ from '../index';
 import { SortSettings, Comparer } from "../utils/comparer";
 import { IGroupedData } from "../interfaces/i-grouped-data";
-import { MinAggregator } from "../aggregators/min-aggregator";
-import { MaxAggregator } from "../aggregators/max-aggregator";
-import { ExistsAggregator } from "../aggregators/exists-aggregator";
-import { SumAggregator } from "../aggregators/sum-aggregator";
-import { CountAggregator } from "../aggregators/count-aggregator";
+import { MaxAggregator } from "../aggregators/max/max-aggregator";
+import { SumAggregator } from "../aggregators/sum/sum-aggregator";
+import { CountAggregator } from "../aggregators/count/count-aggregator";
 import { Exception } from "../exceptions/exceptions";
+import { DistinctByCustomAlgorithm } from "../algorithms/distinct/distinct-by.custom/distinct-by.algorithm.custom";
+import { DistinctByNativeAlgorithm } from "../algorithms/distinct/distinct-by.native/distinct-by.algorithm.native";
+import { DistinctAlgorithm } from "../algorithms/distinct/distinct/distinct.algorithm";
+import { IAlgorithm } from "../algorithms/i-algorithm";
+import { FilterCustomAlgorithm } from "../algorithms/filter/filter.custom/filter.algorithm.custom";
+import { FilterNativeAlgorithm } from "../algorithms/filter/filter.native/filter.algorithm.native";
+import { MapCustomAlgorithm } from "../algorithms/map/map.custom/map.algorithm.custom";
+import { MapNativeAlgorithm } from "../algorithms/map/map.native/map.algorithm.native";
+import { ExistsAggregator } from "../aggregators/exists/exists-aggregator";
+import { FirstOrDefaultAggregator } from "../aggregators/first-or-default/first-or-default-aggregator";
+import { LastAggregator } from "../aggregators/last/last-aggregator";
+import { LastOrDefaultAggregator } from "../aggregators/last-or-default/last-or-default-aggregator";
+import { MinAggregator } from "../aggregators/min/min-aggregator";
+import { ReduceAggregator } from "../aggregators/reduce/reduce-aggregator";
+import { AlgorithmSolver } from "../algorithms/solvers/algoritm-solver";
 import { SumByAggregator } from "../aggregators/sum-by-aggregator";
-import { ReduceAggregator } from "../aggregators/reduce-aggregator";
-import { MATERIALIZE_TYPE_TRESHOLD } from "../MATERIALIZE_TYPE_TRESHOLD";
 
 export class Collection<T> implements ICollection<T> {
     // @ts-ignore
@@ -123,7 +131,7 @@ export class Collection<T> implements ICollection<T> {
 
     public aggregate<V>(predicate: ReduceCondition<T, V>, accumulator?: V): V {
         // @ts-ignore
-        return new ReduceAggregator<V>(this, predicate).aggregate(accumulator);
+        return new ReduceAggregator<T, V>(this, predicate, accumulator).aggregate();
     }
 
     public toArray(): T[] {
@@ -164,28 +172,13 @@ export class FilteringCollection<T> extends Collection<T> {
     protected materialize(): T[] {        
         const array = this.inner.toArray();
 
-        if(array.length > MATERIALIZE_TYPE_TRESHOLD) {
-            return this.materializeByFor(array);
-        } else {
-            return this.materializeNative(array);
-        }
+        const algo = this.chooseAlgorithm(array);
+
+        return algo.run(array, this.condition)
     }
 
-    private materializeByFor(array: T[]): T[] {
-        const result = [];
-
-        for(let i = 0, len = array.length; i < len; i++) {
-            let item = array[i];
-            if(this.condition(item)) {
-                result.push(item);
-            }
-        }
-
-        return result;
-    }
-
-    private materializeNative(array: T[]): T[] {
-        return array.filter(this.condition);
+    protected chooseAlgorithm(array: T[]): IAlgorithm<T[]> {
+        return new AlgorithmSolver().solve(new FilterCustomAlgorithm<T>(), new FilterNativeAlgorithm<T>(), array);
     }
 }
 
@@ -208,25 +201,13 @@ export class MappingCollection<T, V> extends Collection<T> {
     protected materialize(): V[] {        
         const array = this.inner.toArray();
 
-        if(array.length > MATERIALIZE_TYPE_TRESHOLD) {
-            return this.materializeByFor(array);
-        } else {
-            return this.materializeNative(array);
-        }
+        const algo = this.chooseAlgorithm<V>(array);
+
+        return algo.run(array, this.condition);
     }
 
-    private materializeByFor(array: T[]): V[] {
-        const result: V[] = [];
-
-        for(let i = 0, len = array.length; i < len; i++) {
-            result.push(this.condition(array[i]));
-        }
-
-        return result;
-    }
-
-    private materializeNative(array: T[]): V[] {
-        return array.map(this.condition);
+    protected chooseAlgorithm<V>(array: T[]): IAlgorithm<V[]> {
+        return new AlgorithmSolver().solve(new MapCustomAlgorithm<T, V>(), new MapNativeAlgorithm<T, V>(), array);
     }
 }
 
@@ -348,42 +329,18 @@ export class DistinctCollection<T, K = T> extends Collection<T> {
 
     protected materialize(): T[] {
         const array = this.inner.toArray();
+        
+        const algo = this.chooseAlgorithm(array);
+
+        return algo.run(array, this.map);
+    }
+
+    protected chooseAlgorithm(array: T[]): IAlgorithm<T[]> {
         if(!this.map){
-            return Array.from(new Set(array));
-        } else if (array.length > MATERIALIZE_TYPE_TRESHOLD) {
-            return this.distinctByFor(array);
+            return new DistinctAlgorithm<T>();
         } else {
-            return this.distinctByReduceNative(array);
+            return new AlgorithmSolver().solve(new DistinctByCustomAlgorithm<T>(), new DistinctByNativeAlgorithm<T>(), array);
         }
-    }
-
-    private distinctByFor(array: T[]): T[] {
-        const storage = new Map<K, T>();
-
-        for(let i = 0, len = array.length; i < len; i++) {
-            // @ts-ignore
-            const key = this.map(array[i]);
-
-            if(storage.has(key)) continue;
-
-            storage.set(key, array[i])
-        }
-
-        return Array.from(storage.values());
-    }
-
-    protected distinctByReduceNative(array: T[]): T[] {
-        const storage = new Map<K, T>();
-        return Array.from(array.reduce((store, item) => {
-            // @ts-ignore
-            const key = this.map(item);
-
-            if(store.has(key)) return store;
-
-            store.set(key, item);
-
-            return store
-        }, storage).values());
     }
 }
 

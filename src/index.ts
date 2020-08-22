@@ -17,6 +17,19 @@ exp.range = function(from: number, to: number, step = 1): ICollection<number> {
     return new Collection(result);
 }
 
+const RANDOM_MAX = 10e10;
+
+exp.random = function(count: number, max = RANDOM_MAX): ICollection<number> {
+    const result = [];
+
+    for(let i = 0; i <= count; i++) {
+        const item = Math.floor(Math.random() * RANDOM_MAX) % max;
+        result.push(item);
+    }
+
+    return new Collection(result);
+}
+
 /**
  * Creates ICollection instance
  * @param items Array for converting to collection
