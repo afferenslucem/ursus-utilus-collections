@@ -8,3 +8,4 @@ benchmark.ts
 ursus-utilus-*.tgz
 *.spec.ts
 *.bench-spec.ts
+output.txt
