@@ -4,56 +4,45 @@ Simple library with useful utils for data manipulation
 
 ## Menu
 
-* [Technologies](#technologies)
 * [Examples](#examples)
 * [Setup](#setup)
-
-## Technologies
-
-Project is created with:
-
-* benchmark 2.1.4
-* chai 4.2.0
-* mocha 8.1.0
-* ts-mocha 7.0.0
-* ts-node 8.10.2
-* typescript 3.9.7
+* [Technologies](#technologies)
 
 ## Examples
 
-###### Pay attention
+### Pay attention
 
 > ⚠️ Do not change returned array if u want to reuse owned collection
 
+### Importing
+
+```typescript
+import u from 'ursus-utilus-collections'
+```
+
 ### Filtering
 
-``````typescript
-import _ from 'ursus-utilus-collections';
-
+```typescript
 const expected = [2, 4];
-const result = _([1, 2, 3, 4]).where(item => !(item % 2)).toArray();
+const result = u([1, 2, 3, 4]).where(item => !(item % 2)).toArray();
 
 assert.deepEqual(expected, result);
-``````
+```
 
 ### Mapping
 
-``````typescript
-import _ from 'ursus-utilus-collections';
-
+```typescript
 const expected = ['2', '4', '6', '8'];
-const result = _([1, 2, 3, 4]).select(item => (item * 2).toString()).toArray();
+const result = u([1, 2, 3, 4]).select(item => (item * 2).toString()).toArray();
 
 assert.deepEqual(expected, result);
-``````
+```
 
 ### Skipping
 
 ```typescript
-import _ from 'ursus-utilus-collections'
-
 const expected = [4, 5, 6];
-const result = _([1, 2, 3, 4, 5, 6]).skip(3).toArray();
+const result = u([1, 2, 3, 4, 5, 6]).skip(3).toArray();
 
 assert.deepEqual(expected, result);
 ```
@@ -61,10 +50,8 @@ assert.deepEqual(expected, result);
 ### Taking
 
 ```typescript
-import _ from 'ursus-utilus-collections'
-
 const expected = [1, 2, 3];
-const result = _([1, 2, 3, 4, 5, 6]).take(3).toArray();
+const result = u([1, 2, 3, 4, 5, 6]).take(3).toArray();
 
 assert.deepEqual(expected, result);
 ```
@@ -72,8 +59,7 @@ assert.deepEqual(expected, result);
 ### Find first
 
 ```typescript
-import _ from 'ursus-utilus-collections'
-const collection = _([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+const collection = u([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
   
 const first = collection.first(); // returns 1
 assert.equal(first, 1, 'Return wrong first value');
@@ -89,9 +75,7 @@ assert.throws(() => {
 ### Find first or return default
 
 ```typescript
-import _ from 'ursus-utilus-collections';
-
-const collection = _([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+const collection = u([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
 
 const first = collection.firstOrDefault(); // returns 1
 assert.equal(first, 1, 'Return wrong first value');
@@ -109,9 +93,7 @@ assert.equal(defaultFirst, 0, 'Return wrong overrided default value');
 ### Find last
 
 ```typescript
-import _ from 'ursus-utilus-collections';
-
-const collection = _([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+const collection = u([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
 
 const last = collection.last(); // returns 12
 assert.equal(last, 12, 'Return wrong last value');
@@ -127,9 +109,7 @@ assert.throws(() => {
 ### Find first or return default
 
 ```typescript
-import _ from 'ursus-utilus-collections';
-
-const collection = _([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+const collection = u([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
 
 const last = collection.lastOrDefault(); // returns 12
 assert.equal(last, 12, 'Return wrong last value');
@@ -146,64 +126,64 @@ assert.equal(defaultlast, 0, 'Return wrong overrided default');
 
 ### Sorting
 
-###### Default sorting
+#### Default sorting
 
 ```typescript
-const collection = _([3, 2, 1]);
+const collection = u([3, 2, 1]);
 
 const sorted = collection.sort().toArray();
 
 assert.deepEqual(sorted, [1, 2, 3])
 ```
 
-###### Sorting desc
+#### Sorting desc
 
 ```typescript
-const collection = _([1, 2, 3]);
+const collection = u([1, 2, 3]);
 
 const sorted = collection.sort((first, second) => second - first).toArray();
 
 assert.deepEqual(sorted, [3, 2, 1])
 ```
 
-###### Sorting by field
+#### Sorting by field
 
 ```typescript
-const collection = _([[3, 4], [2, 4], [2, 3], [1, 2]]);
+const collection = u([[3, 4], [2, 11], [2, 3], [1, 2]]);
 
 const sorted = collection.sortBy(item => item[0]).toArray();
 
-assert.deepEqual(sorted, [[1, 2], [2, 4], [2, 3], [3, 4]])
+assert.deepEqual(sorted, [[1, 2], [2, 11], [2, 3], [3, 4]])
 ```
 
-###### Sorting by many fields
+#### Sorting by many fields
 
 ```typescript
-const collection = _([[3, 4], [2, 4], [2, 3], [1, 2]]);
+const collection = u([[3, 4], [2, 11], [2, 3], [1, 2]]);
 
 const sorted = collection.sortBy(item => item[0]).thenBy(item => item[1]).toArray();
 
-assert.deepEqual(sorted, [[1, 2], [2, 3], [2, 4], [3, 4]])
+assert.deepEqual(sorted, [[1, 2], [2, 3], [2, 11], [3, 4]])
 ```
 
 ### Grouping
 
-##### Simple grouping
+#### Simple grouping
 
 ```typescript
-const collection = _([[1, 2], [2, 3], [2, 4], [3, 4]]);
+const collection = u([[1, 2], [2, 3], [2, 4], [3, 4]]);
 
-const expected = _([{
+const expected = u([{
     key: 1,
-    group: _([[1, 2]])
+    group: u([[1, 2]])
 },
 {
     key: 2,
-    group: _([[2, 3], [2, 4]])
+    group: u([[2, 3], [2, 4]])
 },
 {
     key: 3,
-    group: _([[3, 4]])
+    group: u([[3, 4]])
 }]);
 
 const grouped = collection.groupBy(item => item[0]);
@@ -211,12 +191,12 @@ const grouped = collection.groupBy(item => item[0]);
 assert.deepEqual(grouped, expected)
 ```
 
-##### Grouping with group manipulations
+#### Grouping with group manipulations
 
 ```typescript
-const collection = _([[1, 2], [2, 3], [2, 4], [3, 4]]);
+const collection = u([[1, 2], [2, 3], [2, 4], [3, 4]]);
 
-const expected: ICollection<IGroupedData<number, number[]>> = _([{
+const expected: ICollection<IGroupedData<number, number[]>> = u([{
     key: 1,
     group: [1, 2]
 },
@@ -236,10 +216,10 @@ assert.deepEqual(grouped, expected);
 
 ### Min & Max
 
-##### Min
+#### Min
 
 ```typescript
-const collection = _([4, 3, 6, 9, 7, 1, 8]);
+const collection = u([4, 3, 6, 9, 7, 1, 8]);
 
 const expected = 1;
 
@@ -248,10 +228,10 @@ const result = collection.min();
 assert.deepEqual(result, expected)
 ```
 
-##### Max
+#### Max
 
 ```typescript
-const collection = _([4, 3, 6, 9, 7, 1, 8]);
+const collection = u([4, 3, 6, 9, 7, 1, 8]);
 
 const expected = 9;
 
@@ -263,7 +243,7 @@ assert.deepEqual(result, expected)
 ### Exists
 
 ```typescript
-const collection = _.range(1, 9);
+const collection = u.range(1, 9);
 
 const expected = true;
 
@@ -275,7 +255,7 @@ assert.equal(result, expected)
 ### Sum
 
 ```typescript
-const collection = _.range(1, 9);
+const collection = u.range(1, 9);
 
 const expected = 45;
 
@@ -284,10 +264,10 @@ const result = collection.sum();
 assert.equal(result, expected)
 ```
 
-##### Sum other types
+#### Sum other types
 
 ```
-const collection = _(['1', '2', '3',]);
+const collection = u(['1', '2', '3',]);
 
 const expected = '6';
 
@@ -299,7 +279,7 @@ assert.equal(result, expected)
 ### Reverse
 
 ```typescript
-const collection = _([1, 2, 3]);
+const collection = u([1, 2, 3]);
 
 const expected = [3, 2, 1];
 
@@ -311,7 +291,7 @@ assert.deepEqual(result, expected)
 ### Distinct
 
 ```typescript
-const collection = _([1, 1, 2, 1, 3, 2, 3]);
+const collection = u([1, 1, 2, 1, 3, 2, 3]);
 
 const expected = [1, 2, 3];
 
@@ -320,10 +300,10 @@ const result = collection.distinct().toArray();
 assert.deepEqual(result, expected)
 ```
 
-##### Distinct by
+#### Distinct by
 
 ```typescript
-const collection = _([[1, 1], [2, 1], [3, 2]]);
+const collection = u([[1, 1], [2, 1], [3, 2]]);
 
 const expected = [[1, 1], [3, 2]];
 
@@ -335,11 +315,11 @@ assert.deepEqual(result, expected)
 ### Concat
 
 ```typescript
-const collection = _([1, 2]);
+const collection = u([1, 2]);
 
 const expected = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-const result = collection.concat([3, 4]).concat(_([5, 6, 7])).concat([8, 9]).toArray();
+const result = collection.concat([3, 4]).concat(u([5, 6, 7])).concat([8, 9]).toArray();
 
 assert.deepEqual(result, expected)
 ```
@@ -347,16 +327,16 @@ assert.deepEqual(result, expected)
 ### Count
 
 ```typescript
-const result = _([8, 5, 4, 2, 9, 1, 4]).count();
+const result = u([8, 5, 4, 2, 9, 1, 4]).count();
 const expected = 7;
 
 assert.deepEqual(result, expected);
 ```
 
-##### By condition
+#### By condition
 
 ```typescript
-const result = _([8, 5, 4, 2, 9, 1, 4]).count(item => (item % 2) == 0);
+const result = u([8, 5, 4, 2, 9, 1, 4]).count(item => (item % 2) == 0);
 const expected = 4;
 
 assert.deepEqual(result, expected);
@@ -367,7 +347,7 @@ assert.deepEqual(result, expected);
 Sum by aggregate
 
 ```typescript
-const collection = _.range(1, 9);
+const collection = u.range(1, 9);
 const expected = 45;
 const result = collection.sum();
 assert.equal(result, expected)
@@ -376,7 +356,7 @@ assert.equal(result, expected)
 Aggregation collection to object
 
 ```typescript
-const collection = _([
+const collection = u([
     { name: 'first', value: 1 },
     { name: 'second', value: 2 },
     { name: 'third', value: 3 },
@@ -396,25 +376,36 @@ assert.deepEqual(result, expected)
 ### Range
 
 ```typescript
-const collection = _.range(0, 5);
+const collection = u.range(0, 5);
 
-const expected = _([0, 1, 2, 3, 4, 5]);
+const expected = u([0, 1, 2, 3, 4, 5]);
 
 assert.deepEqual(collection, expected)
 ```
 
-##### Generating with step
+#### Generating with step
 
 ```typescript
-const collection = _.range(0, 6, 2);
+const collection = u.range(0, 6, 2);
 
-const expected = _([0, 2, 4, 6]);
+const expected = u([0, 2, 4, 6]);
 
 assert.deepEqual(collection, expected)
 ```
 
 ## Setup
 
-``````bash
+```bash
 $npm install ursus-utilus-collections
-``````
+```
+
+## Technologies
+
+Project is created with:
+
+* benchmark 2.1.4
+* chai 4.2.0
+* mocha 8.1.0
+* ts-mocha 7.0.0
+* ts-node 8.10.2
+* typescript 3.9.7

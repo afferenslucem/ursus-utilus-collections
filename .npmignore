@@ -13,3 +13,4 @@ ursus-utilus-*.tgz
 .github
 *.spec.ts
 *.bench-spec.ts
+*.orig
