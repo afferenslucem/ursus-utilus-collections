@@ -164,7 +164,7 @@ export class FilteringCollection<T> extends Collection<T> {
     }
     
     public where(condition: FilterCondition<T>): ICollection<T> { 
-        const result = new FilteringCollection<T>(this.inner, item => condition(item) && this.condition(item));
+        const result = new FilteringCollection<T>(this.inner, item => this.condition(item) && condition(item));
 
         return result;
     }
