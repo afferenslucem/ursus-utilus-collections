@@ -1,6 +1,6 @@
 {
-  "name": "ursus-utilus-collections",
-  "version": "5.1.0",
+  "name": "declarray",
+  "version": "5.1.4",
   "description": "Collections manipulation utils",
   "typings": "lib/index",
   "main": "lib/index.js",
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/afferenslucem/ursus-utilus-collections.git"
+    "url": "git+https://github.com/afferenslucem/declarray.git"
   },
   "keywords": [
     "collections",
@@ -26,9 +26,9 @@
   "author": "afferenslucem",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/afferenslucem/ursus-utilus-collections/issues"
+    "url": "https://github.com/afferenslucem/declarray/issues"
   },
-  "homepage": "https://github.com/afferenslucem/ursus-utilus-collections#readme",
+  "homepage": "https://github.com/afferenslucem/declarray#readme",
   "devDependencies": {
     "@types/benchmark": "^1.0.33",
     "@types/chai": "^4.2.12",
