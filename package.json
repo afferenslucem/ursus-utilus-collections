@@ -1,6 +1,6 @@
 {
   "name": "declarray",
-  "version": "5.1.4",
+  "version": "5.1.5",
   "description": "Collections manipulation utils",
   "typings": "lib/index",
   "main": "lib/index.js",
