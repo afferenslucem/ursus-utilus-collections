@@ -24,6 +24,7 @@ import { LastOrDefaultAggregator } from "../aggregators/last-or-default/last-or-
 import { MinAggregator } from "../aggregators/min/min-aggregator";
 import { ReduceAggregator } from "../aggregators/reduce/reduce-aggregator";
 import { AlgorithmSolver } from "../algorithms/solvers/algoritm-solver";
+import { SumByAggregator } from "../aggregators/sum-by-aggregator";
 
 export class Collection<T> implements ICollection<T> {
     // @ts-ignore
@@ -31,10 +32,12 @@ export class Collection<T> implements ICollection<T> {
     private computed: T[] | null = null;
 
     public constructor(iterable: T[] | Collection<T>) {
-        if(Array.isArray(iterable)) {
+        if (iterable instanceof Collection) {
+            this.inner = iterable;
+        } else if (Array.isArray(iterable)) {
             this.computed = iterable;
         } else {
-            this.inner = iterable;
+            throw Exception.WrongCollectionException
         }
     }
 
@@ -102,7 +105,12 @@ export class Collection<T> implements ICollection<T> {
     }
 
     public sum<V>(predicate?: ReduceCondition<T, V>): V {
-        return new SumAggregator(this, predicate).aggregate();
+        if(predicate) {
+            return new SumByAggregator(this, predicate).aggregate();
+        } else {
+            // @ts-ignore
+            return new SumAggregator(this).aggregate();
+        }
     }
 
     public reverse(): ICollection<T> {
@@ -156,7 +164,7 @@ export class FilteringCollection<T> extends Collection<T> {
     }
     
     public where(condition: FilterCondition<T>): ICollection<T> { 
-        const result = new FilteringCollection<T>(this.inner, item => condition(item) && this.condition(item));
+        const result = new FilteringCollection<T>(this.inner, item => this.condition(item) && condition(item));
 
         return result;
     }

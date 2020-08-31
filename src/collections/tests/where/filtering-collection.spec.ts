@@ -38,6 +38,12 @@ describe('FilteringCollection', function () {
     });
 
     it('should return double filtered from chaining', () => {
+        const result = _([undefined, 0, 3, undefined, 4, 6, 9]).where(item => !!item).where(item => item.toString() > '5').toArray();
+        
+        assert.deepEqual(result, [6, 9])
+    });
+
+    it('should filter in correct order', () => {
         const result = _([8, 5, 4, 2, 9, 1, 4]).where(item => (item % 2) == 0).where(item => ((item + 1) % 5 == 0)).toArray();
         const expected = [4, 4];
 

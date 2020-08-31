@@ -32,16 +32,6 @@ describe('SumAggregator', function () {
 
         assert.equal(result, expected)
     });
-    
-    it('aggregator should returns sum of strings with condition', () => {
-        const collection = _(['1', '2', '3',]);
-
-        const expected = '6';
-
-        const result = new SumAggregator(collection, (a, b) => Number(a) + Number(b)).aggregate();
-
-        assert.equal(result, expected)
-    });
 
     it('should returns sum of range', () => {
         const collection = _.range(1, 9);
@@ -59,16 +49,6 @@ describe('SumAggregator', function () {
         const expected = 'abc';
 
         const result = collection.sum();
-
-        assert.equal(result, expected)
-    });
-    
-    it('should returns sum of strings with condition', () => {
-        const collection = _(['1', '2', '3',]);
-
-        const expected = '6';
-
-        const result = collection.sum((a, b) => Number(a) + Number(b));
 
         assert.equal(result, expected)
     });
