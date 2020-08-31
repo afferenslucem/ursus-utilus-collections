@@ -106,7 +106,7 @@ assert.throws(() => {
 }, 'No matches found');
 ```
 
-### Find first or return default
+### Find last or return default
 
 ```typescript
 const collection = _([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
@@ -141,7 +141,7 @@ assert.deepEqual(sorted, [1, 2, 3])
 ```typescript
 const collection = _([1, 2, 3]);
 
-const sorted = collection.sort((first, second) => second - first).toArray();
+const sorted = collection.sortDescending().toArray();
 
 assert.deepEqual(sorted, [3, 2, 1])
 ```
@@ -151,7 +151,17 @@ assert.deepEqual(sorted, [3, 2, 1])
 ```typescript
 const collection = _([[3, 4], [2, 11], [2, 3], [1, 2]]);
 
-const sorted = collection.sortBy(item => item[0]).toArray();
+const sorted = collection.orderBy(item => item[0]).toArray();
+
+assert.deepEqual(sorted, [[1, 2], [2, 11], [2, 3], [3, 4]])
+```
+
+#### Sorting by field desc
+
+```typescript
+const collection = _([[3, 4], [2, 11], [2, 3], [1, 2]]);
+
+const sorted = collection.orderByDescending(item => item[0]).toArray();
 
 assert.deepEqual(sorted, [[1, 2], [2, 11], [2, 3], [3, 4]])
 ```
@@ -161,7 +171,17 @@ assert.deepEqual(sorted, [[1, 2], [2, 11], [2, 3], [3, 4]])
 ```typescript
 const collection = _([[3, 4], [2, 11], [2, 3], [1, 2]]);
 
-const sorted = collection.sortBy(item => item[0]).thenBy(item => item[1]).toArray();
+const sorted = collection.orderBy(item => item[0]).thenBy(item => item[1]).toArray();
+
+assert.deepEqual(sorted, [[1, 2], [2, 3], [2, 11], [3, 4]])
+```
+
+#### Sorting by many fields desc
+
+```typescript
+const collection = _([[3, 4], [2, 11], [2, 3], [1, 2]]);
+
+const sorted = collection.orderByDescending(item => item[0]).thenByDescending(item => item[1]).toArray();
 
 assert.deepEqual(sorted, [[1, 2], [2, 3], [2, 11], [3, 4]])
 ```

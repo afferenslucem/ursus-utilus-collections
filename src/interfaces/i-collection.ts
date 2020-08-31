@@ -65,11 +65,32 @@ export interface ICollection<T> extends IIterable<T> {
     sort(condition?: CompareCondition<T> | undefined): ICollection<T>;
 
     /**
+     * Sorts items descendings
+     * @param condition Comparing function
+     */
+    sortDescending(condition?: CompareCondition<T> | undefined): ICollection<T>;
+
+    /**
+     * Sorts items
+     * @param map Property taking function
+     * @param condition Comparing function
+     * @deprecated Use orderBy instead
+     */
+    sortBy<E>(map: MapCondition<T, E>, condition?: CompareCondition<E> | undefined): ISortingCollection<T>;
+
+    /**
      * Sorts items
      * @param map Property taking function
      * @param condition Comparing function
      */
-    sortBy<E>(map: MapCondition<T, E>, condition?: CompareCondition<E> | undefined): ISortingCollection<T>;
+    orderBy<E>(map: MapCondition<T, E>, condition?: CompareCondition<E> | undefined): ISortingCollection<T>;
+
+    /**
+     * Sorts items descending
+     * @param map Property taking function
+     * @param condition Comparing function
+     */
+    orderByDescending<E>(map: MapCondition<T, E>, condition?: CompareCondition<E> | undefined): ISortingCollection<T>;
 
     /**
      * Groups items

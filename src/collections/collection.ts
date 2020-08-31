@@ -3,7 +3,7 @@ import { FilterCondition, MapCondition, CompareCondition, ReduceCondition } from
 import { FirstAggregator } from "../aggregators/first/first-aggregator";
 import { ISortingCollection } from "../interfaces/i-sorting-collection";
 import _ from '../index';
-import { SortSettings, Comparer } from "../utils/comparer";
+import { SortSettings, Comparer, SortDirection } from "../utils/comparer";
 import { IGroupedData } from "../interfaces/i-grouped-data";
 import { MaxAggregator } from "../aggregators/max/max-aggregator";
 import { SumAggregator } from "../aggregators/sum/sum-aggregator";
@@ -76,7 +76,15 @@ export class Collection<T> implements ICollection<T> {
 
     public sort(condition?: CompareCondition<T> | undefined): ICollection<T> {
         return new SortingCollection<T>(this, {
-            compare: condition
+            compare: condition,
+            direcion: SortDirection.Asc
+        })
+    }
+
+    public sortDescending(condition?: CompareCondition<T> | undefined): ICollection<T> {
+        return new SortingCollection<T>(this, {
+            compare: condition,
+            direcion: SortDirection.Desc
         })
     }
 
@@ -84,7 +92,26 @@ export class Collection<T> implements ICollection<T> {
         // @ts-ignore
         return new SortingCollection<T, E>(this, {
             mapping: map,
-            compare: condition
+            compare: condition,
+            direcion: SortDirection.Asc
+        })
+    }
+
+    orderBy<E>(map: MapCondition<T, E>, condition?: CompareCondition<E> | undefined): ISortingCollection<T> {
+        // @ts-ignore
+        return new SortingCollection<T, E>(this, {
+            mapping: map,
+            compare: condition,
+            direcion: SortDirection.Asc
+        })
+    }
+
+    orderByDescending<E>(map: MapCondition<T, E>, condition?: CompareCondition<E> | undefined): ISortingCollection<T> {
+        // @ts-ignore
+        return new SortingCollection<T, E>(this, {
+            mapping: map,
+            compare: condition,
+            direcion: SortDirection.Desc
         })
     }
     
@@ -242,16 +269,24 @@ export class SortingCollection<T, V = T> extends Collection<T> implements ISorti
     
     public constructor(iterable: Collection<T>, ...sortSettings: SortSettings<T, V>[]) {
         super(iterable);
-        this.sortSettings = _(sortSettings)
-        .where(item => !!item.compare || !!item.mapping)
-        .toArray();
+        this.sortSettings = sortSettings;
     }
 
     public thenBy<E>(map: MapCondition<T, E>, condition?: CompareCondition<E>): ISortingCollection<T> {
         // @ts-ignore
         return new SortingCollection<T, E>(this, ...this.sortSettings, {
             mapping: map,
-            compare: condition
+            compare: condition,
+            direcion: SortDirection.Asc
+        })
+    }
+
+    thenByDescending<E>(map: MapCondition<T, E>, condition?: CompareCondition<E> | undefined): ISortingCollection<T> {
+        // @ts-ignore
+        return new SortingCollection<T, E>(this, ...this.sortSettings, {
+            mapping: map,
+            compare: condition,
+            direcion: SortDirection.Desc
         })
     }
 

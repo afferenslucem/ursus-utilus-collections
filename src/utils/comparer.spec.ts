@@ -1,4 +1,4 @@
-import { Comparer } from "./comparer";
+import { Comparer, SortDirection } from "./comparer";
 import { assert } from "chai";
 
 
@@ -13,13 +13,15 @@ function defaultCompare(first, second): number {
 }
 
 describe('Comparer', function () {  
-    it('should compare', () => {
+    it('should compare asc', () => {
         const comparer = new Comparer([
             {
-                mapping: item => item[0]
+                mapping: item => item[0],
+                direcion: SortDirection.Asc
             },
             {
-                mapping: item => item[1]
+                mapping: item => item[1],
+                direcion: SortDirection.Asc
             }
         ], defaultCompare);
 
@@ -30,14 +32,35 @@ describe('Comparer', function () {
         assert.equal(-1, comparer.compare([1, 1], [1, 2]));
     });
 
-    it('should compare with override func', () => {
+    it('should compare desc', () => {
         const comparer = new Comparer([
             {
                 mapping: item => item[0],
-                compare: (first, second) => second - first
+                direcion: SortDirection.Desc
             },
             {
-                mapping: item => item[1]
+                mapping: item => item[1],
+                direcion: SortDirection.Desc
+            }
+        ], defaultCompare);
+
+        assert.equal(-1, comparer.compare([2, 1], [1, 1]));
+        assert.equal(-1, comparer.compare([1, 2], [1, 1]));
+        assert.equal(0, comparer.compare([1, 1], [1, 1]));
+        assert.equal(1, comparer.compare([1, 2], [2, 1]));
+        assert.equal(1, comparer.compare([1, 1], [1, 2]));
+    });
+
+    it('should compare asc with override func', () => {
+        const comparer = new Comparer([
+            {
+                mapping: item => item[0],
+                compare: (first, second) => second - first,
+                direcion: SortDirection.Asc
+            },
+            {
+                mapping: item => item[1],
+                direcion: SortDirection.Asc
             }
         ], defaultCompare);
 
@@ -46,5 +69,25 @@ describe('Comparer', function () {
         assert.equal(0, comparer.compare([1, 1], [1, 1]));
         assert.equal(1, comparer.compare([1, 2], [2, 1]));
         assert.equal(-1, comparer.compare([1, 1], [1, 2]));
+    });
+
+    it('should compare desc with override func', () => {
+        const comparer = new Comparer([
+            {
+                mapping: item => item[0],
+                compare: (first, second) => second - first,
+                direcion: SortDirection.Desc
+            },
+            {
+                mapping: item => item[1],
+                direcion: SortDirection.Desc
+            }
+        ], defaultCompare);
+
+        assert.equal(1, comparer.compare([2, 1], [1, 1]));
+        assert.equal(-1, comparer.compare([1, 2], [1, 1]));
+        assert.equal(0, comparer.compare([1, 1], [1, 1]));
+        assert.equal(-1, comparer.compare([1, 2], [2, 1]));
+        assert.equal(1, comparer.compare([1, 1], [1, 2]));
     });
 });
