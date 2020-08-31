@@ -1,7 +1,14 @@
 import { MapCondition, CompareCondition } from "../commands/delegates";
+
+export enum SortDirection {
+    Asc = 1,
+    Desc = -1
+}
+
 export interface SortSettings<T, E> {
     mapping?: MapCondition<T, E>;
     compare?: CompareCondition<E>;
+    direcion: SortDirection;
 }
 
 export class Comparer<T, E = T> {
@@ -16,7 +23,7 @@ export class Comparer<T, E = T> {
             const compare = sorting.compare ?? this.defaultCompare;
 
             // @ts-ignore
-            const result = compare(mappedFirst, mappedSecond);
+            const result = compare(mappedFirst, mappedSecond) * (sorting.direcion || SortDirection.Asc);
 
             if(result != 0) {
                 return result;

@@ -1,19 +1,20 @@
 {
-  "name": "ursus-utilus-collections",
-  "version": "5.1.0",
+  "name": "declarray",
+  "version": "5.3.1",
   "description": "Collections manipulation utils",
   "typings": "lib/index",
   "main": "lib/index.js",
+  "publishConfig": { "registry": "https://npm.pkg.github.com/" },
   "scripts": {
     "test": "ts-mocha -p tsconfig.spec.json \"src/**/*.spec.ts\"",
     "build": "tsc --p tsconfig.json",
     "pack": "npm run build && npm pack",
-    "bench": "ts-mocha -p tsconfig.spec.json \"src/**/*.bench-spec.ts\"",
+    "bench": "ts-mocha \"./src/**/*.bench-spec.ts\"",
     "bench:opt": "ts-node bench/optimization.ts --project tsconfig.json"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/afferenslucem/ursus-utilus-collections.git"
+    "url": "git+https://github.com/afferenslucem/declarray.git"
   },
   "keywords": [
     "collections",
@@ -26,9 +27,9 @@
   "author": "afferenslucem",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/afferenslucem/ursus-utilus-collections/issues"
+    "url": "https://github.com/afferenslucem/declarray/issues"
   },
-  "homepage": "https://github.com/afferenslucem/ursus-utilus-collections#readme",
+  "homepage": "https://github.com/afferenslucem/declarray#readme",
   "devDependencies": {
     "@types/benchmark": "^1.0.33",
     "@types/chai": "^4.2.12",

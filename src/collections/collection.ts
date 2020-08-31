@@ -1,9 +1,9 @@
 import { ICollection } from "../interfaces/i-collection";
-import { FilterCondition, MapCondition, CompareCondition, ReduceCondition } from "../commands/delegates";
+import { FilterCondition, MapCondition, CompareCondition, ReduceCondition, ServiceMapCondition } from "../commands/delegates";
 import { FirstAggregator } from "../aggregators/first/first-aggregator";
 import { ISortingCollection } from "../interfaces/i-sorting-collection";
 import _ from '../index';
-import { SortSettings, Comparer } from "../utils/comparer";
+import { SortSettings, Comparer, SortDirection } from "../utils/comparer";
 import { IGroupedData } from "../interfaces/i-grouped-data";
 import { MaxAggregator } from "../aggregators/max/max-aggregator";
 import { SumAggregator } from "../aggregators/sum/sum-aggregator";
@@ -25,13 +25,15 @@ import { MinAggregator } from "../aggregators/min/min-aggregator";
 import { ReduceAggregator } from "../aggregators/reduce/reduce-aggregator";
 import { AlgorithmSolver } from "../algorithms/solvers/algoritm-solver";
 import { SumByAggregator } from "../aggregators/sum-by-aggregator";
+import { ZipCustomAlgorithm } from "../algorithms/zip/zip.custom/zip.algorithm.custom";
+import { ZipNativeAlgorithm } from "../algorithms/zip/zip.native/zip.algorithm.native";
 
 export class Collection<T> implements ICollection<T> {
     // @ts-ignore
     protected inner: Collection<T>;
     private computed: T[] | null = null;
 
-    public constructor(iterable: T[] | Collection<T>) {
+    public constructor(iterable: T[] | ICollection<T>) {
         if (iterable instanceof Collection) {
             this.inner = iterable;
         } else if (Array.isArray(iterable)) {
@@ -45,7 +47,7 @@ export class Collection<T> implements ICollection<T> {
         return new FilteringCollection<T>(this, condition);
     }
 
-    public select<TOut>(condition: MapCondition<T, TOut>): ICollection<TOut> {                
+    public select<TOut>(condition: ServiceMapCondition<T, TOut>): ICollection<TOut> {                
         // @ts-ignore
         return new MappingCollection<T, TOut>(this, condition);
     }
@@ -76,7 +78,15 @@ export class Collection<T> implements ICollection<T> {
 
     public sort(condition?: CompareCondition<T> | undefined): ICollection<T> {
         return new SortingCollection<T>(this, {
-            compare: condition
+            compare: condition,
+            direcion: SortDirection.Asc
+        })
+    }
+
+    public sortDescending(condition?: CompareCondition<T> | undefined): ICollection<T> {
+        return new SortingCollection<T>(this, {
+            compare: condition,
+            direcion: SortDirection.Desc
         })
     }
 
@@ -84,7 +94,26 @@ export class Collection<T> implements ICollection<T> {
         // @ts-ignore
         return new SortingCollection<T, E>(this, {
             mapping: map,
-            compare: condition
+            compare: condition,
+            direcion: SortDirection.Asc
+        })
+    }
+
+    public orderBy<E>(map: MapCondition<T, E>, condition?: CompareCondition<E> | undefined): ISortingCollection<T> {
+        // @ts-ignore
+        return new SortingCollection<T, E>(this, {
+            mapping: map,
+            compare: condition,
+            direcion: SortDirection.Asc
+        })
+    }
+
+    public orderByDescending<E>(map: MapCondition<T, E>, condition?: CompareCondition<E> | undefined): ISortingCollection<T> {
+        // @ts-ignore
+        return new SortingCollection<T, E>(this, {
+            mapping: map,
+            compare: condition,
+            direcion: SortDirection.Desc
         })
     }
     
@@ -132,6 +161,10 @@ export class Collection<T> implements ICollection<T> {
     public aggregate<V>(predicate: ReduceCondition<T, V>, accumulator?: V): V {
         // @ts-ignore
         return new ReduceAggregator<T, V>(this, predicate, accumulator).aggregate();
+    }
+
+    public zip<V>(iterable: ICollection<V> | V[]): ICollection<[T, V]> {
+        return new ZipCollection<T, V>(this, new Collection<V>(iterable))
     }
 
     public toArray(): T[] {
@@ -242,16 +275,24 @@ export class SortingCollection<T, V = T> extends Collection<T> implements ISorti
     
     public constructor(iterable: Collection<T>, ...sortSettings: SortSettings<T, V>[]) {
         super(iterable);
-        this.sortSettings = _(sortSettings)
-        .where(item => !!item.compare || !!item.mapping)
-        .toArray();
+        this.sortSettings = sortSettings;
     }
 
     public thenBy<E>(map: MapCondition<T, E>, condition?: CompareCondition<E>): ISortingCollection<T> {
         // @ts-ignore
         return new SortingCollection<T, E>(this, ...this.sortSettings, {
             mapping: map,
-            compare: condition
+            compare: condition,
+            direcion: SortDirection.Asc
+        })
+    }
+
+    thenByDescending<E>(map: MapCondition<T, E>, condition?: CompareCondition<E> | undefined): ISortingCollection<T> {
+        // @ts-ignore
+        return new SortingCollection<T, E>(this, ...this.sortSettings, {
+            mapping: map,
+            compare: condition,
+            direcion: SortDirection.Desc
         })
     }
 
@@ -352,5 +393,26 @@ export class ConcatCollection<T> extends Collection<T> {
 
     protected materialize(): T[] {
         return this.inner.toArray().concat(this.additional.toArray());
+    }
+}
+
+export class ZipCollection<T, V> extends Collection<[T, V]> {    
+    public constructor(iterable: Collection<T>, private outer: Collection<V>) {
+        // @ts-ignore
+        super(iterable);
+    }
+
+    protected materialize(): Array<[T, V]> {
+        const array = this.inner.toArray();
+        const zipper = this.outer.toArray();
+
+        // @ts-ignore
+        const algo = this.chooseAlgorithm<V>(array);
+
+        return algo.run(array, zipper);
+    }
+
+    protected chooseAlgorithm<V>(array: T[]): IAlgorithm<[T, V][]> {
+        return new AlgorithmSolver().solve(new ZipCustomAlgorithm<T, V>(), new ZipNativeAlgorithm<T, V>(), array);
     }
 }

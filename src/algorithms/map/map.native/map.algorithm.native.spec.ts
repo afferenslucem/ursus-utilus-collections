@@ -1,5 +1,5 @@
 import { assert } from "chai";
-import { MapNativeAlgorithm } from "./map.algorithm.native";
+import {MapNativeAlgorithm} from './map.algorithm.native';
 
 describe('Map Algorithm Native', function () {  
     it('should return distinct', () => {

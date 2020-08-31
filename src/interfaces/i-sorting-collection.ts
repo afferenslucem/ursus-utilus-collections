@@ -9,4 +9,11 @@ export interface ISortingCollection<T> extends ICollection<T> {
      * @param condition Comparing function
      */
     thenBy<E>(map: MapCondition<T, E>, condition?: CompareCondition<E>): ISortingCollection<T>;
+    
+    /**
+     * Sorts items descending
+     * @param map Property taking function
+     * @param condition Comparing function
+     */
+    thenByDescending<E>(map: MapCondition<T, E>, condition?: CompareCondition<E>): ISortingCollection<T>;
 }

@@ -9,9 +9,11 @@ coverage
 .vscode
 tsconfig.json
 benchmark.ts
-ursus-utilus-*.tgz
+declarray-*.tgz
 .github
 *.spec.ts
 *.bench-spec.ts
 *.orig
 .npmrc
+output.txt
+*.orig
