@@ -152,6 +152,11 @@ export interface ICollection<T> extends IIterable<T> {
     aggregate<V = T>(predicate: ReduceCondition<T, V>, accumulator?: V): V;
 
     /**
+     * Returns zipped collections
+     */
+    zip<V>(iterable: ICollection<V> | V[]): ICollection<[T, V]>
+
+    /**
      * Converting method to array
      * Triggers computation
      * Array is freezed

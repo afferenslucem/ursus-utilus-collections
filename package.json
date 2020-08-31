@@ -1,6 +1,6 @@
 {
   "name": "declarray",
-  "version": "5.2.0",
+  "version": "5.3.0",
   "description": "Collections manipulation utils",
   "typings": "lib/index",
   "main": "lib/index.js",
@@ -8,7 +8,7 @@
     "test": "ts-mocha -p tsconfig.spec.json \"src/**/*.spec.ts\"",
     "build": "tsc --p tsconfig.json",
     "pack": "npm run build && npm pack",
-    "bench": "ts-mocha -p tsconfig.spec.json \"src/**/*.bench-spec.ts\"",
+    "bench": "ts-mocha \"./src/**/*.bench-spec.ts\"",
     "bench:opt": "ts-node bench/optimization.ts --project tsconfig.json"
   },
   "repository": {

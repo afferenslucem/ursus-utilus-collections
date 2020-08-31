@@ -393,6 +393,18 @@ const result = collection.aggregate((acc, item) => {
 assert.deepEqual(result, expected)
 ```
 
+### Zip
+
+```typescript
+const collection = _([1, 2, 3]);
+
+const expected = [[1, 3], [2, 2], [3, 1]];
+
+const result = collection.zip([3, 2, 1]).toArray();
+
+assert.deepEqual(result, expected)
+```
+
 ### Range
 
 ```typescript
