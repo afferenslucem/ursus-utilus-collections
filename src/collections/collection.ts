@@ -17,7 +17,7 @@ import { FilterCustomAlgorithm } from "../algorithms/filter/filter.custom/filter
 import { FilterNativeAlgorithm } from "../algorithms/filter/filter.native/filter.algorithm.native";
 import { MapCustomAlgorithm } from "../algorithms/map/map.custom/map.algorithm.custom";
 import { MapNativeAlgorithm } from "../algorithms/map/map.native/map.algorithm.native";
-import { ExistsAggregator } from "../aggregators/exists/exists-aggregator";
+import { AnyAggregator } from "../aggregators/any/any-aggregator";
 import { FirstOrDefaultAggregator } from "../aggregators/first-or-default/first-or-default-aggregator";
 import { LastAggregator } from "../aggregators/last/last-aggregator";
 import { LastOrDefaultAggregator } from "../aggregators/last-or-default/last-or-default-aggregator";
@@ -130,11 +130,11 @@ export class Collection<T> implements ICollection<T> {
     }
 
     public exists(predicate: FilterCondition<T>): boolean {
-        return new ExistsAggregator(this, predicate).aggregate();
+        return new AnyAggregator(this, predicate).aggregate();
     }
 
-    public contains(predicate: FilterCondition<T>): boolean {
-        return new ExistsAggregator(this, predicate).aggregate();
+    public any(predicate: FilterCondition<T>): boolean {
+        return new AnyAggregator(this, predicate).aggregate();
     }
 
     public sum<V>(map?: MapCondition<T, V>): V {

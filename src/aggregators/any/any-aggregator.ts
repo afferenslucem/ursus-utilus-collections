@@ -6,7 +6,7 @@ import { ExistsCustomAlgorithm } from "../../algorithms/exists/exists.custom/exi
 import { ExistsNativeAlgorithm } from "../../algorithms/exists/exists.native/exists.algorithm.native";
 import { AlgorithmSolver } from "../../algorithms/solvers/algoritm-solver";
 
-export class ExistsAggregator<T> extends Aggregator<boolean> {
+export class AnyAggregator<T> extends Aggregator<boolean> {
     public constructor(private collection: ICollection<T>, private condition: FilterCondition<T>) {
         super()
     }
