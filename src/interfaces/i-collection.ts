@@ -74,14 +74,6 @@ export interface ICollection<T> extends IIterable<T> {
      * Sorts items
      * @param map Property taking function
      * @param condition Comparing function
-     * @deprecated Use orderBy instead
-     */
-    sortBy<E>(map: MapCondition<T, E>, condition?: CompareCondition<E> | undefined): ISortingCollection<T>;
-
-    /**
-     * Sorts items
-     * @param map Property taking function
-     * @param condition Comparing function
      */
     orderBy<E>(map: MapCondition<T, E>, condition?: CompareCondition<E> | undefined): ISortingCollection<T>;
 

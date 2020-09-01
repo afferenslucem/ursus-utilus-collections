@@ -91,15 +91,6 @@ export class Collection<T> implements ICollection<T> {
         })
     }
 
-    public sortBy<E>(map: MapCondition<T, E>, condition?: CompareCondition<E> | undefined): ISortingCollection<T> {
-        // @ts-ignore
-        return new SortingCollection<T, E>(this, {
-            mapping: map,
-            compare: condition,
-            direcion: SortDirection.Asc
-        })
-    }
-
     public orderBy<E>(map: MapCondition<T, E>, condition?: CompareCondition<E> | undefined): ISortingCollection<T> {
         // @ts-ignore
         return new SortingCollection<T, E>(this, {

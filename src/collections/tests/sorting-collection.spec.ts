@@ -143,14 +143,6 @@ describe('SortingCollection', function () {
     it('should sort by field in chaining', () => {
         const collection = _([[3, 4], [2, 4], [2, 3], [1, 2]]);
 
-        const sorted = collection.sortBy(item => item[0]).toArray();
-
-        assert.deepEqual(sorted, [[1, 2], [2, 4], [2, 3], [3, 4]])
-    });
-    
-    it('should sort by field in chaining', () => {
-        const collection = _([[3, 4], [2, 4], [2, 3], [1, 2]]);
-
         const sorted = collection.orderBy(item => item[0]).toArray();
 
         assert.deepEqual(sorted, [[1, 2], [2, 4], [2, 3], [3, 4]])
@@ -167,14 +159,6 @@ describe('SortingCollection', function () {
     it('should sort cascade in chaining', () => {
         const collection = _([[3, 4], [2, 4], [2, 3], [1, 2]]);
 
-        const sorted = collection.sortBy(item => item[0]).thenBy(item => item[1]).toArray();
-
-        assert.deepEqual(sorted, [[1, 2], [2, 3], [2, 4], [3, 4]])
-    });
-
-    it('should sort cascade in chaining', () => {
-        const collection = _([[3, 4], [2, 4], [2, 3], [1, 2]]);
-
         const sorted = collection.orderBy(item => item[0]).thenBy(item => item[1]).toArray();
 
         assert.deepEqual(sorted, [[1, 2], [2, 3], [2, 4], [3, 4]])
@@ -184,15 +168,6 @@ describe('SortingCollection', function () {
         const collection = _([[2, 3], [1, 2], [3, 4], [2, 4], ]);
 
         const sorted = collection.orderByDescending(item => item[0]).thenByDescending(item => item[1]).toArray();
-
-        assert.deepEqual(sorted, [[3, 4], [2, 4], [2, 3], [1, 2]])
-    });
-
-    it('should sort cascade with condition in chaining', () => {
-        const collection = _([[1, 2], [2, 3], [2, 4], [3, 4]]);
-
-        const sorted = collection.sortBy(item => item[0], (first, second) => second - first)
-        .thenBy(item => item[1], (first, second) => second - first).toArray();
 
         assert.deepEqual(sorted, [[3, 4], [2, 4], [2, 3], [1, 2]])
     });
