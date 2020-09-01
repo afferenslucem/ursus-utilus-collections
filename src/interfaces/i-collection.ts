@@ -119,9 +119,9 @@ export interface ICollection<T> extends IIterable<T> {
 
     /**
      * Sums element of collection
-     * @param predicate Sum rule
+     * @param predicate Sum field taking predicate
      */
-    sum<V>(predicate?: ReduceCondition<T, V>): V;
+    sum<V>(map?: MapCondition<T, V>): V;
 
     /**
      * Returns reversed collection
