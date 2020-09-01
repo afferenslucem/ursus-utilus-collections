@@ -142,6 +142,10 @@ export class Collection<T> implements ICollection<T> {
         return new AllAggregator(this, predicate).aggregate();
     }
 
+    public contains(element: T): boolean {
+        return this.any(item => item === element);
+    }
+
     public sum<V>(map?: MapCondition<T, V>): V {
         if(map) {
             return new SumAggregator(this.select(map)).aggregate();

@@ -124,12 +124,16 @@ export interface ICollection<T> extends IIterable<T> {
      */
     any(predicate: FilterCondition<T>): boolean;
 
-
     /**
      * Check that all elements can pass condition
      * @param predicate Predicate for element check
      */
     all(predicate: FilterCondition<T>): boolean;
+    
+    /**
+     * Check element existing at collection
+     */
+    contains(element: T): boolean;
 
     /**
      * Sums element of collection

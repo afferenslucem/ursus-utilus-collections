@@ -76,4 +76,20 @@ describe('Index', function () {
             const collection = _(1);
         }, Exception.WrongCollectionException)
     });
+    
+    it('should return true for containing element', () => {
+        const expected = true;
+
+        const result = _([1, 2, 3]).contains(2);
+
+        assert.equal(expected, result);
+    });
+    
+    it('should return false for not containing element', () => {
+        const expected = false;
+
+        const result = _([1, 2, 3]).contains(4);
+
+        assert.equal(expected, result);
+    });
 });

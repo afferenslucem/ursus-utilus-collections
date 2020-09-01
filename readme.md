@@ -260,6 +260,30 @@ const result = collection.max();
 assert.deepEqual(result, expected)
 ```
 
+### Any
+
+```typescript
+const collection = u.range(1, 9);
+
+const expected = true;
+
+const result = collection.any(item => (item % 7) == 0);
+
+assert.equal(result, expected)
+```
+
+### All
+
+```typescript
+const collection = u.range(1, 9);
+
+const expected = false;
+
+const result = collection.all(item => (item % 7) == 0);
+
+assert.equal(result, expected)
+```
+
 ### Contains
 
 ```typescript
@@ -267,7 +291,7 @@ const collection = u.range(1, 9);
 
 const expected = true;
 
-const result = collection.contains(item => (item % 7) == 0);
+const result = collection.contains(7);
 
 assert.equal(result, expected)
 ```
@@ -441,3 +465,4 @@ Project is created with:
 * ts-mocha 7.0.0
 * ts-node 8.10.2
 * typescript 3.9.7
+
