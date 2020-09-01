@@ -28,6 +28,8 @@ import { SumByAggregator } from "../aggregators/sum-by-aggregator";
 import { ZipCustomAlgorithm } from "../algorithms/zip/zip.custom/zip.algorithm.custom";
 import { ZipNativeAlgorithm } from "../algorithms/zip/zip.native/zip.algorithm.native";
 import { AllAggregator } from "../aggregators/all/all-aggregator";
+import { ElementAtAggregator } from "../aggregators/element-at/element-at";
+import { ElementAtOrDefaultAggregator } from "../aggregators/element-at-or-default/element-at-or-default-aggregator";
 
 export class Collection<T> implements ICollection<T> {
     // @ts-ignore
@@ -62,19 +64,37 @@ export class Collection<T> implements ICollection<T> {
     }
 
     public first(predicate?: FilterCondition<T> | undefined): T {
-        return new FirstAggregator(this, predicate).aggregate();
+        if(predicate) {
+            return new ElementAtAggregator(this.where(predicate), 0).aggregate();
+        } else {
+            return new ElementAtAggregator(this, 0).aggregate();
+        }
     }
 
     public firstOrDefault($default?: T | null, predicate?: FilterCondition<T> | undefined): T | null {
-        return new FirstOrDefaultAggregator(this, predicate, $default).aggregate();
+        if(predicate) {
+            return new ElementAtOrDefaultAggregator(this.where(predicate), 0, $default).aggregate();
+        } else {
+            return new ElementAtOrDefaultAggregator(this, 0, $default).aggregate();
+        }
     }
 
     public last(predicate?: FilterCondition<T> | undefined): T {
-        return new LastAggregator(this, predicate).aggregate();
+        if(predicate) {
+            const collection = this.where(predicate);
+            return new ElementAtAggregator(collection, collection.count() - 1).aggregate();
+        } else {
+            return new ElementAtAggregator(this, this.count() - 1).aggregate();
+        }
     }
 
     public lastOrDefault($default?: T | null, predicate?: FilterCondition<T>): T | null {
-        return new LastOrDefaultAggregator(this, predicate, $default).aggregate();
+        if(predicate) {
+            const collection = this.where(predicate);
+            return new ElementAtOrDefaultAggregator(collection, collection.count() - 1, $default).aggregate();
+        } else {
+            return new ElementAtOrDefaultAggregator(this, this.count() - 1, $default).aggregate();
+        }
     }
 
     public sort(condition?: CompareCondition<T> | undefined): ICollection<T> {
@@ -169,6 +189,14 @@ export class Collection<T> implements ICollection<T> {
 
     public zip<V>(iterable: ICollection<V> | V[]): ICollection<[T, V]> {
         return new ZipCollection<T, V>(this, new Collection<V>(iterable))
+    }
+
+    public elementAt(position: number): T {
+        return new ElementAtAggregator(this, position).aggregate()
+    }
+
+    public elementAtOrDefault(position: number, $default?: T): T | null | undefined {
+        return new ElementAtOrDefaultAggregator(this, position, $default).aggregate()
     }
 
     public toArray(): T[] {

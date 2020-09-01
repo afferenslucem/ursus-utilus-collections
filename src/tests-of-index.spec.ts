@@ -92,4 +92,88 @@ describe('Index', function () {
 
         assert.equal(expected, result);
     });
+    
+    it('should throw error in chaining for empty collection', () => {        
+        assert.throws(() => {
+            _([1, 2, 3, 4, 5, 6, 7, 8]).select(item => item ** 2).where(item => item > 1000).first();
+        }, 'No matches found');
+    });
+    
+    it('should throw error in chaining for always falsy condition', () => {
+        assert.throws(() => {
+            _([1, 2, 3, 4, 5, 6, 7, 8]).where(item => item > 3).first(item => item > 1000);
+        }, 'No matches found');
+    });
+    
+    it('should return null in chaining for empty collection', () => {
+        const result = _([1, 2, 3, 4, 5, 6, 7, 8]).select(item => item ** 2).where(item => item > 1000).firstOrDefault();
+        const expected = null;
+        
+        assert.equal(result, expected)
+    });
+    
+    it('should return default in chaining for empty collection', () => {
+        const result = _([1, 2, 3, 4, 5, 6, 7, 8]).select(item => item ** 2).where(item => item > 1000).firstOrDefault(0);
+        const expected = 0;
+        
+        assert.equal(result, expected)
+    });
+    
+    it('should return null in chaining for always falsy condition', () => {
+        const result = _([1, 2, 3, 4, 5, 6, 7, 8]).where(item => item > 3).firstOrDefault(null, item => item > 1000);
+            
+        const expected = null;
+        
+        assert.equal(result, expected)
+    });
+    
+    it('should return 0 in chaining for always falsy condition', () => {
+        const result = _([1, 2, 3, 4, 5, 6, 7, 8]).where(item => item > 3).firstOrDefault(0, item => item > 1000);
+            
+        const expected = 0;
+        
+        assert.equal(result, expected)
+    });
+    
+    it('should throw error in chaining for empty collection', () => {        
+        assert.throws(() => {
+            _([1, 2, 3, 4, 5, 6, 7, 8]).select(item => item ** 2).where(item => item > 1000).last();
+        }, 'No matches found');
+    });
+    
+    it('should throw error in chaining for always falsy condition', () => {
+        assert.throws(() => {
+            _([1, 2, 3, 4, 5, 6, 7, 8]).where(item => item > 3).last(item => item > 1000);
+        }, 'No matches found');
+    });
+    
+    it('should return null in chaining for empty collection', () => {
+        const result = _([1, 2, 3, 4, 5, 6, 7, 8]).select(item => item ** 2).where(item => item > 1000).lastOrDefault();
+        const expected = null;
+        
+        assert.equal(result, expected)
+    });
+    
+    it('should return default in chaining for empty collection', () => {
+        const result = _([1, 2, 3, 4, 5, 6, 7, 8]).select(item => item ** 2).where(item => item > 1000).lastOrDefault(0);
+        const expected = 0;
+        
+        assert.equal(result, expected)
+    });
+    
+    it('should return null in chaining for always falsy condition', () => {
+        const result = _([1, 2, 3, 4, 5, 6, 7, 8]).where(item => item > 3).lastOrDefault(null, item => item > 1000);
+            
+        const expected = null;
+        
+        assert.equal(result, expected)
+    });
+    
+    it('should return 0 in chaining for always falsy condition', () => {
+        const result = _([1, 2, 3, 4, 5, 6, 7, 8]).where(item => item > 3).lastOrDefault(0, item => item > 1000);
+            
+        const expected = 0;
+        
+        assert.equal(result, expected)
+    });
 });

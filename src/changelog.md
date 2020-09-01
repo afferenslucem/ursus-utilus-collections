@@ -3,6 +3,8 @@
 * Contains
 * Any
 * All
+* ElementAt
+* ElementAtOrDefault
 
 # Deleted
 
@@ -14,4 +16,4 @@
 
 # Deprecated
 
-* Exists~~~~
+* Exists

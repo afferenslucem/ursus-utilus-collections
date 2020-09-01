@@ -165,6 +165,20 @@ export interface ICollection<T> extends IIterable<T> {
      * Returns zipped collections
      */
     zip<V>(iterable: ICollection<V> | V[]): ICollection<[T, V]>
+    
+    /**
+     * Returns element at position. If sequence hasn't got matching element throws exception
+     * @param position Position of element
+     * @throws 'No matches found'
+     */
+    elementAt(position: number): T;
+
+    /**
+     * Returns element at position. If sequence hasn't got matching element returns default
+     * @param position Position of element
+     * @param $default Default value for returning if sequence hasn't tgot matches
+     */
+    elementAtOrDefault(position: number, $default?: T): T | null | undefined;
 
     /**
      * Converting method to array
