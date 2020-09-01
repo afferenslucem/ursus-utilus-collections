@@ -4,7 +4,6 @@
   "description": "Collections manipulation utils",
   "typings": "lib/index",
   "main": "lib/index.js",
-  "publishConfig": { "registry": "https://npm.pkg.github.com/" },
   "scripts": {
     "test": "ts-mocha -p tsconfig.spec.json \"src/**/*.spec.ts\"",
     "build": "tsc --p tsconfig.json",
