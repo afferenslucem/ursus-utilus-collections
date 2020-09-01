@@ -5,6 +5,7 @@
 * All
 * ElementAt
 * ElementAtOrDefault
+* Average
 
 # Deleted
 

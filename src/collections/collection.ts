@@ -157,13 +157,22 @@ export class Collection<T> implements ICollection<T> {
         return this.any(item => item === element);
     }
 
-    public sum<V>(map?: MapCondition<T, V>): V {
+    public sum(map?: MapCondition<T, number>): number {
         if(map) {
             return new SumAggregator(this.select(map)).aggregate();
         } else {
             // @ts-ignore
             return new SumAggregator(this).aggregate();
         }
+    }
+
+    public average(map?: MapCondition<T, number>): number {
+        const sum = map ?
+            new SumAggregator(this.select(map)).aggregate() :
+            // @ts-ignore
+            new SumAggregator(this).aggregate();
+
+        return sum / this.count()
     }
 
     public reverse(): ICollection<T> {

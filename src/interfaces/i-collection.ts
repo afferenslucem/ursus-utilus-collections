@@ -131,7 +131,13 @@ export interface ICollection<T> extends IIterable<T> {
      * Sums element of collection
      * @param predicate Sum field taking predicate
      */
-    sum<V>(map?: MapCondition<T, V>): V;
+    sum(map?: MapCondition<T, number>): number;
+
+    /**
+     * Averages element of collection
+     * @param predicate Average field taking predicate
+     */
+    average(map?: MapCondition<T, number>): number;
 
     /**
      * Returns reversed collection

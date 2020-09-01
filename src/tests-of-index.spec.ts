@@ -176,4 +176,20 @@ describe('Index', function () {
         
         assert.equal(result, expected)
     });
+    
+    it('should return 2 like average', () => {
+        const result = _([1, 2, 3, 4, 5, 6, 7, 8, 9]).average();
+            
+        const expected = 5;
+        
+        assert.equal(result, expected)
+    });
+    
+    it('should return 2 like average', () => {
+        const result = _([[1], [2, 3], [4, 5, 6]]).average(item => item.length);
+            
+        const expected = 2;
+        
+        assert.equal(result, expected)
+    });
 });

@@ -315,10 +315,36 @@ const collection = _(['1', '2', '3',]);
 
 const expected = '6';
 
-const result = collection.sum((a, b) => Number(a) + Number(b));
+const result = collection.sum(item => Number(item));
 
 assert.equal(result, expected)
 ```
+
+### Average
+
+```typescript
+const collection = u.range(1, 9);
+
+const expected = 5;
+
+const result = collection.average();
+
+assert.equal(result, expected)
+```
+
+#### Average of other types
+
+```
+const collection = _(['1', '2', '3',]);
+
+const expected = 2;
+
+const result = collection.average(item => Number(item));
+
+assert.equal(result, expected)
+```
+
+
 
 ### Reverse
 
