@@ -27,6 +27,7 @@ import { AlgorithmSolver } from "../algorithms/solvers/algoritm-solver";
 import { SumByAggregator } from "../aggregators/sum-by-aggregator";
 import { ZipCustomAlgorithm } from "../algorithms/zip/zip.custom/zip.algorithm.custom";
 import { ZipNativeAlgorithm } from "../algorithms/zip/zip.native/zip.algorithm.native";
+import { AllAggregator } from "../aggregators/all/all-aggregator";
 
 export class Collection<T> implements ICollection<T> {
     // @ts-ignore
@@ -135,6 +136,10 @@ export class Collection<T> implements ICollection<T> {
 
     public any(predicate: FilterCondition<T>): boolean {
         return new AnyAggregator(this, predicate).aggregate();
+    }
+
+    public all(predicate: FilterCondition<T>): boolean {
+        return new AllAggregator(this, predicate).aggregate();
     }
 
     public sum<V>(map?: MapCondition<T, V>): V {

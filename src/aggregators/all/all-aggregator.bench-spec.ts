@@ -3,18 +3,18 @@ import _ from "../../index";
 import lodash from "lodash";
 import { Suite } from "benchmark";
 
-const exists = (item: number) => item > 100
+const exists = (item: number) => item > 0
 
 function bench(array: number[]): Suite {
     return getSuite('name')
-    .add('ursus.any', () => {
-        _(array).any(exists);
+    .add('ursus.all', () => {
+        _(array).all(exists);
     })
-    .add('lodash.some', () => {
-        lodash(array).some(exists);
+    .add('lodash.every', () => {
+        lodash(array).every(exists);
     })
-    .add('array.some', () => {
-        array.some(exists)
+    .add('array.every', () => {
+        array.every(exists)
     })
 }
 

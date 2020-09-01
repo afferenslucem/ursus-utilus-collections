@@ -1,5 +1,5 @@
 import { assert } from "chai";
-import {ExistsNativeAlgorithm} from './exists.algorithm.native'
+import {ExistsNativeAlgorithm} from './any.algorithm.native'
 
 describe('Exists Algorithm Native', function () {  
     it('should return false', () => {
