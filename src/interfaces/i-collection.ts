@@ -112,10 +112,17 @@ export interface ICollection<T> extends IIterable<T> {
     max(predicate?: CompareCondition<T> | undefined): T;
 
     /**
+     * @deprecated
      * Check element what can pass condition
      * @param predicate Predicate for element check
      */
     exists(predicate: FilterCondition<T>): boolean;
+
+    /**
+     * Check element what can pass condition
+     * @param predicate Predicate for element check
+     */
+    contains(predicate: FilterCondition<T>): boolean;
 
     /**
      * Sums element of collection

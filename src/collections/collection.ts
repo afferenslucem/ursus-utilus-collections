@@ -133,6 +133,10 @@ export class Collection<T> implements ICollection<T> {
         return new ExistsAggregator(this, predicate).aggregate();
     }
 
+    public contains(predicate: FilterCondition<T>): boolean {
+        return new ExistsAggregator(this, predicate).aggregate();
+    }
+
     public sum<V>(map?: MapCondition<T, V>): V {
         if(map) {
             return new SumAggregator(this.select(map)).aggregate();

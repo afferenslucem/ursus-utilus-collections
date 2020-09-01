@@ -62,4 +62,19 @@ describe('ExistsAggregator', function () {
 
         assert.deepEqual(result, expected);
     });
+
+    it('should return true for trusly contains condition', () => {
+        const result = _([8, 5, 4, 2, 9, 1, 4]).contains(item => item === 9);
+
+        const expected = true;
+
+        assert.deepEqual(result, expected);
+    });
+
+    it('should return false for falsy contains condition', () => {
+        const result = _([8, 5, 4, 2, 9, 1, 4]).contains(item => item === 10);
+        const expected = false;
+
+        assert.deepEqual(result, expected);
+    });
 });
