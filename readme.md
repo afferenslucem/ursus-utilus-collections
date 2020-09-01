@@ -289,9 +289,9 @@ assert.equal(result, expected)
 ```
 const collection = _(['1', '2', '3',]);
 
-const expected = '6';
+const expected = 6;
 
-const result = collection.sum((a, b) => Number(a) + Number(b));
+const result = collection.sum(item => Number(item));
 
 assert.equal(result, expected)
 ```
