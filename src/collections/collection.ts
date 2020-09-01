@@ -1,6 +1,5 @@
 import { ICollection } from "../interfaces/i-collection";
 import { FilterCondition, MapCondition, CompareCondition, ReduceCondition, ServiceMapCondition } from "../commands/delegates";
-import { FirstAggregator } from "../aggregators/first/first-aggregator";
 import { ISortingCollection } from "../interfaces/i-sorting-collection";
 import _ from '../index';
 import { SortSettings, Comparer, SortDirection } from "../utils/comparer";
@@ -18,13 +17,9 @@ import { FilterNativeAlgorithm } from "../algorithms/filter/filter.native/filter
 import { MapCustomAlgorithm } from "../algorithms/map/map.custom/map.algorithm.custom";
 import { MapNativeAlgorithm } from "../algorithms/map/map.native/map.algorithm.native";
 import { AnyAggregator } from "../aggregators/any/any-aggregator";
-import { FirstOrDefaultAggregator } from "../aggregators/first-or-default/first-or-default-aggregator";
-import { LastAggregator } from "../aggregators/last/last-aggregator";
-import { LastOrDefaultAggregator } from "../aggregators/last-or-default/last-or-default-aggregator";
 import { MinAggregator } from "../aggregators/min/min-aggregator";
 import { ReduceAggregator } from "../aggregators/reduce/reduce-aggregator";
 import { AlgorithmSolver } from "../algorithms/solvers/algoritm-solver";
-import { SumByAggregator } from "../aggregators/sum-by-aggregator";
 import { ZipCustomAlgorithm } from "../algorithms/zip/zip.custom/zip.algorithm.custom";
 import { ZipNativeAlgorithm } from "../algorithms/zip/zip.native/zip.algorithm.native";
 import { AllAggregator } from "../aggregators/all/all-aggregator";
