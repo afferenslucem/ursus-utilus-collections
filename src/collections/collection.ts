@@ -133,9 +133,9 @@ export class Collection<T> implements ICollection<T> {
         return new ExistsAggregator(this, predicate).aggregate();
     }
 
-    public sum<V>(predicate?: ReduceCondition<T, V>): V {
-        if(predicate) {
-            return new SumByAggregator(this, predicate).aggregate();
+    public sum<V>(map?: MapCondition<T, V>): V {
+        if(map) {
+            return new SumAggregator(this.select(map)).aggregate();
         } else {
             // @ts-ignore
             return new SumAggregator(this).aggregate();

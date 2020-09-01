@@ -20,7 +20,7 @@ describe('SumAggregator', function () {
 
         const expected = '6';
 
-        const result = collection.sum((a, b) => Number(a) + Number(b));
+        const result = collection.sum(item => Number(item)).toString();
 
         assert.equal(result, expected)
     });
