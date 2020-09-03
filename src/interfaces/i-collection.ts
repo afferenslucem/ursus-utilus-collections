@@ -31,8 +31,7 @@ export interface ICollection<T> extends IIterable<T> {
     /**
      * Returns first element in sequence or first matching element for secified predicate. If sequence hasn't got matching element throws exception
      * @param predicate Predicate for searching element
-     * 
-     * @throws 'No matches found'
+     * @throws 'No matches found' if doesn't contains no one element
      */
     first(predicate?: FilterCondition<T>): T;
 
@@ -46,8 +45,7 @@ export interface ICollection<T> extends IIterable<T> {
     /**
      * Returns last element in sequence or last matching element for secified predicate. If sequence hasn't got matching element throws exception
      * @param predicate Predicate for searching element
-     * 
-     * @throws 'No matches found'
+     * @throws 'No matches found' if collections doesn't contains no one elements
      */
     last(predicate?: FilterCondition<T>): T;
 
@@ -181,7 +179,7 @@ export interface ICollection<T> extends IIterable<T> {
     /**
      * Returns element at position. If sequence hasn't got matching element throws exception
      * @param position Position of element
-     * @throws 'No matches found'
+     * @throws 'No matches found' if doesn't contains element with this index
      */
     elementAt(position: number): T;
 
