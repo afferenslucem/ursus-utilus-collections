@@ -1,6 +1,6 @@
 import { Aggregator } from "../aggregator";
 import { ICollection } from "../..";
-import { ReduceCondition } from "../../commands/delegates";
+import { ReduceCondition, ReduceWithAccumulatorCondition } from "../../commands/delegates";
 import { ReduceCustomAlgorithm } from "../../algorithms/reduce/reduce.custom/reduce.algorithm.custom";
 import { ReduceNativeAlgorithm } from "../../algorithms/reduce/reduce.native/reduce.algorithm.native";
 import { ReduceWithAccumulatorCustomAlgorithm } from "../../algorithms/reduce/reduce-with-accumulator.custom/reduce-with-accumulator.algorithm.custom";
@@ -9,7 +9,7 @@ import { IAlgorithm } from "../../algorithms/i-algorithm";
 import { AlgorithmSolver } from "../../algorithms/solvers/algoritm-solver";
 
 export class ReduceAggregator<T, V = T> extends Aggregator<V> {
-    public constructor(private collection: ICollection<T>, protected predicate: ReduceCondition<T, V>, protected accumulator?: V){
+    public constructor(private collection: ICollection<T>, protected predicate: ReduceCondition<T> | ReduceWithAccumulatorCondition<T, V>, protected accumulator?: V){
         super();
     }
 

@@ -1,5 +1,5 @@
 import { ICollection } from "../interfaces/i-collection";
-import { FilterCondition, MapCondition, CompareCondition, ReduceCondition, ServiceMapCondition } from "../commands/delegates";
+import { FilterCondition, MapCondition, CompareCondition, ReduceCondition, ServiceMapCondition, ReduceWithAccumulatorCondition } from "../commands/delegates";
 import { ISortingCollection } from "../interfaces/i-sorting-collection";
 import _ from '../index';
 import { SortSettings, Comparer, SortDirection } from "../utils/comparer";
@@ -186,7 +186,9 @@ export class Collection<T> implements ICollection<T> {
         return new CountAggregator(this, predicate).aggregate();
     }
 
-    public aggregate<V>(predicate: ReduceCondition<T, V>, accumulator?: V): V {
+    public aggregate(predicate: ReduceCondition<T>, accumulator?: T): T;
+
+    public aggregate<V>(predicate: ReduceWithAccumulatorCondition<T, V>, accumulator: V): V {
         // @ts-ignore
         return new ReduceAggregator<T, V>(this, predicate, accumulator).aggregate();
     }

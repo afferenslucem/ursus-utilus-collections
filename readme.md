@@ -310,10 +310,10 @@ assert.equal(result, expected)
 
 #### Sum other types
 
-```
+```typescript
 const collection = _(['1', '2', '3',]);
 
-const expected = '6';
+const expected = 6;
 
 const result = collection.sum(item => Number(item));
 
@@ -334,7 +334,7 @@ assert.equal(result, expected)
 
 #### Average of other types
 
-```
+```typescript
 const collection = _(['1', '2', '3',]);
 
 const expected = 2;
@@ -343,8 +343,6 @@ const result = collection.average(item => Number(item));
 
 assert.equal(result, expected)
 ```
-
-
 
 ### Reverse
 
@@ -491,4 +489,3 @@ Project is created with:
 * ts-mocha 7.0.0
 * ts-node 8.10.2
 * typescript 3.9.7
-

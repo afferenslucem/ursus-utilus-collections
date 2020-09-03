@@ -6,4 +6,5 @@ export type ServiceMapCondition<T, E> = (item: T, index: number) => E;
 
 export type CompareCondition<T> = (first: T, second: T) => number;
 
-export type ReduceCondition<T, V = T> = (first: T | V, second: T) => V;
+export type ReduceCondition<T> = (first: T, second: T) => T;
+export type ReduceWithAccumulatorCondition<T, V> = (acc: V, second: T) => V;

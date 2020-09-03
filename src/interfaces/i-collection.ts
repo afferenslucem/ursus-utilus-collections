@@ -1,4 +1,4 @@
-import { FilterCondition, MapCondition, CompareCondition, ReduceCondition } from "../commands/delegates";
+import { FilterCondition, MapCondition, CompareCondition, ReduceCondition, ReduceWithAccumulatorCondition } from "../commands/delegates";
 import { IIterable } from "./i-iterable";
 import { ISortingCollection } from "./i-sorting-collection";
 import { IGroupedData } from "./i-grouped-data";
@@ -165,7 +165,13 @@ export interface ICollection<T> extends IIterable<T> {
      * Returns aggregated value
      * @param predicate Predicate for aggregating
      */
-    aggregate<V = T>(predicate: ReduceCondition<T, V>, accumulator?: V): V;
+    aggregate(predicate: ReduceCondition<T>, accumulator?: T): T;
+
+    /**
+     * Returns aggregated value
+     * @param predicate Predicate for aggregating
+     */
+    aggregate<V>(predicate: ReduceWithAccumulatorCondition<T, V>, accumulator: V): V;
 
     /**
      * Returns zipped collections

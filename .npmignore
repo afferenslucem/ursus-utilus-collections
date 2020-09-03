@@ -13,5 +13,8 @@ declarray-*.tgz
 .github
 *.spec.ts
 *.bench-spec.ts
+*.orig
+.npmrc
 output.txt
 *.orig
+*.md

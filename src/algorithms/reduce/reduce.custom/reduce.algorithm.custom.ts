@@ -1,8 +1,8 @@
-import { ReduceCondition } from "../../../commands/delegates";
+import { ReduceCondition, ReduceWithAccumulatorCondition } from "../../../commands/delegates";
 import { ReduceAlgorthm } from "../reduce.algorithm";
 
 export class ReduceCustomAlgorithm<T, V = T> extends ReduceAlgorthm<T, V> {
-    public run<V = T>(array: T[], predicate: ReduceCondition<T, V>): V {
+    public run<V = T>(array: T[], predicate: ReduceWithAccumulatorCondition<T, V>): V {
         // @ts-ignore
         let result: V = array[0];
 
