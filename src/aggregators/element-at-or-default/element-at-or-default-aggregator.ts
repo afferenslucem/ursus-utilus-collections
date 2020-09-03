@@ -1,11 +1,10 @@
-import { LastAggregator } from "../last/last-aggregator";
 import { ICollection } from "../..";
-import { FilterCondition } from "../../commands/delegates";
 import { Exception } from "../../exceptions/exceptions";
+import { ElementAtAggregator } from "../element-at/element-at";
 
-export class LastOrDefaultAggregator<T> extends LastAggregator<T> {
-    public constructor(collection: ICollection<T>, predicate?: FilterCondition<T> | undefined, private $default?: T | null | undefined){
-        super(collection, predicate);
+export class ElementAtOrDefaultAggregator<T> extends ElementAtAggregator<T> {
+    public constructor(collection: ICollection<T>, position: number, private $default?: T | null | undefined){
+        super(collection, position);
     }
 
     // @ts-ignore

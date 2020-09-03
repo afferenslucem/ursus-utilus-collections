@@ -74,14 +74,6 @@ export interface ICollection<T> extends IIterable<T> {
      * Sorts items
      * @param map Property taking function
      * @param condition Comparing function
-     * @deprecated Use orderBy instead
-     */
-    sortBy<E>(map: MapCondition<T, E>, condition?: CompareCondition<E> | undefined): ISortingCollection<T>;
-
-    /**
-     * Sorts items
-     * @param map Property taking function
-     * @param condition Comparing function
      */
     orderBy<E>(map: MapCondition<T, E>, condition?: CompareCondition<E> | undefined): ISortingCollection<T>;
 
@@ -112,16 +104,40 @@ export interface ICollection<T> extends IIterable<T> {
     max(predicate?: CompareCondition<T> | undefined): T;
 
     /**
+     * @deprecated use any instead
      * Check element what can pass condition
      * @param predicate Predicate for element check
      */
     exists(predicate: FilterCondition<T>): boolean;
 
     /**
+     * Check element what can pass condition
+     * @param predicate Predicate for element check
+     */
+    any(predicate: FilterCondition<T>): boolean;
+
+    /**
+     * Check that all elements can pass condition
+     * @param predicate Predicate for element check
+     */
+    all(predicate: FilterCondition<T>): boolean;
+    
+    /**
+     * Check element existing at collection
+     */
+    contains(element: T): boolean;
+
+    /**
      * Sums element of collection
      * @param predicate Sum field taking predicate
      */
-    sum<V>(map?: MapCondition<T, V>): V;
+    sum(map?: MapCondition<T, number>): number;
+
+    /**
+     * Averages element of collection
+     * @param predicate Average field taking predicate
+     */
+    average(map?: MapCondition<T, number>): number;
 
     /**
      * Returns reversed collection
@@ -155,6 +171,20 @@ export interface ICollection<T> extends IIterable<T> {
      * Returns zipped collections
      */
     zip<V>(iterable: ICollection<V> | V[]): ICollection<[T, V]>
+    
+    /**
+     * Returns element at position. If sequence hasn't got matching element throws exception
+     * @param position Position of element
+     * @throws 'No matches found'
+     */
+    elementAt(position: number): T;
+
+    /**
+     * Returns element at position. If sequence hasn't got matching element returns default
+     * @param position Position of element
+     * @param $default Default value for returning if sequence hasn't tgot matches
+     */
+    elementAtOrDefault(position: number, $default?: T): T | null | undefined;
 
     /**
      * Converting method to array

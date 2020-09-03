@@ -14,10 +14,32 @@ describe('Collection', function () {
         const collection = new Collection(items)
     });
 
-    it('should create collection by array', () => {
+    it('should create collection by collection', () => {
         const items = [1, 2, 3];
         const collection = new Collection(items);
         const collectionByOtherCollection = new Collection(collection);
+    });
+    
+    it('should return true for containing element', () => {
+        const items = [1, 2, 3];
+        const collection = new Collection(items)
+
+        const expected = true;
+
+        const result = collection.contains(2);
+
+        assert.equal(expected, result);
+    });
+    
+    it('should return false for not containing element', () => {
+        const items = [1, 2, 3];
+        const collection = new Collection(items)
+
+        const expected = false;
+
+        const result = collection.contains(4);
+
+        assert.equal(expected, result);
     });
 
     it('should throw error by creation from object', () => {

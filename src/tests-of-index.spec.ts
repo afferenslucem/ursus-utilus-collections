@@ -76,4 +76,120 @@ describe('Index', function () {
             const collection = _(1);
         }, Exception.WrongCollectionException)
     });
+    
+    it('should return true for containing element', () => {
+        const expected = true;
+
+        const result = _([1, 2, 3]).contains(2);
+
+        assert.equal(expected, result);
+    });
+    
+    it('should return false for not containing element', () => {
+        const expected = false;
+
+        const result = _([1, 2, 3]).contains(4);
+
+        assert.equal(expected, result);
+    });
+    
+    it('should throw error in chaining for empty collection', () => {        
+        assert.throws(() => {
+            _([1, 2, 3, 4, 5, 6, 7, 8]).select(item => item ** 2).where(item => item > 1000).first();
+        }, 'No matches found');
+    });
+    
+    it('should throw error in chaining for always falsy condition', () => {
+        assert.throws(() => {
+            _([1, 2, 3, 4, 5, 6, 7, 8]).where(item => item > 3).first(item => item > 1000);
+        }, 'No matches found');
+    });
+    
+    it('should return null in chaining for empty collection', () => {
+        const result = _([1, 2, 3, 4, 5, 6, 7, 8]).select(item => item ** 2).where(item => item > 1000).firstOrDefault();
+        const expected = null;
+        
+        assert.equal(result, expected)
+    });
+    
+    it('should return default in chaining for empty collection', () => {
+        const result = _([1, 2, 3, 4, 5, 6, 7, 8]).select(item => item ** 2).where(item => item > 1000).firstOrDefault(0);
+        const expected = 0;
+        
+        assert.equal(result, expected)
+    });
+    
+    it('should return null in chaining for always falsy condition', () => {
+        const result = _([1, 2, 3, 4, 5, 6, 7, 8]).where(item => item > 3).firstOrDefault(null, item => item > 1000);
+            
+        const expected = null;
+        
+        assert.equal(result, expected)
+    });
+    
+    it('should return 0 in chaining for always falsy condition', () => {
+        const result = _([1, 2, 3, 4, 5, 6, 7, 8]).where(item => item > 3).firstOrDefault(0, item => item > 1000);
+            
+        const expected = 0;
+        
+        assert.equal(result, expected)
+    });
+    
+    it('should throw error in chaining for empty collection', () => {        
+        assert.throws(() => {
+            _([1, 2, 3, 4, 5, 6, 7, 8]).select(item => item ** 2).where(item => item > 1000).last();
+        }, 'No matches found');
+    });
+    
+    it('should throw error in chaining for always falsy condition', () => {
+        assert.throws(() => {
+            _([1, 2, 3, 4, 5, 6, 7, 8]).where(item => item > 3).last(item => item > 1000);
+        }, 'No matches found');
+    });
+    
+    it('should return null in chaining for empty collection', () => {
+        const result = _([1, 2, 3, 4, 5, 6, 7, 8]).select(item => item ** 2).where(item => item > 1000).lastOrDefault();
+        const expected = null;
+        
+        assert.equal(result, expected)
+    });
+    
+    it('should return default in chaining for empty collection', () => {
+        const result = _([1, 2, 3, 4, 5, 6, 7, 8]).select(item => item ** 2).where(item => item > 1000).lastOrDefault(0);
+        const expected = 0;
+        
+        assert.equal(result, expected)
+    });
+    
+    it('should return null in chaining for always falsy condition', () => {
+        const result = _([1, 2, 3, 4, 5, 6, 7, 8]).where(item => item > 3).lastOrDefault(null, item => item > 1000);
+            
+        const expected = null;
+        
+        assert.equal(result, expected)
+    });
+    
+    it('should return 0 in chaining for always falsy condition', () => {
+        const result = _([1, 2, 3, 4, 5, 6, 7, 8]).where(item => item > 3).lastOrDefault(0, item => item > 1000);
+            
+        const expected = 0;
+        
+        assert.equal(result, expected)
+    });
+    
+    it('should return 2 like average', () => {
+        const result = _([1, 2, 3, 4, 5, 6, 7, 8, 9]).average();
+            
+        const expected = 5;
+        
+        assert.equal(result, expected)
+    });
+    
+    it('should return 2 like average', () => {
+        const result = _([[1], [2, 3], [4, 5, 6]]).average(item => item.length);
+            
+        const expected = 2;
+        
+        assert.equal(result, expected)
+    });
 });

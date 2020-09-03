@@ -1,12 +1,9 @@
 import { FilterCondition } from "../../commands/delegates";
 import { ICollection } from "../../interfaces/i-collection";
 import { Aggregator } from "../aggregator";
-import { IAlgorithm } from "../../algorithms/i-algorithm";
-import { ExistsCustomAlgorithm } from "../../algorithms/exists/exists.custom/exists.algorithm.custom";
-import { ExistsNativeAlgorithm } from "../../algorithms/exists/exists.native/exists.algorithm.native";
-import { AlgorithmSolver } from "../../algorithms/solvers/algoritm-solver";
+import { AllCustomAlgorithm } from "../../algorithms/all/all.custom/all.algorithm.custom";
 
-export class ExistsAggregator<T> extends Aggregator<boolean> {
+export class AllAggregator<T> extends Aggregator<boolean> {
     public constructor(private collection: ICollection<T>, private condition: FilterCondition<T>) {
         super()
     }
@@ -14,7 +11,7 @@ export class ExistsAggregator<T> extends Aggregator<boolean> {
     public aggregate(): boolean {
         const array = this.collection.toArray();
 
-        const algo = new ExistsCustomAlgorithm<T>();
+        const algo = new AllCustomAlgorithm<T>();
 
         return algo.run(array, this.condition);
     }

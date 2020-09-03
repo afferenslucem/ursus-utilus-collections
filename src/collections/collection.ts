@@ -1,6 +1,5 @@
 import { ICollection } from "../interfaces/i-collection";
 import { FilterCondition, MapCondition, CompareCondition, ReduceCondition, ServiceMapCondition } from "../commands/delegates";
-import { FirstAggregator } from "../aggregators/first/first-aggregator";
 import { ISortingCollection } from "../interfaces/i-sorting-collection";
 import _ from '../index';
 import { SortSettings, Comparer, SortDirection } from "../utils/comparer";
@@ -17,16 +16,15 @@ import { FilterCustomAlgorithm } from "../algorithms/filter/filter.custom/filter
 import { FilterNativeAlgorithm } from "../algorithms/filter/filter.native/filter.algorithm.native";
 import { MapCustomAlgorithm } from "../algorithms/map/map.custom/map.algorithm.custom";
 import { MapNativeAlgorithm } from "../algorithms/map/map.native/map.algorithm.native";
-import { ExistsAggregator } from "../aggregators/exists/exists-aggregator";
-import { FirstOrDefaultAggregator } from "../aggregators/first-or-default/first-or-default-aggregator";
-import { LastAggregator } from "../aggregators/last/last-aggregator";
-import { LastOrDefaultAggregator } from "../aggregators/last-or-default/last-or-default-aggregator";
+import { AnyAggregator } from "../aggregators/any/any-aggregator";
 import { MinAggregator } from "../aggregators/min/min-aggregator";
 import { ReduceAggregator } from "../aggregators/reduce/reduce-aggregator";
 import { AlgorithmSolver } from "../algorithms/solvers/algoritm-solver";
-import { SumByAggregator } from "../aggregators/sum-by-aggregator";
 import { ZipCustomAlgorithm } from "../algorithms/zip/zip.custom/zip.algorithm.custom";
 import { ZipNativeAlgorithm } from "../algorithms/zip/zip.native/zip.algorithm.native";
+import { AllAggregator } from "../aggregators/all/all-aggregator";
+import { ElementAtAggregator } from "../aggregators/element-at/element-at";
+import { ElementAtOrDefaultAggregator } from "../aggregators/element-at-or-default/element-at-or-default-aggregator";
 
 export class Collection<T> implements ICollection<T> {
     // @ts-ignore
@@ -61,19 +59,37 @@ export class Collection<T> implements ICollection<T> {
     }
 
     public first(predicate?: FilterCondition<T> | undefined): T {
-        return new FirstAggregator(this, predicate).aggregate();
+        if(predicate) {
+            return new ElementAtAggregator(this.where(predicate), 0).aggregate();
+        } else {
+            return new ElementAtAggregator(this, 0).aggregate();
+        }
     }
 
     public firstOrDefault($default?: T | null, predicate?: FilterCondition<T> | undefined): T | null {
-        return new FirstOrDefaultAggregator(this, predicate, $default).aggregate();
+        if(predicate) {
+            return new ElementAtOrDefaultAggregator(this.where(predicate), 0, $default).aggregate();
+        } else {
+            return new ElementAtOrDefaultAggregator(this, 0, $default).aggregate();
+        }
     }
 
     public last(predicate?: FilterCondition<T> | undefined): T {
-        return new LastAggregator(this, predicate).aggregate();
+        if(predicate) {
+            const collection = this.where(predicate);
+            return new ElementAtAggregator(collection, collection.count() - 1).aggregate();
+        } else {
+            return new ElementAtAggregator(this, this.count() - 1).aggregate();
+        }
     }
 
     public lastOrDefault($default?: T | null, predicate?: FilterCondition<T>): T | null {
-        return new LastOrDefaultAggregator(this, predicate, $default).aggregate();
+        if(predicate) {
+            const collection = this.where(predicate);
+            return new ElementAtOrDefaultAggregator(collection, collection.count() - 1, $default).aggregate();
+        } else {
+            return new ElementAtOrDefaultAggregator(this, this.count() - 1, $default).aggregate();
+        }
     }
 
     public sort(condition?: CompareCondition<T> | undefined): ICollection<T> {
@@ -87,15 +103,6 @@ export class Collection<T> implements ICollection<T> {
         return new SortingCollection<T>(this, {
             compare: condition,
             direcion: SortDirection.Desc
-        })
-    }
-
-    public sortBy<E>(map: MapCondition<T, E>, condition?: CompareCondition<E> | undefined): ISortingCollection<T> {
-        // @ts-ignore
-        return new SortingCollection<T, E>(this, {
-            mapping: map,
-            compare: condition,
-            direcion: SortDirection.Asc
         })
     }
 
@@ -130,16 +137,37 @@ export class Collection<T> implements ICollection<T> {
     }
 
     public exists(predicate: FilterCondition<T>): boolean {
-        return new ExistsAggregator(this, predicate).aggregate();
+        return new AnyAggregator(this, predicate).aggregate();
     }
 
-    public sum<V>(map?: MapCondition<T, V>): V {
+    public any(predicate: FilterCondition<T>): boolean {
+        return new AnyAggregator(this, predicate).aggregate();
+    }
+
+    public all(predicate: FilterCondition<T>): boolean {
+        return new AllAggregator(this, predicate).aggregate();
+    }
+
+    public contains(element: T): boolean {
+        return this.any(item => item === element);
+    }
+
+    public sum(map?: MapCondition<T, number>): number {
         if(map) {
             return new SumAggregator(this.select(map)).aggregate();
         } else {
             // @ts-ignore
             return new SumAggregator(this).aggregate();
         }
+    }
+
+    public average(map?: MapCondition<T, number>): number {
+        const sum = map ?
+            new SumAggregator(this.select(map)).aggregate() :
+            // @ts-ignore
+            new SumAggregator(this).aggregate();
+
+        return sum / this.count()
     }
 
     public reverse(): ICollection<T> {
@@ -165,6 +193,14 @@ export class Collection<T> implements ICollection<T> {
 
     public zip<V>(iterable: ICollection<V> | V[]): ICollection<[T, V]> {
         return new ZipCollection<T, V>(this, new Collection<V>(iterable))
+    }
+
+    public elementAt(position: number): T {
+        return new ElementAtAggregator(this, position).aggregate()
+    }
+
+    public elementAtOrDefault(position: number, $default?: T): T | null | undefined {
+        return new ElementAtOrDefaultAggregator(this, position, $default).aggregate()
     }
 
     public toArray(): T[] {

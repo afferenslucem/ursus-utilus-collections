@@ -7,8 +7,8 @@ const exists = (item: number) => item > 100
 
 function bench(array: number[]): Suite {
     return getSuite('name')
-    .add('ursus.exists', () => {
-        _(array).exists(exists);
+    .add('ursus.any', () => {
+        _(array).any(exists);
     })
     .add('lodash.some', () => {
         lodash(array).some(exists);
@@ -18,6 +18,6 @@ function bench(array: number[]): Suite {
     })
 }
 
-describe('Exists Algorithm', function () {  
+describe('Any Algorithm', function () {  
     b_chain(bench)
 })
