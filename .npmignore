@@ -18,3 +18,4 @@ declarray-*.tgz
 output.txt
 *.orig
 *.md
+docs/
