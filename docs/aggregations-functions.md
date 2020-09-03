@@ -3,10 +3,12 @@
 * [first](#first)
 * [last](#last)
 * [elementAt](#elementAt)
+* [min](#min)
+* [max](#max)
 
 ## first
 
-Method signature: `first(predicate?: (item: T) => boolean): T`
+Method signature: `first(predicate?: (item: T) => boolean): T`.
 
 Returns first element at collection.
 
@@ -28,7 +30,7 @@ console.log(firstByCondition); // 7
 
 ### firstOrDefault
 
-Method signature: `firstOrDefault($default?: T | null, predicate?: (item: T) => boolean): T | null`
+Method signature: `firstOrDefault($default?: T | null, predicate?: (item: T) => boolean): T | null`.
 
 Works like `first`, but doesn't throw exception, it returns null like default result.
 
@@ -56,7 +58,7 @@ console.log(firstWithDefault); // 0
 
 ## last
 
-Method signature: `last(predicate?: (item: T) => boolean): T`
+Method signature: `last(predicate?: (item: T) => boolean): T`.
 
 Returns last element at collection.
 
@@ -78,7 +80,7 @@ console.log(lastByCondition); // 2
 
 ### lastOrDefault
 
-Method signature: `lastOrDefault($default?: T | null, predicate?: (item: T) => boolean): T | null`
+Method signature: `lastOrDefault($default?: T | null, predicate?: (item: T) => boolean): T | null`.
 
 Works like `last`, but doesn't throw exception, it returns null like default result.
 
@@ -106,7 +108,7 @@ console.log(lastWithDefault); // 0
 
 ## elementAt
 
-Method signature: `elementAt(position: number): T;`
+Method signature: `elementAt(position: number): T`.
 
 Returns element at specified index at collection.
 
@@ -120,7 +122,7 @@ console.log(el); // 4
 
 ### elementAtOrDefault
 
-Method signature: `elementAtOrDefault(position: number, $default?: T): T | null;`
+Method signature: `elementAtOrDefault(position: number, $default?: T): T | null`.
 
 Works like `elementAt`, but doesn't throw exception, it returns null like default result.
 
@@ -140,7 +142,69 @@ console.log(el); // 0
 
 ## min
 
+Method signature: `min(predicate?: (first: T, second: T) => number | undefined): T`.
+
+Returns minimum value in collection.
+
+```typescript
+const el = _([1, 3, 1, 4, 2, 4, 1]).min()
+
+console.log(el); // 1
+```
+
+You can use this method for non numeric objects, but you should specify compare function:
+
+```typescript
+const cats = [{
+    name: 'Tom',
+    age: 1
+},
+{
+    name: 'Bonny',
+    age: 3
+},
+{
+    name: 'Feya',
+    age: 2
+}]
+
+const el = _(cats).min((a, b) => a.age - b.age) // Find cat with minimum age
+
+console.log(el); // { name: 'Tom', age: 1 }
+```
+
 ## max
+
+Method signature: `max(predicate?: (first: T, second: T) => number | undefined): T`.
+
+Returns maximum value in collection.
+
+```typescript
+const el = _([1, 3, 1, 4, 2, 4, 1]).max()
+
+console.log(el); // 4
+```
+
+You can use this method for non numeric objects, but you should specify compare function:
+
+```typescript
+const cats = [{
+    name: 'Tom',
+    age: 1
+},
+{
+    name: 'Bonny',
+    age: 3
+},
+{
+    name: 'Feya',
+    age: 2
+}]
+
+const el = _(cats).max((a, b) => a.age - b.age) // Find cat with maximum age
+
+console.log(el); // { name: 'Bonny', age: 3 }
+```
 
 ## any
 
