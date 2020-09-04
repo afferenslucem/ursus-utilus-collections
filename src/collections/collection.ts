@@ -127,10 +127,6 @@ export class Collection<T> implements ICollection<T> {
             direcion: SortDirection.Desc
         })
     }
-    
-    public groupBy<K, V>(key: MapCondition<T, K>, group?: MapCondition<ICollection<T>, V> | undefined): ICollection<IGroupedData<K, V>> {
-        return new GroupingCollection<T, K, V>(this, key, group);
-    }
 
     public min(predicate?: CompareCondition<T> | undefined): T {
         return new MinAggregator(this, predicate).aggregate();
@@ -182,6 +178,12 @@ export class Collection<T> implements ICollection<T> {
     public distinct<K>(mapping: MapCondition<T, K>): ICollection<T>
     public distinct<K>(mapping?: MapCondition<T, K>): ICollection<T> {
         return new DistinctCollection(this, mapping);
+    }
+    
+    public groupBy<TKey>(key: MapCondition<T, TKey>): ICollection<IGroupedData<TKey, ICollection<T>>>;
+    public groupBy<TKey, TValue>(key: MapCondition<T, TKey>, group: MapCondition<ICollection<T>, TValue>): ICollection<IGroupedData<TKey, TValue>>;
+    public groupBy<TKey, TValue>(key: MapCondition<T, TKey>, group?: MapCondition<ICollection<T>, TValue>): ICollection<IGroupedData<TKey, TValue>> {
+        return new GroupingCollection<T, TKey, TValue>(this, key, group);
     }
 
     public concat(items: T[] | ICollection<T>): ICollection<T> {

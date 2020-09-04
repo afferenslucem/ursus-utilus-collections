@@ -217,6 +217,20 @@ export interface ICollection<T> extends IIterable<T> {
     distinct<V>(mapping: MapCondition<T, V>): ICollection<T>;
 
 
+    /**
+     * Groups items by key
+     * @param key Key taking function
+     */
+    groupBy<TKey>(key: MapCondition<T, TKey>): ICollection<IGroupedData<TKey, ICollection<T>>>;
+
+    /**
+     * Groups items by key and modify theese by mapCondition
+     * @param key Key taking function
+     * @param groupMap Group mapping function
+     */
+    groupBy<TKey, TValue>(key: MapCondition<T, TKey>, groupMap: MapCondition<ICollection<T>, TValue>): ICollection<IGroupedData<TKey, TValue>>;
+
+
     // Joines
 
 
@@ -269,13 +283,6 @@ export interface ICollection<T> extends IIterable<T> {
      * @param condition Comparing function
      */
     orderByDescending<E>(map: MapCondition<T, E>, condition?: CompareCondition<E> | undefined): ISortingCollection<T>;
-
-    /**
-     * Groups items
-     * @param key Key taking function
-     * @param group Group taking function
-     */
-    groupBy<K, E>(key: MapCondition<T, K>, group?: MapCondition<ICollection<T>, E> | undefined): ICollection<IGroupedData<K, E>>;
 
     /**
      * Returns reversed collection
