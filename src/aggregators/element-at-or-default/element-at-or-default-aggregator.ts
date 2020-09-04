@@ -3,7 +3,7 @@ import { Exception } from "../../exceptions/exceptions";
 import { ElementAtAggregator } from "../element-at/element-at";
 
 export class ElementAtOrDefaultAggregator<T> extends ElementAtAggregator<T> {
-    public constructor(collection: ICollection<T>, position: number, private $default?: T | null | undefined){
+    public constructor(collection: ICollection<T>, position: number, private $default: T | null){
         super(collection, position);
     }
 

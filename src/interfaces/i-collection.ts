@@ -47,13 +47,13 @@ export interface ICollection<T> extends IIterable<T> {
     firstOrDefault(): T | null;
 
     /**
-     * Returns first element in collection or specified @param $default
+     * Returns first element in collection or specified $default
      * @param $default Default value for returning if collection hasn't got any element
      */
     firstOrDefault($default: T): T;
 
     /**
-     * Returns first element in collection passed the @param condition
+     * Returns first element in collection passed the condition
      * @param condition Condition for search element
      * @param $default Default value. Will returning if filtered collection hasn't got elements
      */

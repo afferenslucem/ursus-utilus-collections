@@ -58,37 +58,41 @@ export class Collection<T> implements ICollection<T> {
         return new TakingCollection(this, shouldTake);
     }
 
-    public first(predicate?: FilterCondition<T> | undefined): T {
+    public first(predicate?: FilterCondition<T>): T {
         if(predicate) {
             return new ElementAtAggregator(this.where(predicate), 0).aggregate();
         } else {
-            return new ElementAtAggregator(this, 0).aggregate();
+            return new ElementAtAggregator<T>(this, 0).aggregate();
         }
     }
 
-    public firstOrDefault($default?: T | null, predicate?: FilterCondition<T> | undefined): T | null {
+    public firstOrDefault($default?: T | null): T | null;
+    public firstOrDefault($default: T): T;
+    public firstOrDefault($default: T | null, predicate?: FilterCondition<T>): T | null {
         if(predicate) {
-            return new ElementAtOrDefaultAggregator(this.where(predicate), 0, $default).aggregate();
+            return new ElementAtOrDefaultAggregator<T>(this.where(predicate), 0, $default).aggregate();
         } else {
-            return new ElementAtOrDefaultAggregator(this, 0, $default).aggregate();
+            return new ElementAtOrDefaultAggregator<T>(this, 0, $default).aggregate();
         }
     }
 
-    public last(predicate?: FilterCondition<T> | undefined): T {
-        if(predicate) {
-            const collection = this.where(predicate);
-            return new ElementAtAggregator(collection, collection.count() - 1).aggregate();
-        } else {
-            return new ElementAtAggregator(this, this.count() - 1).aggregate();
-        }
-    }
-
-    public lastOrDefault($default?: T | null, predicate?: FilterCondition<T>): T | null {
+    public last(predicate?: FilterCondition<T>): T {
         if(predicate) {
             const collection = this.where(predicate);
-            return new ElementAtOrDefaultAggregator(collection, collection.count() - 1, $default).aggregate();
+            return new ElementAtAggregator<T>(collection, collection.count() - 1).aggregate();
         } else {
-            return new ElementAtOrDefaultAggregator(this, this.count() - 1, $default).aggregate();
+            return new ElementAtAggregator<T>(this, this.count() - 1).aggregate();
+        }
+    }
+
+    public lastOrDefault($default?: T | null): T | null
+    public lastOrDefault($default: T): T
+    public lastOrDefault($default: T | null, predicate?: FilterCondition<T>): T | null {
+        if(predicate) {
+            const collection = this.where(predicate);
+            return new ElementAtOrDefaultAggregator<T>(collection, collection.count() - 1, $default).aggregate();
+        } else {
+            return new ElementAtOrDefaultAggregator<T>(this, this.count() - 1, $default).aggregate();
         }
     }
 
@@ -198,7 +202,7 @@ export class Collection<T> implements ICollection<T> {
     }
 
     public elementAt(position: number): T {
-        return new ElementAtAggregator(this, position).aggregate()
+        return new ElementAtAggregator<T>(this, position).aggregate()
     }
 
     public elementAtOrDefault(position: number, $default?: T): T | null | undefined {
