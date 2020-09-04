@@ -51,7 +51,7 @@ console.log(result); // '0123'
 
 ## all
 
-Method signature: `all(predicate: ((item: T, index?: number) => boolean): T`.
+Method signature: `all(condition: ((item: T, index?: number) => boolean): T`.
 
 Determines whether all elements of a sequence satisfy a condition.
 
@@ -65,7 +65,7 @@ console.log(resultTruthly); // true
 
 ## any
 
-Method signature: `any(predicate: ((item: T, index?: number) => boolean): T`.
+Method signature: `any(condition: ((item: T, index?: number) => boolean): T`.
 
 Determines whether any element of a sequence satisfies a condition.
 
@@ -89,7 +89,7 @@ const result = _([1, 2, 3, 4, 5]).average()
 console.log(result); // 3
 ```
 
-### For field of objects
+### avarege for field of objects
 
 ```typescript
 const cats = [{
@@ -344,17 +344,17 @@ console.log(el); // { name: 'Tom', age: 1 }
 
 ## sum
 
-Method signature: `average(map?: (item: T) => number): number`.
+Method signature: `sum(map?: (item: T) => number): number`.
 
-Computes the average of a collection of numeric values.
+Computes the sum of a collection of numeric values.
 
 ```typescript
-const result = _([1, 2, 3, 4, 5]).average()
+const result = _([1, 2, 3, 4, 5]).sum()
 
-console.log(result); // 3
+console.log(result); // 15
 ```
 
-### For field of objects
+### sum for field of objects
 
 ```typescript
 const cats = [{
@@ -370,7 +370,7 @@ const cats = [{
     age: 2
 }]
 
-const result = _(cats).average(item => item.age) // Computing middle age of cats
+const result = _(cats).sum(item => item.age) // Computing sum of ages of cats
 
-console.log(result); // 2
+console.log(result); // 6
 ```
