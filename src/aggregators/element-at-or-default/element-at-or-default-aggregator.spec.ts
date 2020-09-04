@@ -6,7 +6,7 @@ describe('ElementAtOrDefaultAggregator', function () {
     it('should return null on empty array', () => {
         const collection = _([]);
 
-        const result = new ElementAtOrDefaultAggregator(collection, 0).aggregate();
+        const result = new ElementAtOrDefaultAggregator(collection, 0, null).aggregate();
         const expected = null;
         
         assert.equal(result, expected);
@@ -24,7 +24,7 @@ describe('ElementAtOrDefaultAggregator', function () {
     it('should return first', () => {
         const collection = _([1, 2, 3]);
 
-        const result = new ElementAtOrDefaultAggregator(collection, 0).aggregate();
+        const result = new ElementAtOrDefaultAggregator(collection, 0, null).aggregate();
         const expected = 1;
         
         assert.equal(result, expected)

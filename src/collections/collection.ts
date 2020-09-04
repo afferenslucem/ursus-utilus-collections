@@ -205,8 +205,10 @@ export class Collection<T> implements ICollection<T> {
         return new ElementAtAggregator<T>(this, position).aggregate()
     }
 
-    public elementAtOrDefault(position: number, $default?: T): T | null | undefined {
-        return new ElementAtOrDefaultAggregator(this, position, $default).aggregate()
+    public elementAtOrDefault(position: number): T | null;
+    public elementAtOrDefault(position: number, $default: T): T;
+    public elementAtOrDefault(position: number, $default: T | null = null): T| null {
+        return new ElementAtOrDefaultAggregator<T>(this, position, $default).aggregate()
     }
 
     public toArray(): T[] {
