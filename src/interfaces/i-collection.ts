@@ -1,4 +1,4 @@
-import { FilterCondition, MapCondition, CompareCondition, ReduceCondition, ReduceWithAccumulatorCondition } from "../commands/delegates";
+import { FilterCondition, MapCondition, CompareCondition, ReduceCondition, ReduceWithAccumulatorCondition, ZipCondition } from "../commands/delegates";
 import { IIterable } from "./i-iterable";
 import { ISortingCollection } from "./i-sorting-collection";
 import { IGroupedData } from "./i-grouped-data";
@@ -322,10 +322,18 @@ export interface ICollection<T> extends IIterable<T> {
      */
     concat(items: T[] | ICollection<T>): ICollection<T>;
 
+
     /**
-     * Returns zipped collections
+     * Returns new collection with converted corresponding elements to tuples
      */
-    zip<V>(iterable: ICollection<V> | V[]): ICollection<[T, V]>
+    zip<T2>(iterable: ICollection<T2> | T2[]): ICollection<[T, T2]>
+    
+    /**
+     * Returns new collection with converted corresponding elements to tuples
+     */
+    zip<T2, TResult>(iterable: ICollection<T2> | T2[], zipFunc: ZipCondition<T, T2, TResult>): ICollection<TResult>
+
+    // Materializing
 
     /**
      * Converting method to array

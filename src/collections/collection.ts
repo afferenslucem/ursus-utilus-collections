@@ -1,5 +1,5 @@
 import { ICollection } from "../interfaces/i-collection";
-import { FilterCondition, MapCondition, CompareCondition, ReduceCondition, ServiceMapCondition, ReduceWithAccumulatorCondition } from "../commands/delegates";
+import { FilterCondition, MapCondition, CompareCondition, ReduceCondition, ServiceMapCondition, ReduceWithAccumulatorCondition, ZipCondition } from "../commands/delegates";
 import { ISortingCollection } from "../interfaces/i-sorting-collection";
 import _ from '../index';
 import { SortSettings, Comparer, SortDirection } from "../utils/comparer";
@@ -201,8 +201,10 @@ export class Collection<T> implements ICollection<T> {
         return new ReduceAggregator<T, V>(this, predicate, accumulator).aggregate();
     }
 
-    public zip<V>(iterable: ICollection<V> | V[]): ICollection<[T, V]> {
-        return new ZipCollection<T, V>(this, new Collection<V>(iterable))
+    public zip<T2, TResult>(iterable: ICollection<T2> | T2[], zipFunc?: ZipCondition<T, T2, TResult>): ICollection<TResult>;
+    public zip<T2>(iterable: ICollection<T2> | T2[]): ICollection<[T, T2]>;
+    public zip<T2, TResult>(iterable: ICollection<T2> | T2[], zipFunc?: ZipCondition<T, T2, TResult>): ICollection<TResult> {
+        return new ZipCollection<T, T2, TResult>(this, new Collection<T2>(iterable), zipFunc)
     }
 
     public elementAt(position: number): T {
@@ -444,23 +446,25 @@ export class ConcatCollection<T> extends Collection<T> {
     }
 }
 
-export class ZipCollection<T, V> extends Collection<[T, V]> {    
-    public constructor(iterable: Collection<T>, private outer: Collection<V>) {
+export class ZipCollection<T1, T2, TResult = [T1, T2]> extends Collection<TResult> {    
+    public constructor(iterable: Collection<T1>, private outer: Collection<T2>, 
+        // @ts-ignore
+        private zipCondition: ZipCondition<T1, T2, TResult> = ((a: T1, b: T2) => [a, b] as TResult)) {
         // @ts-ignore
         super(iterable);
     }
 
-    protected materialize(): Array<[T, V]> {
+    protected materialize(): Array<TResult> {
         const array = this.inner.toArray();
         const zipper = this.outer.toArray();
 
         // @ts-ignore
-        const algo = this.chooseAlgorithm<V>(array);
+        const algo = this.chooseAlgorithm<T2>(array);
 
-        return algo.run(array, zipper);
+        return algo.run(array, zipper, this.zipCondition);
     }
 
-    protected chooseAlgorithm<V>(array: T[]): IAlgorithm<[T, V][]> {
-        return new AlgorithmSolver().solve(new ZipCustomAlgorithm<T, V>(), new ZipNativeAlgorithm<T, V>(), array);
+    protected chooseAlgorithm(array: T1[]): IAlgorithm<TResult[]> {
+        return new AlgorithmSolver().solve(new ZipCustomAlgorithm<T1, T2, TResult>(), new ZipNativeAlgorithm<T1, T2, TResult>(), array);
     }
 }
