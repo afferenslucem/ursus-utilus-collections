@@ -214,7 +214,7 @@ export interface ICollection<T> extends IIterable<T> {
      * Returns distinct elements by field from a collection
      * @param mapping Rule for taking field
      */
-    distinct<V>(mapping: MapCondition<T, V>): ICollection<T>;
+    distinct<TKey>(mapping: MapCondition<T, TKey>): ICollection<T>;
 
 
     /**
@@ -230,6 +230,33 @@ export interface ICollection<T> extends IIterable<T> {
      */
     groupBy<TKey, TValue>(key: MapCondition<T, TKey>, groupMap: MapCondition<ICollection<T>, TValue>): ICollection<IGroupedData<TKey, TValue>>;
 
+    
+    /**
+     * Sorts the elements of a collection in ascending order to a key
+     * @param key Key taking function
+     */
+    orderBy<TKey>(key: MapCondition<T, TKey>): ISortingCollection<T>;
+
+    /**
+     * Sorts the elements of a collection in ascending order to a key
+     * @param key Key taking function
+     * @param condition Comparing function
+     */
+    orderBy<TKey>(key: MapCondition<T, TKey>, condition: CompareCondition<TKey>): ISortingCollection<T>;
+
+
+    /**
+     * Sorts the elements of a collection in descending order to a key
+     * @param key Key taking function
+     */
+    orderByDescending<TKey>(key: MapCondition<T, TKey>): ISortingCollection<T>;
+
+    /**
+     * Sorts the elements of a collection in descending order to a key
+     * @param key Key taking function
+     * @param condition Comparing function
+     */
+    orderByDescending<TKey>(key: MapCondition<T, TKey>, condition: CompareCondition<TKey>): ISortingCollection<T>;
 
     // Joines
 
@@ -269,20 +296,6 @@ export interface ICollection<T> extends IIterable<T> {
      * @param condition Comparing function
      */
     sortDescending(condition?: CompareCondition<T> | undefined): ICollection<T>;
-
-    /**
-     * Sorts items
-     * @param map Property taking function
-     * @param condition Comparing function
-     */
-    orderBy<E>(map: MapCondition<T, E>, condition?: CompareCondition<E> | undefined): ISortingCollection<T>;
-
-    /**
-     * Sorts items descending
-     * @param map Property taking function
-     * @param condition Comparing function
-     */
-    orderByDescending<E>(map: MapCondition<T, E>, condition?: CompareCondition<E> | undefined): ISortingCollection<T>;
 
     /**
      * Returns reversed collection
