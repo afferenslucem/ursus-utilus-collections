@@ -3,6 +3,14 @@
 * [distinct](#distinct)
 * [groupBy](#groupBy)
 * [orderBy](#orderBy)
+* [orderByDescending](#orderByDescending)
+* [reverse](#reverse)
+* [select](#select)
+* [skip](#skip)
+* [sort](#sort)
+* [sortDescending](#sortDescending)
+* [take](#take)
+* [where](#where)
 
 ## distinct
 
@@ -20,7 +28,7 @@ console.log(distinct); // [ 1, 3, 2 ]
 
 Method signature: `distinct<V>(mapping: (item: T) => V): ICollection<T>`.
 
-Returns distinct elements by field from a collection
+Returns distinct elements by field from a collection.
 
 ```typescript
 const cats = [{
@@ -111,7 +119,7 @@ console.log(grouped);
 
 Method signature: `orderBy<TKey>(key: MapCondition<T, TKey>): ISortingCollection<T>`.
 
-Sorts the elements of a collection in ascending order to a key
+Sorts the elements of a collection in ascending order to a key.
 
 ```typescript
 const cats = [{
@@ -144,7 +152,7 @@ console.log(ordered);
 
 Method signature: `orderBy<TKey>(key: MapCondition<T, TKey>): ISortingCollection<T>`.
 
-Sorts the elements of a collection in ascending order to a key
+Sorts the elements of a collection in descending order to a key.
 
 ```typescript
 const cats = [{
@@ -171,4 +179,86 @@ console.log(ordered);
 //  { name: 'Feya', age: 2 },
 //  { name: 'Cherry', age: 2 },
 //  { name: 'Bonny', age: 3 } ]
+```
+
+## reverse
+
+Method signature: `reverse(): ICollection<T>`.
+
+```typescript
+const reverced = _([1, 2, 3, 4, 5]).reverse().toArray();
+
+console.log(reverced); // [ 5, 4, 3, 2, 1 ]
+```
+
+## select
+
+Method signature: `select<TResult>(condition: MapCondition<T, TResult>): ICollection<TResult>`.
+
+Converts each element of a collection into a new form.
+
+```typescript
+const selected = _([1, 2, 3, 4, 5]).select(item => item ** 2).toArray();
+
+console.log(selected); // [ 1, 4, 9, 16, 25 ]
+```
+
+## skip
+
+Method signature: `skip(shouldSkip: number) : ICollection<T>`.
+
+Bypasses `shouldSkip` elements in a collection and then returns the remaining elements.
+
+```typescript
+const skipped = _([1, 2, 3, 4, 5]).skip(3).toArray();
+
+console.log(skipped); // [ 4, 5 ]
+```
+
+## sort
+
+Method signature: `sort(): ICollection<T>`.
+
+Sorts items ascending using default comparison
+
+```typescript
+const sorted = _([4, 1, 3, 2]).sort().toArray();
+
+console.log(sorted); // [ 1, 2, 3, 4 ]
+```
+
+## sortDescending
+
+Method signature: `sortDescending(): ICollection<T>`.
+
+Sorts items descending using default comparison
+
+```typescript
+const sorted = _([4, 1, 3, 2]).sortDescending().toArray();
+
+console.log(sorted); // [ 4, 3, 2, 1 ]
+```
+
+## take
+
+Method signature: `skip(shouldSkip: number) : ICollection<T>`.
+
+Returns a `shouldTake` elements from the start of a collection.
+
+```typescript
+const taked = _([1, 2, 3, 4, 5]).take(3).toArray();
+
+console.log(taked); // [ 1, 2, 3 ]
+```
+
+## where
+
+Method signature: `where(predicate: (item: T, index?: number) => boolean) : ICollection<T>`.
+
+Filters a sequence of values based on a predicate.
+
+```typescript
+const sorted = _([4, 1, 3, 2]).where(item => item % 2).toArray();
+
+console.log(sorted); // [ 1, 3 ]
 ```

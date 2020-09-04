@@ -258,49 +258,64 @@ export interface ICollection<T> extends IIterable<T> {
      */
     orderByDescending<TKey>(key: MapCondition<T, TKey>, condition: CompareCondition<TKey>): ISortingCollection<T>;
 
-    // Joines
-
-
+    
     /**
-     * Filtering method
-     * @param item Filtering predicate
+     * Inverts the order of the elements in a collection
      */
-    where(predicate: FilterCondition<T>) : ICollection<T>;
+    reverse(): ICollection<T>;
+    
 
     /**
-     * Skips some data from start of collection
+     * Converts each element of a collection into a new form.
+     * @param condition Converting func
+     */
+    select<TResult>(condition: MapCondition<T, TResult>): ICollection<TResult>;
+
+
+    /**
+     * Bypasses a specified number of elements in a collection and then returns the remaining elements.
      * @param shouldSkip Count of skipping elements
      */
     skip(shouldSkip: number) : ICollection<T>;
 
+
     /**
-     * Takes some data from start of collection
+     * Sorts items ascending using default comparison
+     */
+    sort(): ICollection<T>;
+
+    /**
+     * Sorts items ascending using specified comparison
+     * @param condition Comparing condition
+     */
+    sort(condition: CompareCondition<T>): ICollection<T>;
+
+    /**
+     * Sorts items descending using default comparison
+     */
+    sortDescending(): ICollection<T>;
+
+    /**
+     * Sorts items descending using default comparison
+     * @param condition Comparing condition
+     */
+    sortDescending(condition: CompareCondition<T>): ICollection<T>;
+
+
+    /**
+     * Returns a specified number of elements from the start of a collection.
      * @param shouldTake Count of taking elements
      */
     take(shouldTake: number) : ICollection<T>;
 
+    
     /**
-     * Converts collection
-     * @param condition Converting func
+     * Filters a collection by predicate.
+     * @param predicate Filtering predicate
      */
-    select<V>(condition: MapCondition<T, V>): ICollection<V>;
+    where(predicate: FilterCondition<T>) : ICollection<T>;
 
-    /**
-     * Sorts items
-     * @param condition Comparing function
-     */
-    sort(condition?: CompareCondition<T> | undefined): ICollection<T>;
-
-    /**
-     * Sorts items descendings
-     * @param condition Comparing function
-     */
-    sortDescending(condition?: CompareCondition<T> | undefined): ICollection<T>;
-
-    /**
-     * Returns reversed collection
-     */
-    reverse(): ICollection<T>;
+    // Joines
 
     /**
      * Returns new collection with new elements at end
