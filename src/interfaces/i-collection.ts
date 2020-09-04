@@ -205,6 +205,16 @@ export interface ICollection<T> extends IIterable<T> {
 
     // Queries
 
+    /**
+     * Returns distinct elements from a collection
+     */
+    distinct(): ICollection<T>;
+
+    /**
+     * Returns distinct elements by field from a collection
+     * @param mapping Rule for taking field
+     */
+    distinct<V>(mapping: MapCondition<T, V>): ICollection<T>;
 
 
     // Joines
@@ -271,12 +281,6 @@ export interface ICollection<T> extends IIterable<T> {
      * Returns reversed collection
      */
     reverse(): ICollection<T>;
-
-    /**
-     * Returns collection with unique elements
-     * @param mapping Condition for distinct by field
-     */
-    distinct<K>(mapping?: MapCondition<T, K>): ICollection<T>;
 
     /**
      * Returns new collection with new elements at end

@@ -1,8 +1,8 @@
 export type FilterCondition<T> = (item: T, index?: number) => boolean;
 
-export type MapCondition<T, E> = (item: T) => E;
+export type MapCondition<T, V> = (item: T) => V;
 
-export type ServiceMapCondition<T, E> = (item: T, index: number) => E;
+export type ServiceMapCondition<T, V> = (item: T, index: number) => V;
 
 export type CompareCondition<T> = (first: T, second: T) => number;
 

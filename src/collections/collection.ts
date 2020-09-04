@@ -178,6 +178,8 @@ export class Collection<T> implements ICollection<T> {
         return new ReverseCollection(this);
     }
 
+    public distinct(): ICollection<T>;
+    public distinct<K>(mapping: MapCondition<T, K>): ICollection<T>
     public distinct<K>(mapping?: MapCondition<T, K>): ICollection<T> {
         return new DistinctCollection(this, mapping);
     }
