@@ -28,7 +28,7 @@
   "bugs": {
     "url": "https://github.com/afferenslucem/declarray/issues"
   },
-  "homepage": "https://github.com/afferenslucem/declarray#readme",
+  "homepage": "https://github.com/afferenslucem/declarray/wiki",
   "devDependencies": {
     "@types/benchmark": "^1.0.33",
     "@types/chai": "^4.2.12",
