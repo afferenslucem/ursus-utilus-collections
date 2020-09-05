@@ -1,5 +1,7 @@
 # Aggregation Methods
 
+Aggregating methods trigger computation of your query. All your chain of methods will be runned for taking result.
+
 * [aggregate](#aggregate)
 * [all](#all)
 * [any](#any)
@@ -7,19 +9,32 @@
 * [contains](#contains)
 * [count](#count)
 * [elementAt](#elementAt)
+* [elementAtOrDefault](#elementAtOrDefault)
 * [first](#first)
+* [firstOrDefault](#firstOrDefault)
 * [last](#last)
+* [lastOrDefault](#lastOrDefault)
 * [max](#max)
 * [min](#min)
 * [sum](#sum)
 
 ## aggregate
 
-Method signature: `aggregate(predicate: (first: T, second: T) => T, accumulator?: T): T`.
+Method signature: `aggregate(accumulatorFunc: (first: T, second: T) => T): T`.
+
+Applies an accumulator function over a collection skipping first value and this value using like accumulator.
+
+```typescript
+const result = _([1, 2, 3]).aggregate((a, b) => a + b)
+
+console.log(result); // 6
+```
 
 ### With accumulator
 
-Applies an accumulator function over a sequence with initialized accumulator value.
+Method signature: `aggregate(accumulatorFunc: (first: T, second: T) => T, accumulator: T): T`.
+
+Applies an accumulator function over a collection with initialized accumulator value.
 
 ```typescript
 const result = _([1, 2, 3]).aggregate((acc, item) => acc + item, 10)
@@ -27,21 +42,11 @@ const result = _([1, 2, 3]).aggregate((acc, item) => acc + item, 10)
 console.log(result); // 16
 ```
 
-### Without accumulator
-
-Applies an accumulator function over a sequence skipping first value and this value using like accumulator.
-
-```typescript
-const result = _([1, 2, 3]).aggregate((acc, item) => acc + item)
-
-console.log(result); // 6
-```
-
 ### With accumulator of external type
 
-Method signature: `aggregate(predicate: (acc: V, second: T) => V, accumulator?: T): T`.
+Method signature: `aggregate<TResult>(accumulatorFunc: ReduceWithAccumulatorCondition<T, TResult>, accumulator: TResult): TResult`.
 
-Applies an accumulator function over a sequence with initialized accumulator value.
+Applies an accumulator function over a collection with initialized accumulator value.
 
 ```typescript
 const result = _([1, 2, 3]).aggregate((acc, item) => acc + item, '0')
@@ -79,7 +84,7 @@ console.log(resultFalsy); // false
 
 ## average
 
-Method signature: `average(map?: (item: T) => number): number`.
+Method signature: `average(): number`.
 
 Computes the average of a collection of numeric values.
 
@@ -90,6 +95,10 @@ console.log(result); // 3
 ```
 
 ### avarege for field of objects
+
+Method signature: `average(map: (item: T) => number): number`.
+
+Computes the average of numeric property on items of a collection.
 
 ```typescript
 const cats = [{
@@ -126,7 +135,7 @@ console.log(result); //false
 
 ## count
 
-Method signature: `count(predicate?: (item: T, index?: number) => boolean): number;`.
+Method signature: `count(): number;`.
 
 Returns the number of elements in a collection.
 
@@ -136,6 +145,10 @@ console.log(result); // 5
 ```
 
 ### Count for condition
+
+Method signature: `count(condition: (item: T, index?: number) => boolean): number;`.
+
+Returns the number of elements passed codition.
 
 ```typescript
 const result = _([1, 2, 3, 4, 5]).count(item => (item % 2)) // Counting odd items
@@ -156,11 +169,11 @@ console.log(el); // 4
 
 > ⚠️ If collection hasn't got element at specified index - method throws '**No matches found**'
 
-### elementAtOrDefault
+## elementAtOrDefault
 
-Method signature: `elementAtOrDefault(position: number, $default?: T): T | null`.
+Method signature: `elementAtOrDefault(position: number): T | null`.
 
-Works like `elementAt`, but doesn't throw exception, it returns null like default result.
+Returns element at specified index at collection. If collection hasn't got matching element returns null.
 
 ```typescript
 const el = _([1, 2, 3, 4, 5, 6, 7]).elementAtOrDefault(10)
@@ -168,7 +181,11 @@ const el = _([1, 2, 3, 4, 5, 6, 7]).elementAtOrDefault(10)
 console.log(el); // null
 ```
 
-Default result can be overrided:
+### elementAtOrDefault with custon default
+
+Method signature: `elementAtOrDefault(position: number, $default: T): T`.
+
+Returns element at specified index at collection. If collection hasn't got matching element returns specified default
 
 ```typescript
 const el = _([1, 2, 3, 4, 5, 6, 7]).elementAtOrDefault(10, 0)
@@ -178,7 +195,7 @@ console.log(el); // 0
 
 ## first
 
-Method signature: `first(predicate?: (item: T, index?: number) => boolean): T`.
+Method signature: `first(): T`.
 
 Returns first element at collection.
 
@@ -190,7 +207,11 @@ console.log(first); // 1
 
 > ⚠️ If collection has got no one element this method throws '**No matches found**'
 
-Can be used with condition:
+### first for condition
+
+Method signature: `first(condition: (item: T, index?: number) => boolean): T`.
+
+Returns first element of collection passed the condition.
 
 ```typescript
 const firstByCondition = _([1, 3, 7, 3, 2, 4, 7, 8]).first(item => item > 3);
@@ -198,9 +219,9 @@ const firstByCondition = _([1, 3, 7, 3, 2, 4, 7, 8]).first(item => item > 3);
 console.log(firstByCondition); // 7
 ```
 
-### firstOrDefault
+## firstOrDefault
 
-Method signature: `firstOrDefault($default?: T | null, predicate?: (item: T, index?: number) => boolean): T | null`.
+Method signature: `firstOrDefault(): T | null`.
 
 Works like `first`, but doesn't throw exception, it returns null like default result.
 
@@ -210,7 +231,11 @@ const first = _([]).firstOrDefault();
 console.log(first); // null
 ```
 
-Default result can be overrided:
+### firstOrDefault with custom default value
+
+Method signature: `firstOrDefault($default: T): T`.
+
+Returns first element in collection or specified $default.
 
 ```typescript
 const firstWithDefault = _([]).firstOrDefault(0);
@@ -218,7 +243,11 @@ const firstWithDefault = _([]).firstOrDefault(0);
 console.log(firstWithDefault); // 0
 ```
 
-You can use this method with condition too:
+### firstOrDefault with condition
+
+Method signature: `firstOrDefault($default: T | null, condition: FilterCondition<T>): T | null`.
+
+Returns first element in collection passed the condition.
 
 ```typescript
 const firstWithDefault = _([3, 4, 6, 3, 2 ,5]).firstOrDefault(0, item => item > 777);
@@ -228,7 +257,7 @@ console.log(firstWithDefault); // 0
 
 ## last
 
-Method signature: `last(predicate?: (item: T, index?: number) => boolean): T`.
+Method signature: `last(): T`.
 
 Returns last element at collection.
 
@@ -240,7 +269,11 @@ console.log(last); // 8
 
 > ⚠️ If collection has got no one element this method throws '**No matches found**'
 
-Can be used with condition:
+### last with condition
+
+Method signature: `last(condition: (item: T, index?: number) => boolean): T`.
+
+Returns last element of collection passed the condition.
 
 ```typescript
 const lastByCondition = _([1, 3, 7, 3, 2, 4, 7, 8]).last(item => item < 3);
@@ -250,9 +283,9 @@ console.log(lastByCondition); // 2
 
 ### lastOrDefault
 
-Method signature: `lastOrDefault($default?: T | null, predicate?: (item: T, index?: number) => boolean): T | null`.
+Method signature: `lastOrDefault(): T | null`.
 
-Works like `last`, but doesn't throw exception, it returns null like default result.
+Returns last element in collection or null.
 
 ```typescript
 const last = _([]).lastOrDefault();
@@ -260,7 +293,11 @@ const last = _([]).lastOrDefault();
 console.log(last); // null
 ```
 
-Default result can be overrided:
+### lastOrDefault with custom default value
+
+Method signature: `lastOrDefault($default?: T): T`.
+
+Returns last element in collection or specified $default.
 
 ```typescript
 const lastWithDefault = _([]).lastOrDefault(0);
@@ -268,7 +305,9 @@ const lastWithDefault = _([]).lastOrDefault(0);
 console.log(lastWithDefault); // 0
 ```
 
-You can use this method with condition too:
+### lastOrDefault with condition
+
+Returns last element in collection passed the condition
 
 ```typescript
 const lastWithDefault = _([3, 4, 6, 3, 2 ,5]).lastOrDefault(0, item => item < 0);
@@ -278,9 +317,9 @@ console.log(lastWithDefault); // 0
 
 ## max
 
-Method signature: `max(predicate?: (first: T, second: T) => number | undefined): T`.
+Method signature: `max(): T`.
 
-Returns maximum value in collection.
+Returns maximum value in collection. Will using default comparing like rule.
 
 ```typescript
 const el = _([1, 3, 1, 4, 2, 4, 1]).max()
@@ -288,7 +327,10 @@ const el = _([1, 3, 1, 4, 2, 4, 1]).max()
 console.log(el); // 4
 ```
 
-You can use this method for non numeric objects, but you should specify compare function:
+### max with condition
+
+Method signature: `max(predicate: (first: T, second: T) => number): T`.
+Returns maximum value in collection by compare rule.
 
 ```typescript
 const cats = [{
@@ -311,7 +353,7 @@ console.log(el); // { name: 'Bonny', age: 3 }
 
 ## min
 
-Method signature: `min(predicate?: (first: T, second: T) => number | undefined): T`.
+Method signature: `min(): T`.
 
 Returns minimum value in collection.
 
@@ -321,7 +363,10 @@ const el = _([1, 3, 1, 4, 2, 4, 1]).min()
 console.log(el); // 1
 ```
 
-You can use this method for non numeric objects, but you should specify compare function:
+### min with condition
+
+Method signature: `min(predicate: (first: T, second: T) => number): T`.
+Returns minimum value in collection by compare rule.
 
 ```typescript
 const cats = [{
@@ -344,7 +389,7 @@ console.log(el); // { name: 'Tom', age: 1 }
 
 ## sum
 
-Method signature: `sum(map?: (item: T) => number): number`.
+Method signature: `sum(): number`.
 
 Computes the sum of a collection of numeric values.
 
@@ -355,6 +400,10 @@ console.log(result); // 15
 ```
 
 ### sum for field of objects
+
+Method signature: `sum(map: (item: T) => number): number`.
+
+Computes the sum of a collection of numeric values.
 
 ```typescript
 const cats = [{

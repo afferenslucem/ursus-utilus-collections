@@ -5,25 +5,25 @@ import { IGroupedData } from "./i-grouped-data";
 
 export interface ICollection<T> extends IIterable<T> {
 
-    // Aggregates
+    // Aggregating
 
     /**
      * Applies an accumulator function over a collection skipping first value and this value using like accumulator.
-     * @param predicate Aggregating rule
+     * @param accumulatorFunc Aggregating rule
      */
-    aggregate(predicate: ReduceCondition<T>): T;
+    aggregate(accumulatorFunc: ReduceCondition<T>): T;
 
     /**
      * Applies an accumulator function over a collection with initialized accumulator value.
-     * @param predicate Aggregating rule
+     * @param accumulatorFunc Aggregating rule
      */
-    aggregate(predicate: ReduceCondition<T>, accumulator: T): T;
+    aggregate(accumulatorFunc: ReduceCondition<T>, accumulator: T): T;
 
     /**
      * Applies an accumulator function over a collection with initialized accumulator value.
-     * @param predicate Aggregating rule
+     * @param accumulatorFunc Aggregating rule
      */
-    aggregate<V>(predicate: ReduceWithAccumulatorCondition<T, V>, accumulator: V): V;
+    aggregate<TResult>(accumulatorFunc: ReduceWithAccumulatorCondition<T, TResult>, accumulator: TResult): TResult;
 
 
     /**
@@ -84,7 +84,7 @@ export interface ICollection<T> extends IIterable<T> {
     elementAtOrDefault(position: number): T | null;
     
     /**
-     * Returns element at specified index at collection. If collection hasn't got matching element returns default
+     * Returns element at specified index at collection. If collection hasn't got matching element returns specified default
      * @param position Position of element
      * @param $default Default value for returning if collection hasn't got matches
      */
@@ -144,30 +144,17 @@ export interface ICollection<T> extends IIterable<T> {
     lastOrDefault(): T | null;
 
     /**
-     * Returns last element in collection or specified @param $default
+     * Returns last element in collection or specified $default
      * @param $default Default value for returning if collection hasn't got any element
      */
     lastOrDefault($default: T): T;
 
     /**
-     * Returns last element in collection passed the @param condition
+     * Returns last element in collection passed the condition
      * @param condition Condition for search element
      * @param $default Default value. Will returning if filtered collection hasn't got elements
      */
     lastOrDefault($default: T | null, condition: FilterCondition<T>): T | null;
-
-
-    /**
-     * Returns minimum value in collection. 
-     * Will using default comparing like rule.
-     */
-    min(): T;
-
-    /**
-     * Returns minimum value in collection by rule.
-     * @param comparing Rule for comparing two values
-     */
-    min(comparing: CompareCondition<T>): T;
 
 
     /**
@@ -177,10 +164,23 @@ export interface ICollection<T> extends IIterable<T> {
     max(): T;
 
     /**
-     * Returns maximum value in collection by rule.
+     * Returns maximum value in collection by compare rule.
      * @param comparing Rule for comparing two values
      */
     max(comparing: CompareCondition<T>): T;
+
+
+    /**
+     * Returns minimum value in collection. 
+     * Will using default comparing like rule.
+     */
+    min(): T;
+
+    /**
+     * Returns minimum value in collection by compare rule.
+     * @param comparing Rule for comparing two values
+     */
+    min(comparing: CompareCondition<T>): T;
 
     
     /**
@@ -203,7 +203,7 @@ export interface ICollection<T> extends IIterable<T> {
     sum(map: MapCondition<T, number>): number;
 
 
-    // Queries
+    // Querring
 
     /**
      * Returns distinct elements from a collection
@@ -315,10 +315,10 @@ export interface ICollection<T> extends IIterable<T> {
      */
     where(predicate: FilterCondition<T>) : ICollection<T>;
 
-    // Joines
+    // Joining
 
     /**
-     * Returns new collection with new elements at end
+     * Concatenates two sequences.
      */
     concat(items: T[] | ICollection<T>): ICollection<T>;
 
@@ -329,16 +329,14 @@ export interface ICollection<T> extends IIterable<T> {
     zip<T2>(iterable: ICollection<T2> | T2[]): ICollection<[T, T2]>
     
     /**
-     * Returns new collection with converted corresponding elements to tuples
+     * Applies a specified function to the corresponding elements of two collections, producing a collection of the results
      */
     zip<T2, TResult>(iterable: ICollection<T2> | T2[], zipFunc: ZipCondition<T, T2, TResult>): ICollection<TResult>
 
     // Materializing
 
     /**
-     * Converting method to array
-     * Triggers computation
-     * Array is freezed
+     * Creates an array from collection
      */
     toArray(): T[];
 }
