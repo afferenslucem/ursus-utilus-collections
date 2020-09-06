@@ -50,6 +50,11 @@ export class Collection<T> implements ICollection<T> {
         return new MappingCollection<T, TOut>(this, condition);
     }
 
+    public selectMany<TOut>(condition: ServiceMapCondition<T, TOut[]>): ICollection<TOut> {                
+        // @ts-ignore
+        return new MappingManyCollection<T, TOut>(this, condition);
+    }
+
     public skip(shouldSkip: number): ICollection<T> {
         return new SkippingCollection(this, shouldSkip);
     }
@@ -196,9 +201,9 @@ export class Collection<T> implements ICollection<T> {
 
     public aggregate(predicate: ReduceCondition<T>, accumulator?: T): T;
 
-    public aggregate<V>(predicate: ReduceWithAccumulatorCondition<T, V>, accumulator: V): V {
+    public aggregate<T2>(predicate: ReduceWithAccumulatorCondition<T, T2>, accumulator: T2): T2 {
         // @ts-ignore
-        return new ReduceAggregator<T, V>(this, predicate, accumulator).aggregate();
+        return new ReduceAggregator<T, T2>(this, predicate, accumulator).aggregate();
     }
 
     public zip<T2, TResult>(iterable: ICollection<T2> | T2[], zipFunc?: ZipCondition<T, T2, TResult>): ICollection<TResult>;
@@ -291,6 +296,41 @@ export class MappingCollection<T, V> extends Collection<T> {
 
     protected chooseAlgorithm<V>(array: T[]): IAlgorithm<V[]> {
         return new AlgorithmSolver().solve(new MapCustomAlgorithm<T, V>(), new MapNativeAlgorithm<T, V>(), array);
+    }
+}
+
+export class MappingManyCollection<T, T2> extends Collection<T> {
+    public constructor(iterable: Collection<T>, private condition: ServiceMapCondition<T, T2[]>) {
+        // @ts-ignore
+        super(iterable);
+    }
+
+    // @ts-ignore
+    public selectMany<TOut>(condition: MapCondition<T, TOut[]>): ICollection<TOut> {
+        // @ts-ignore
+        const result = new MappingManyCollection<T, T2>(this.inner, (item: T) => condition(this.condition(item)));
+
+        // @ts-ignore
+        return result;
+    }
+
+    // @ts-ignore
+    protected materialize(): T2[] {        
+        const array = this.inner.toArray();
+
+        const algo = this.chooseAlgorithm(array);
+
+        const partsOfResult = algo.run(array, this.condition);
+
+        if(partsOfResult.length === 0) return [];
+
+        const result = new Collection(partsOfResult).aggregate((a, b) => a.concat(b))
+
+        return result;
+    }
+
+    protected chooseAlgorithm(array: T[]): IAlgorithm<T2[][]> {
+        return new AlgorithmSolver().solve(new MapCustomAlgorithm<T, T2[]>(), new MapNativeAlgorithm<T, T2[]>(), array);
     }
 }
 

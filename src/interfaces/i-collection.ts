@@ -271,6 +271,11 @@ export interface ICollection<T> extends IIterable<T> {
      */
     select<TResult>(condition: MapCondition<T, TResult>): ICollection<TResult>;
 
+    /**
+     * Projects each element of a collection to an Array<T> and flattens the resulting collection into one collection
+     */
+    selectMany<TResult>(condition: MapCondition<T, TResult[]>): ICollection<TResult>;
+
 
     /**
      * Bypasses a specified number of elements in a collection and then returns the remaining elements.

@@ -6,6 +6,7 @@
 * [orderByDescending](#orderByDescending)
 * [reverse](#reverse)
 * [select](#select)
+* [selectMany](#selectMany)
 * [skip](#skip)
 * [sort](#sort)
 * [sortDescending](#sortDescending)
@@ -201,6 +202,29 @@ Converts each element of a collection into a new form.
 const selected = _([1, 2, 3, 4, 5]).select(item => item ** 2).toArray();
 
 console.log(selected); // [ 1, 4, 9, 16, 25 ]
+```
+
+## selectMany
+
+Method signature: `select<TResult>(condition: MapCondition<T, TResult>): ICollection<TResult>`.
+
+Projects each element of a collection to an `Array<T>` and flattens the resulting collection into one collection
+
+```typescript
+const cats = [
+    {
+        name: 'Feya',
+        kittens: ['Lory', 'Pussy']
+    },
+    {
+        name: 'Cherry',
+        kittens: ['Browny', 'Tommy']
+    }
+];
+
+const allKittens = _(cats).selectMany(item => item.kittens).toArray();
+
+console.log(allKittens); // [ 'Lory', 'Pussy', 'Browny', 'Tommy' ]
 ```
 
 ## skip

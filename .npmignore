@@ -19,3 +19,4 @@ output.txt
 *.orig
 *.md
 docs/
+tsconfig.*.json
