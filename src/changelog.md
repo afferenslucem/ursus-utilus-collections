@@ -6,3 +6,8 @@
 * CountWhile
 * SkipWhile
 * TakeWhile
+* Overloading for Contains
+
+# Deleted
+
+* Exists

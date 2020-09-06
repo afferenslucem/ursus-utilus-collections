@@ -1,5 +1,5 @@
 import { ICollection } from "../interfaces/i-collection";
-import { FilterCondition, MapCondition, CompareCondition, ReduceCondition, ServiceMapCondition, ReduceWithAccumulatorCondition, ZipCondition } from "../commands/delegates";
+import { FilterCondition, MapCondition, CompareCondition, ReduceCondition, ServiceMapCondition, ReduceWithAccumulatorCondition, ZipCondition, EqualityCondition } from "../commands/delegates";
 import { ISortingCollection } from "../interfaces/i-sorting-collection";
 import _ from '../index';
 import { SortSettings, Comparer, SortDirection } from "../utils/comparer";
@@ -151,10 +151,6 @@ export class Collection<T> implements ICollection<T> {
         return new MaxAggregator(this, predicate).aggregate();
     }
 
-    public exists(predicate: FilterCondition<T>): boolean {
-        return new AnyAggregator(this, predicate).aggregate();
-    }
-
     public any(predicate: FilterCondition<T>): boolean {
         return new AnyAggregator(this, predicate).aggregate();
     }
@@ -163,8 +159,8 @@ export class Collection<T> implements ICollection<T> {
         return new AllAggregator(this, predicate).aggregate();
     }
 
-    public contains(element: T): boolean {
-        return this.any(item => item === element);
+    public contains(element: T, condition: EqualityCondition<T> = (a: T, b: T) => a === b): boolean {
+        return this.any(item => condition(item, element));
     }
 
     public sum(map?: MapCondition<T, number>): number {

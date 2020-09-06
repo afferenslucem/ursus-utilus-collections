@@ -208,4 +208,58 @@ describe('Index', function () {
         
         assert.deepEqual(result, expected)
     });
+    
+    it('returns truthly contains by eq comparer', () => {
+        const cats = [{
+            name: 'Barsik',
+            age: 9
+        },{
+            name: 'Cherry',
+            age: 4
+        },{
+            name: 'Feya',
+            age: 4
+        },{
+            name: 'Lulya',
+            age: 1
+        },];
+
+        const cat = {
+            name: 'Barsik',
+            age: 9
+        }
+
+        const result = _(cats).contains(cat, (a, b) => a.name == b.name);
+            
+        const expected = true;
+        
+        assert.deepEqual(result, expected)
+    });
+    
+    it('returns falsy contains by eq comparer', () => {
+        const cats = [{
+            name: 'Barsik',
+            age: 9
+        },{
+            name: 'Cherry',
+            age: 4
+        },{
+            name: 'Feya',
+            age: 4
+        },{
+            name: 'Lulya',
+            age: 1
+        },];
+
+        const cat = {
+            name: 'Tom',
+            age: 9
+        }
+
+        const result = _(cats).contains(cat, (a, b) => a.name == b.name);
+            
+        const expected = false;
+        
+        assert.deepEqual(result, expected)
+    });
 });

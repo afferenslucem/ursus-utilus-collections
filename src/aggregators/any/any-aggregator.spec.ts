@@ -48,21 +48,6 @@ describe('AnyAggregator', function () {
         assert.deepEqual(result, expected);
     });
 
-    it('should return true for truthly condition after chaining', () => {
-        const result = _([8, 5, 4, 2, 9, 1, 4]).select(item => item ** 2).where(item => item > 25).exists(item => item === 81);
-
-        const expected = true;
-
-        assert.deepEqual(result, expected);
-    });
-
-    it('should return false for falsy condition after chaining', () => {
-        const result = _([8, 5, 4, 2, 9, 1, 4]).select(item => item ** 2).where(item => item > 25).exists(item => item === 16);
-        const expected = false;
-
-        assert.deepEqual(result, expected);
-    });
-
     it('should return true for trusly contains condition', () => {
         const result = _([8, 5, 4, 2, 9, 1, 4]).any(item => item === 9);
 

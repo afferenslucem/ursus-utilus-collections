@@ -1,4 +1,4 @@
-import { FilterCondition, MapCondition, CompareCondition, ReduceCondition, ReduceWithAccumulatorCondition, ZipCondition } from "../commands/delegates";
+import { FilterCondition, MapCondition, CompareCondition, ReduceCondition, ReduceWithAccumulatorCondition, ZipCondition, EqualityCondition } from "../commands/delegates";
 import { IIterable } from "./i-iterable";
 import { ISortingCollection } from "./i-sorting-collection";
 import { IGroupedData } from "./i-grouped-data";
@@ -70,10 +70,17 @@ export interface ICollection<T> extends IIterable<T> {
     countWhile(condition: FilterCondition<T>): number;
     
     /**
-     * Determines whether a collection contains a specified element.
+     * Determines whether a collection contains a specified element. Using default equality condition.
      * @param element Element for checking
      */
     contains(element: T): boolean;
+    
+    /**
+     * Determines whether a collection contains a specified element. Using custom equality condition.
+     * @param element Element for checking
+     * @param condition Equality condition
+     */
+    contains(element: T, condition: EqualityCondition<T>): boolean;
     
     
     /**
@@ -187,14 +194,6 @@ export interface ICollection<T> extends IIterable<T> {
      * @param comparing Rule for comparing two values
      */
     min(comparing: CompareCondition<T>): T;
-
-    
-    /**
-     * @deprecated use any instead
-     * Check element what can pass condition
-     * @param predicate Predicate for element check
-     */
-    exists(predicate: FilterCondition<T>): boolean;
 
 
     /**

@@ -124,7 +124,7 @@ console.log(result); // 2
 
 Method signature: `contains(element: T): boolean`.
 
-Determines whether a collection contains a specified element.
+Determines whether a collection contains a specified element. Using default equality condition.
 
 ```typescript
 const result = _([1, 2, 3, 4, 5]).contains(3)
@@ -132,6 +132,37 @@ console.log(result); //true
 
 const resultFalsy = _([1, 2, 3, 4, 5]).contains(9)
 console.log(result); //false
+```
+
+## contains with equality comparer
+
+Method signature: `contains(element: T, (first: T, second: T) => boolean): boolean`.
+
+Determines whether a collection contains a specified element. Using custom equality condition.
+
+```typescript
+const cats = [{
+    name: 'Barsik',
+    age: 9
+},{
+    name: 'Cherry',
+    age: 4
+},{
+    name: 'Feya',
+    age: 4
+},{
+    name: 'Lulya',
+    age: 1
+},];
+
+const cat = {
+    name: 'Feya',
+    age: 9
+}
+
+const result = _(cats).contains(cat, (a, b) => a.name == b.name);
+
+console.log(result); // true
 ```
 
 ## count
