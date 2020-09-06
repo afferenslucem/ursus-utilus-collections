@@ -4,3 +4,5 @@
 * SelectMany
 * Join
 * CountWhile
+* SkipWhile
+* TakeWhile
