@@ -3,3 +3,4 @@
 * Overloading for Aggregate
 * SelectMany
 * Join
+* CountWhile

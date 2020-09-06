@@ -26,6 +26,7 @@ import { AllAggregator } from "../aggregators/all/all-aggregator";
 import { ElementAtAggregator } from "../aggregators/element-at/element-at";
 import { ElementAtOrDefaultAggregator } from "../aggregators/element-at-or-default/element-at-or-default-aggregator";
 import { combine } from "../utils/operators";
+import { CountWhileAggregator } from "../aggregators/count-while/count-while-aggregator";
 
 export class Collection<T> implements ICollection<T> {
     // @ts-ignore
@@ -198,6 +199,10 @@ export class Collection<T> implements ICollection<T> {
 
     public count(predicate?: FilterCondition<T>): number {
         return new CountAggregator(this, predicate).aggregate();
+    }
+
+    public countWhile(predicate: FilterCondition<T>): number {
+        return new CountWhileAggregator(this, predicate).aggregate();
     }
 
     public aggregate(predicate: ReduceCondition<T>, accumulator?: T): T;

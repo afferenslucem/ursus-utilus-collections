@@ -8,6 +8,7 @@ Aggregating methods trigger computation of your query. All your chain of methods
 * [average](#average)
 * [contains](#contains)
 * [count](#count)
+* [countWhile](#countWhile)
 * [elementAt](#elementAt)
 * [elementAtOrDefault](#elementAtOrDefault)
 * [first](#first)
@@ -153,6 +154,17 @@ Returns the number of elements passed codition.
 ```typescript
 const result = _([1, 2, 3, 4, 5]).count(item => (item % 2)) // Counting odd items
 console.log(result); // 3
+```
+
+## countWhile
+
+Method signature: `countWhile(condition: (item: T, index?: number) => boolean): number;`.
+
+Returns count of elements from a collection as long as a specified condition is true.
+
+```typescript
+const result = _([1, 2, 3, 2, 1]).countWhile(item => item < 3)
+console.log(result); // 2
 ```
 
 ## elementAt

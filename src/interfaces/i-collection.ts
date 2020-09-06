@@ -62,6 +62,12 @@ export interface ICollection<T> extends IIterable<T> {
      * @param condition Predicate for counting elements by condition
      */
     count(condition: FilterCondition<T>): number;
+
+    /**
+     * Returns count of elements from a collection as long as a specified condition is true.
+     * @param condition Predicate for counting elements by condition
+     */
+    countWhile(condition: FilterCondition<T>): number;
     
     /**
      * Determines whether a collection contains a specified element.
