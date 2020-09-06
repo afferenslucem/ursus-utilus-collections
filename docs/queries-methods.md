@@ -194,7 +194,7 @@ console.log(reverced); // [ 5, 4, 3, 2, 1 ]
 
 ## select
 
-Method signature: `select<TResult>(condition: MapCondition<T, TResult>): ICollection<TResult>`.
+Method signature: `select<TResult>(condition: (item: T) => T2): ICollection<TResult>`.
 
 Converts each element of a collection into a new form.
 
@@ -206,7 +206,7 @@ console.log(selected); // [ 1, 4, 9, 16, 25 ]
 
 ## selectMany
 
-Method signature: `select<TResult>(condition: MapCondition<T, TResult>): ICollection<TResult>`.
+Method signature: `select<TResult>(condition: (item: T) => T2): ICollection<TResult>`.
 
 Projects each element of a collection to an `Array<T>` and flattens the resulting collection into one collection
 

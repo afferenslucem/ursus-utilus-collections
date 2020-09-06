@@ -2,6 +2,7 @@
 
 * [concat](#concat)
 * [zip](#zip)
+* [joid](#join)
 
 ## concat
 
@@ -37,4 +38,52 @@ Applies a specified function to the corresponding elements of two collections, p
 const zipped = _([1, 2, 3).zip([4, 5, 6], (a, b) => a + b).toArray();
 
 console.log(zipped); // [ 5, 7, 9 ]
+```
+
+## join
+
+Method signature: `join<T2, TKey, TResult>(iterable: ICollection<T2> | T2[], firstKey: (item: T1) => TKey, secondKey: (item: T2) => TKey, zipFunc: (first: T1, second: T2) => TResult)`
+
+Correlates the elements of two collections based on matching keys.
+
+```typescript
+const cats = [{
+    name: 'Barsik',
+    age: 9
+},{
+    name: 'Cherry',
+    age: 4
+},{
+    name: 'Feya',
+    age: 4
+},{
+    name: 'Lulya',
+    age: 1
+},];
+
+const ages = [{
+    years: 1,
+    name: "Young"
+},{
+    years: 4,
+    name: "Middle"
+},{
+    years: 9,
+    name: "Old"
+}]
+
+const joined = _(cats).join(
+    ages,
+    cat => cat.age,
+    age => age.years,
+    (cat, age) => ({name: cat.name, age: age.name})
+).toArray();
+
+console.log(joined);
+// [
+//     {name: 'Barsik', age: 'Old'},
+//     {name: 'Cherry', age: 'Middle'},
+//     {name: 'Feya', age: 'Middle'},
+//     {name: 'Lulya', age: 'Young'},
+// ]
 ```

@@ -25,6 +25,7 @@ import { ZipNativeAlgorithm } from "../algorithms/zip/zip.native/zip.algorithm.n
 import { AllAggregator } from "../aggregators/all/all-aggregator";
 import { ElementAtAggregator } from "../aggregators/element-at/element-at";
 import { ElementAtOrDefaultAggregator } from "../aggregators/element-at-or-default/element-at-or-default-aggregator";
+import { combine } from "../utils/operators";
 
 export class Collection<T> implements ICollection<T> {
     // @ts-ignore
@@ -211,6 +212,14 @@ export class Collection<T> implements ICollection<T> {
     public zip<T2, TResult>(iterable: ICollection<T2> | T2[], zipFunc?: ZipCondition<T, T2, TResult>): ICollection<TResult> {
         return new ZipCollection<T, T2, TResult>(this, new Collection<T2>(iterable), zipFunc)
     }
+
+    join<T2, TKey, TResult>(
+        iterable: ICollection<T2> | T2[],
+        firstKey: MapCondition<T, TKey>,
+        secondKey: MapCondition<T2, TKey>,
+        zipFunc: ZipCondition<T, T2, TResult>): ICollection<TResult> {
+            return new JoinCollection<T, T2, TKey, TResult>(this, new Collection(iterable), firstKey, secondKey, zipFunc);
+        }
 
     public elementAt(position: number): T {
         return new ElementAtAggregator<T>(this, position).aggregate()
@@ -506,5 +515,39 @@ export class ZipCollection<T1, T2, TResult = [T1, T2]> extends Collection<TResul
 
     protected chooseAlgorithm(array: T1[]): IAlgorithm<TResult[]> {
         return new AlgorithmSolver().solve(new ZipCustomAlgorithm<T1, T2, TResult>(), new ZipNativeAlgorithm<T1, T2, TResult>(), array);
+    }
+}
+
+export class JoinCollection<T1, T2, TKey, TResult> extends Collection<TResult> {    
+    public constructor(
+        iterable: Collection<T1>,
+        private outer: Collection<T2>, 
+        private firstKey: MapCondition<T1, TKey>,
+        private secondKey: MapCondition<T2, TKey>,
+        private zipFunc: ZipCondition<T1, T2, TResult>) {
+        // @ts-ignore
+        super(iterable);
+    }
+
+    protected materialize(): Array<TResult> {
+        // @ts-ignore
+        const left = this.inner as ICollection<T1>;
+        
+        const right = this.outer.groupBy(this.secondKey).aggregate((map, item) => {
+            map.set(item.key, item.group);
+            return map;
+        }, new Map<TKey, ICollection<T2>>());
+
+        const result = left.selectMany(item => {
+            const target = right.get(this.firstKey(item))
+
+            if(target) {
+                return combine(item, target);
+            } else {
+                return []
+            }
+        }).select(item => this.zipFunc(item[0], item[1])).toArray()
+
+        return result;
     }
 }

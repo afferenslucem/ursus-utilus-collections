@@ -335,8 +335,23 @@ export interface ICollection<T> extends IIterable<T> {
     
     /**
      * Applies a specified function to the corresponding elements of two collections, producing a collection of the results
+     * @param iterable Collection for merging
+     * @param zipFunc Function for merging elements
      */
     zip<T2, TResult>(iterable: ICollection<T2> | T2[], zipFunc: ZipCondition<T, T2, TResult>): ICollection<TResult>
+    
+    /**
+     * Correlates the elements of two collections based on matching keys.
+     * @param iterable Collection for joining
+     * @param firstKey Key taking function
+     * @param secondKey Key taking function
+     * @param zipFunc Function for merging elements
+     */
+    join<T2, TKey, TResult>(
+        iterable: ICollection<T2> | T2[],
+        firstKey: MapCondition<T, TKey>,
+        secondKey: MapCondition<T2, TKey>,
+        zipFunc: ZipCondition<T, T2, TResult>): ICollection<TResult>
 
     // Materializing
 
