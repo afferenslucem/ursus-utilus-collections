@@ -8,9 +8,11 @@
 * [select](#select)
 * [selectMany](#selectMany)
 * [skip](#skip)
+* [skipWhile](#skipWhile)
 * [sort](#sort)
 * [sortDescending](#sortDescending)
 * [take](#take)
+* [takeWhile](#takeWhile)
 * [where](#where)
 
 ## distinct
@@ -239,6 +241,18 @@ const skipped = _([1, 2, 3, 4, 5]).skip(3).toArray();
 console.log(skipped); // [ 4, 5 ]
 ```
 
+## skipWhile
+
+Method signature: `skipWhile(shouldSkipCondition: (item: T, index?: number) => boolean): ICollection<T>`.
+
+Bypasses elements in a collection as long as a specified condition is true and then returns the remaining elements.
+
+```typescript
+const skipped = _([1, 2, 3, 2, 1]).skipWhile(item => item < 3).toArray();
+
+console.log(skipped); // [ 3, 2, 1 ]
+```
+
 ## sort
 
 Method signature: `sort(): ICollection<T>`.
@@ -273,6 +287,18 @@ Returns a `shouldTake` elements from the start of a collection.
 const taked = _([1, 2, 3, 4, 5]).take(3).toArray();
 
 console.log(taked); // [ 1, 2, 3 ]
+```
+
+## takeWhile
+
+Method signature: `takeWhile(shouldSkipCondition: (item: T, index?: number) => boolean): ICollection<T>`.
+
+Returns elements from a collection as long as a specified condition is true, and then skips the remaining elements.
+
+```typescript
+const taken = _([1, 2, 3, 2, 1]).takeWhile(item => item < 3).toArray();
+
+console.log(skipped); // [ 1, 2 ]
 ```
 
 ## where

@@ -291,6 +291,13 @@ export interface ICollection<T> extends IIterable<T> {
 
 
     /**
+     * Bypasses elements in a collection as long as a specified condition is true and then returns the remaining elements.
+     * @param shouldSkipCondition Condition for skipping elements
+     */
+    skipWhile(shouldSkipCondition: FilterCondition<T>) : ICollection<T>;
+
+
+    /**
      * Sorts items ascending using default comparison
      */
     sort(): ICollection<T>;
@@ -318,6 +325,13 @@ export interface ICollection<T> extends IIterable<T> {
      * @param shouldTake Count of taking elements
      */
     take(shouldTake: number) : ICollection<T>;
+
+
+    /**
+     * Returns elements from a collection as long as a specified condition is true, and then skips the remaining elements.
+     * @param shouldTakeCondition Condition for returning elements
+     */
+    takeWhile(shouldTakeCondition: FilterCondition<T>) : ICollection<T>;
 
     
     /**

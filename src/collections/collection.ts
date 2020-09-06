@@ -61,8 +61,16 @@ export class Collection<T> implements ICollection<T> {
         return new SkippingCollection(this, shouldSkip);
     }
 
+    public skipWhile(condition: FilterCondition<T>): ICollection<T> {
+        return new SkippingWhileCollection(this, condition);
+    }
+
     public take(shouldTake: number): ICollection<T> {
         return new TakingCollection(this, shouldTake);
+    }
+
+    public takeWhile(condition: FilterCondition<T>): ICollection<T> {
+        return new TakingWhileCollection(this, condition);
     }
 
     public first(predicate?: FilterCondition<T>): T {
@@ -364,6 +372,18 @@ export class SkippingCollection<T> extends Collection<T> {
     }
 }
 
+export class SkippingWhileCollection<T> extends Collection<T> {
+    public constructor(iterable: Collection<T>, private shouldSkip: FilterCondition<T>) {
+        super(iterable);
+    }
+
+    protected materialize(): T[] {
+        const count = this.inner.countWhile(this.shouldSkip);
+
+        return this.inner.toArray().slice(count);
+    }
+}
+
 export class TakingCollection<T> extends Collection<T> {
     public constructor(iterable: Collection<T>, private shouldTake: number) {
         super(iterable);
@@ -371,6 +391,19 @@ export class TakingCollection<T> extends Collection<T> {
 
     protected materialize(): T[] {
         return this.inner.toArray().slice(0, this.shouldTake);
+    }
+}
+
+
+export class TakingWhileCollection<T> extends Collection<T> {
+    public constructor(iterable: Collection<T>, private shouldTake: FilterCondition<T>) {
+        super(iterable);
+    }
+
+    protected materialize(): T[] {
+        const count = this.inner.countWhile(this.shouldTake);
+
+        return this.inner.toArray().slice(0, count);
     }
 }
 
