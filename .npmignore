@@ -3,6 +3,7 @@ lib/**/*.spec.ts
 lib/**/*.-bench-spec.ts
 lib/**/*.spec.*.js
 lib/**/*.bench-spec.*.js
+lib/lib
 tests
 bench
 coverage
@@ -19,4 +20,5 @@ output.txt
 *.orig
 *.md
 docs/
-tsconfig.*.json
+tsconfig.*json
+bench-formatter.js
