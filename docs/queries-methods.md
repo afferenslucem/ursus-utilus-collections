@@ -191,6 +191,9 @@ Method signature: `prepend(item: T): ICollection<T>`.
 Adds a value to the beginning of the sequence.
 
 ```typescript
+const prepended = _([1, 2, 3]).prepend(2).toArray();
+
+console.log(prepended); // [2, 1, 2, 3]
 ```
 
 ## reverse

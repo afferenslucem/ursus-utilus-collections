@@ -7,6 +7,7 @@
 * SkipWhile
 * TakeWhile
 * Overloading for Contains
+* Prepend
 
 # Deleted
 
