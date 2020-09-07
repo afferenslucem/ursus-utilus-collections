@@ -307,6 +307,13 @@ export interface ICollection<T> extends IIterable<T> {
 
 
     /**
+     * Returns a new collection collection that contains the elements from source with the last count elements of the source collection omitted.
+     * @param shouldSkip Count of skipping elements
+     */
+    skipLast(shouldSkip: number) : ICollection<T>;
+
+
+    /**
      * Bypasses elements in a collection as long as a specified condition is true and then returns the remaining elements.
      * @param shouldSkipCondition Condition for skipping elements
      */

@@ -1,4 +1,6 @@
-# Added
+# Changelog
+
+## Added
 
 * Overloading for Aggregate
 * SelectMany
@@ -13,7 +15,13 @@
 * Of
 * Repeat
 * ofType
+* Union
+* SkipLast
 
-# Deleted
+## Deleted
 
 * Exists
+
+## Changed
+
+* Distinct delegate

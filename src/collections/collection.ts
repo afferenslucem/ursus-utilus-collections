@@ -61,6 +61,10 @@ export class Collection<T> implements ICollection<T> {
         return new SkippingCollection(this, shouldSkip);
     }
 
+    public skipLast(shouldSkip: number): ICollection<T> {
+        return new SkippingLastCollection(this, shouldSkip);
+    }
+
     public skipWhile(condition: FilterCondition<T>): ICollection<T> {
         return new SkippingWhileCollection(this, condition);
     }
@@ -383,6 +387,22 @@ export class SkippingCollection<T> extends Collection<T> {
         }
 
         return this.inner.toArray().slice(this.shouldSkip);
+    }
+}
+
+export class SkippingLastCollection<T> extends Collection<T> {
+    public constructor(iterable: Collection<T>, private shouldSkip: number) {
+        super(iterable);
+    }
+
+    protected materialize(): T[] {
+        const array = this.inner.toArray();
+
+        if(array.length < this.shouldSkip) {
+            throw Exception.SoManySkipping;
+        }
+
+        return array.slice(0, array.length - this.shouldSkip);
     }
 }
 

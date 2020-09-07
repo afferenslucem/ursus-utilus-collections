@@ -230,14 +230,6 @@ describe('Index', function () {
         assert.equal(result, expected)
     });
     
-    it('should skip while elements < 5', () => {
-        const result = _.range(1, 10).skipWhile(item => item < 5).toArray();
-            
-        const expected = _.range(5, 10).toArray();
-        
-        assert.deepEqual(result, expected)
-    });
-    
     it('should take wile elements < 5', () => {
         const result = _.range(1, 10).takeWhile(item => item < 5).toArray();
             
