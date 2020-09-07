@@ -1,6 +1,6 @@
 import { Collection } from './collections/collection';
 import { ICollection } from './interfaces/i-collection';
-import { range, random, of } from './utils/operators';
+import { range, random, of, empty, repeat } from './utils/operators';
 
 export * from './interfaces/i-collection';
 
@@ -13,6 +13,10 @@ exp.range = range;
 exp.random = random;
 
 exp.of = of;
+
+exp.empty = empty;
+
+exp.repeat = repeat;
 
 /**
  * Creates ICollection instance

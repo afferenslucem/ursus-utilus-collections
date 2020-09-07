@@ -69,6 +69,24 @@ describe('Index', function () {
 
         assert.deepEqual(expect, result);
     });
+
+
+    it('should create collection from repeated object', () => {
+        const expect = _([1, 1, 1]);
+
+        const result = _.repeat(1, 3);
+
+        assert.deepEqual(expect, result);
+    });
+
+
+    it('should create empty collection', () => {
+        const expect = _([]);
+
+        const result = _.empty();
+
+        assert.deepEqual(expect, result);
+    });
          
     it('should create collection by array', () => {
         const items = [1, 2, 3];

@@ -1,5 +1,5 @@
 import { assert } from "chai";
-import { combine, of, range, random } from './operators';
+import { combine, of, range, random, empty, repeat } from './operators';
 import _ from '../index';
 
 
@@ -57,6 +57,28 @@ describe('of', function () {
         const expect = [1];
 
         const result = of(obj).toArray();
+
+        assert.deepEqual(expect, result);
+    });
+});
+
+
+describe('empty', function () {  
+    it('should create empty collection', () => {
+        const result = empty();
+
+        const expect = _([]);
+
+        assert.deepEqual(expect, result);
+    });
+});
+
+
+describe('repeat', function () {  
+    it('should create collection', () => {
+        const result = repeat(5, 3);
+
+        const expect = _([5, 5, 5]);
 
         assert.deepEqual(expect, result);
     });

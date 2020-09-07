@@ -35,3 +35,13 @@ export function random (count: number, max = RANDOM_MAX): ICollection<number> {
 
     return new Collection(result);
 }
+
+export function empty<T> (): ICollection<T> {
+    return new Collection<T>([]);
+}
+
+export function repeat<T> (value: T, length: number): ICollection<T> {
+    const array = new Array<T>(length).fill(value)
+
+    return new Collection<T>(array);
+}
