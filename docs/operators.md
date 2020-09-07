@@ -4,6 +4,7 @@
 * [of](#of)
 * [random](#random)
 * [range](#range)
+* [repeat](#rarepeatnge)
 
 ## empty
 
@@ -12,7 +13,7 @@ Method signature: `empty<T> (): ICollection<T>`.
 Creates empty collection
 
 ```typescript
-const empty = _.empty().toArray();
+const empty = _.empty<number>().toArray();
 
 console.log(empty); // []
 ```
