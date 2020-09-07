@@ -12,3 +12,26 @@ export function combine<T, T2>(obj: T, arr: T2[] | ICollection<T2>): Array<[T, T
 export function of<T>(obj: T) : ICollection<T> {
     return new Collection([obj]);
 }
+
+export function range(from: number, to: number, step = 1) : ICollection<number> {
+    const result = [];
+
+    for(let i = from; i <= to; i += step) {
+        result.push(i);
+    }
+
+    return new Collection(result);
+}
+
+const RANDOM_MAX = 10e10;
+
+export function random (count: number, max = RANDOM_MAX): ICollection<number> {
+    const result = [];
+
+    for(let i = 0; i < count; i++) {
+        const item = Math.floor(Math.random() * RANDOM_MAX) % max;
+        result.push(item);
+    }
+
+    return new Collection(result);
+}

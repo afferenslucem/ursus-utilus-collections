@@ -10,6 +10,7 @@
 * Prepend
 * Append
 * DefaultIfEmpty
+* Of
 
 # Deleted
 

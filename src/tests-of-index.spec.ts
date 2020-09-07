@@ -50,6 +50,25 @@ describe('Index', function () {
 
         assert.deepEqual(collection, expected)
     });   
+
+    it('should generate range', () => {
+        const collection = _.random(5, 5);
+
+        const expected = 5;
+
+        assert.deepEqual(collection.count(), expected)
+    });    
+
+
+    it('should create collection from object', () => {
+        const obj = 1;
+
+        const expect = [1];
+
+        const result = _.of(obj).toArray();
+
+        assert.deepEqual(expect, result);
+    });
          
     it('should create collection by array', () => {
         const items = [1, 2, 3];

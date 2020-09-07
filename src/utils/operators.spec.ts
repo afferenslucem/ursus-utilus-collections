@@ -1,5 +1,5 @@
 import { assert } from "chai";
-import { combine, of } from './operators';
+import { combine, of, range, random } from './operators';
 import _ from '../index';
 
 
@@ -59,5 +59,35 @@ describe('of', function () {
         const result = of(obj).toArray();
 
         assert.deepEqual(expect, result);
+    });
+});
+
+
+describe('range', function () {  
+    it('should generate range', () => {
+        const collection = range(0, 5);
+
+        const expected = _([0, 1, 2, 3, 4, 5]);
+
+        assert.deepEqual(collection, expected)
+    });
+
+    it('should generate range with step', () => {
+        const collection = range(0, 6, 2);
+
+        const expected = _([0, 2, 4, 6]);
+
+        assert.deepEqual(collection, expected)
+    });   
+});
+
+
+describe('random', function () {  
+    it('should generate range', () => {
+        const collection = random(5, 5);
+
+        const expected = 5;
+
+        assert.deepEqual(collection.count(), expected)
     });
 });
