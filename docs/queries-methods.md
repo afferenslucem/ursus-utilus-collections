@@ -279,6 +279,18 @@ const skipped = _([1, 2, 3, 4, 5]).skip(3).toArray();
 console.log(skipped); // [ 4, 5 ]
 ```
 
+## skipLast
+
+Method signature: `skipLast(shouldSkip: number) : ICollection<T>`.
+
+Returns a new collection that contains the elements from source with the last `shouldSkip` elements of the source collection omitted.
+
+```typescript
+const skipped = _([1, 2, 3, 4, 5]).skipLast(3).toArray();
+
+console.log(skipped); // [ 1, 2 ]
+```
+
 ## skipWhile
 
 Method signature: `skipWhile(shouldSkipCondition: (item: T, index?: number) => boolean): ICollection<T>`.
@@ -317,7 +329,7 @@ console.log(sorted); // [ 4, 3, 2, 1 ]
 
 ## take
 
-Method signature: `skip(shouldSkip: number) : ICollection<T>`.
+Method signature: `take(shouldTake: number) : ICollection<T>`.
 
 Returns a `shouldTake` elements from the start of a collection.
 
@@ -325,6 +337,18 @@ Returns a `shouldTake` elements from the start of a collection.
 const taked = _([1, 2, 3, 4, 5]).take(3).toArray();
 
 console.log(taked); // [ 1, 2, 3 ]
+```
+
+## takeLast
+
+Method signature: `takeLast(shouldTake: number) : ICollection<T>`.
+
+Returns a new collection that contains the last `shouldTake` elements from source.
+
+```typescript
+const taked = _([1, 2, 3, 4, 5]).takeLast(3).toArray();
+
+console.log(taked); // [ 3, 4, 5 ]
 ```
 
 ## takeWhile

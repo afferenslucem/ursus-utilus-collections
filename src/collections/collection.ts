@@ -73,6 +73,10 @@ export class Collection<T> implements ICollection<T> {
         return new TakingCollection(this, shouldTake);
     }
 
+    public takeLast(shouldSkip: number): ICollection<T> {
+        return new TakingLastCollection(this, shouldSkip);
+    }
+
     public takeWhile(condition: FilterCondition<T>): ICollection<T> {
         return new TakingWhileCollection(this, condition);
     }
@@ -428,6 +432,16 @@ export class TakingCollection<T> extends Collection<T> {
     }
 }
 
+export class TakingLastCollection<T> extends Collection<T> {
+    public constructor(iterable: Collection<T>, private shouldTake: number) {
+        super(iterable);
+    }
+
+    protected materialize(): T[] {
+        const array = this.inner.toArray()
+        return array.slice(array.length - this.shouldTake);
+    }
+}
 
 export class TakingWhileCollection<T> extends Collection<T> {
     public constructor(iterable: Collection<T>, private shouldTake: FilterCondition<T>) {
