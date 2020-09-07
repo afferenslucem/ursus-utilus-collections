@@ -31,6 +31,7 @@ import { SingleAggregator } from "../aggregators/single/single-aggregator";
 import { SingleOrDefaultAggregator } from "../aggregators/single-or-default/single-or-defaulr-aggregator";
 import { equalityCompare } from "../utils/equality-compare";
 import { SSL_OP_NO_TLSv1_1 } from "constants";
+import { CollectionEqualAggregator } from "../aggregators/collectionEqual/collection-equal-aggregaor";
 
 export class Collection<T> implements ICollection<T> {
     // @ts-ignore
@@ -92,6 +93,12 @@ export class Collection<T> implements ICollection<T> {
 
     public takeWhile(condition: FilterCondition<T>): ICollection<T> {
         return new TakingWhileCollection(this, condition);
+    }
+
+    public collectionEqual(collection: T[] | ICollection<T>): boolean;
+    public collectionEqual(collection: T[] | ICollection<T>, comparer: EqualityCondition<T>): boolean;
+    public collectionEqual(collection: T[] | ICollection<T>, comparer?: EqualityCondition<T>): boolean {
+        return new CollectionEqualAggregator<T>(this, new Collection(collection), comparer).aggregate();
     }
 
     public first(predicate?: FilterCondition<T>): T {

@@ -33,7 +33,7 @@ console.log(onlyInFirst) // [ 0, 1, 7, 8 ];
 
 ### except with custom comparer
 
-Method signature: `except(items: T[] | ICollection<T>, comparer: EqualityCondition<T>): ICollection<T>`.
+Method signature: `except(items: T[] | ICollection<T>, comparer: (first: T, second: T) => boolean): ICollection<T>`.
 
 Produces the set collection of two collections by using the specified equality comparer to compare values.
 
@@ -80,7 +80,7 @@ console.log(intersect) // [ 2, 3 ];
 
 ### intersect with custom comparer
 
-Method signature: `intersect(items: T[] | ICollection<T>, comparer: EqualityCondition<T>): ICollection<T>`.
+Method signature: `intersect(items: T[] | ICollection<T>, comparer: (first: T, second: T) => boolean): ICollection<T>`.
 
 Produces the set collection of two collections by using the specified equality comparer to compare values.
 
@@ -116,7 +116,7 @@ console.log(union)
 
 ## groupJoin
 
-Method signature: `groupJoin<T2, TKey, TResult>(iterable: ICollection<T2> | T2[], firstKey: MapCondition<T, TKey>, secondKey: MapCondition<T2, TKey>, zipFunc: GroupJoinCondition<T, T2, TResult>): ICollection<TResult>`
+Method signature: `groupJoin<T2, TKey, TResult>(iterable: ICollection<T2> | T2[], firstKey: MapCondition<T, TKey>, secondKey: MapCondition<T2, TKey>, zipFunc: (first: T1, seconds: ICollection<T2>) => TResult): ICollection<TResult>`
 
 Correlates the elements of two collections based on equality of keys and groups the results.
 
@@ -223,7 +223,7 @@ console.log(union) // [0, 1, 2, 3, 4, 5, 6];
 
 ### union with custom comparer
 
-Method signature: `union(items: T[] | ICollection<T>, comparer: EqualityCondition<T>): ICollection<T>`.
+Method signature: `union(items: T[] | ICollection<T>, comparer: (first: T, second: T) => boolean): ICollection<T>`.
 
 Produces the set union of two collections by using the specified equality comparer.
 

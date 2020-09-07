@@ -86,7 +86,7 @@ console.log(distinct)
 
 ## groupBy
 
-Method signature: `groupBy<TKey>(key: MapCondition<T, TKey>): ICollection< IGroupedData<TKey, ICollection<T>> >`.
+Method signature: `groupBy<TKey>(key: (item: T) => TKey): ICollection< IGroupedData<TKey, ICollection<T>> >`.
 
 Groups the elements of a collection.
 
@@ -116,7 +116,7 @@ console.log(grouped);
 
 ### Grouping with mapping result
 
-Method signature: `groupBy<TKey, TValue>(key: MapCondition<T, TKey>, groupMap: MapCondition<ICollection<T>, TValue>): ICollection<IGroupedData<TKey, TValue>>`.
+Method signature: `groupBy<TKey, TValue>(key: (item: T) => TKey, groupMap: (item: ICollection<T>) => TValue>): ICollection<IGroupedData<TKey, TValue>>`.
 
 Groups the elements of a collection and aggregates it.
 
@@ -146,7 +146,7 @@ console.log(grouped);
 
 ## orderBy
 
-Method signature: `orderBy<TKey>(key: MapCondition<T, TKey>): ISortingCollection<T>`.
+Method signature: `orderBy<TKey>(key: (item: T) => TKey): ISortingCollection<T>`.
 
 Sorts the elements of a collection in ascending order to a key.
 
@@ -179,7 +179,7 @@ console.log(ordered);
 
 ## orderByDescending
 
-Method signature: `orderBy<TKey>(key: MapCondition<T, TKey>): ISortingCollection<T>`.
+Method signature: `orderBy<TKey>(key: (item: T) => TKey): ISortingCollection<T>`.
 
 Sorts the elements of a collection in descending order to a key.
 

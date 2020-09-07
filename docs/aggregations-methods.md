@@ -6,6 +6,7 @@ Aggregating methods trigger computation of your query. All your chain of methods
 * [all](#all)
 * [any](#any)
 * [average](#average)
+* [collectionEqual](#collectionEqual)
 * [contains](#contains)
 * [count](#count)
 * [countWhile](#countWhile)
@@ -121,6 +122,57 @@ const cats = [{
 const result = _(cats).average(item => item.age) // Computing middle age of cats
 
 console.log(result); // 2
+```
+
+## collectionEqual
+
+Method signature: `collectionEqual(collection: T[] | ICollection<T>): boolean`.
+
+Determines whether two sequences are equal by comparing the elements by using the default equality comparer.
+
+```typescript
+const eq = _.range(1, 5).collectionEqual([1, 2, 3, 4, 5])
+console.log(eq); //true
+```
+
+## contains with equality comparer
+
+Method signature: `collectionEqual(collection: T[] | ICollection<T>, (first: T, second: T) => boolean): boolean`.
+
+Determines whether two sequences are equal by comparing the elements by using the specified equality comparer.
+
+```typescript
+const cats = [{
+    name: 'Barsik',
+    age: 9
+},{
+    name: 'Cherry',
+    age: 4
+},{
+    name: 'Feya',
+    age: 4
+},{
+    name: 'Lulya',
+    age: 1
+},];
+
+const cats2 = [{
+    name: 'Barsik',
+    age: 9
+},{
+    name: 'Cherry',
+    age: 4
+},{
+    name: 'Feya',
+    age: 4
+},{
+    name: 'Lulya',
+    age: 1
+},];
+
+const result = _(cats).collectionEqual(cats2, (a, b) => a.name == b.name);
+
+console.log(result); // true
 ```
 
 ## contains

@@ -50,6 +50,29 @@ export interface ICollection<T> extends IIterable<T> {
      * @param map function for taking element property
      */
     average(map: MapCondition<T, number>): number;
+    
+    /**
+     * Determines whether two sequences are equal by comparing the elements by using the default equality comparer.
+     */
+    collectionEqual(collection: T[] | ICollection<T>): boolean;
+
+    /**
+     * Determines whether two sequences are equal by comparing the elements by using the specified equality comparer.
+     */
+    collectionEqual(collection: T[] | ICollection<T>, comparer: (first: T, second: T) => boolean): boolean;
+
+    /**
+     * Determines whether a collection contains a specified element. Using default equality condition.
+     * @param element Element for checking
+     */
+    contains(element: T): boolean;
+    
+    /**
+     * Determines whether a collection contains a specified element. Using custom equality condition.
+     * @param element Element for checking
+     * @param condition Equality condition
+     */
+    contains(element: T, condition: EqualityCondition<T>): boolean;
 
     
     /**
@@ -68,19 +91,6 @@ export interface ICollection<T> extends IIterable<T> {
      * @param condition Predicate for counting elements by condition
      */
     countWhile(condition: FilterCondition<T>): number;
-    
-    /**
-     * Determines whether a collection contains a specified element. Using default equality condition.
-     * @param element Element for checking
-     */
-    contains(element: T): boolean;
-    
-    /**
-     * Determines whether a collection contains a specified element. Using custom equality condition.
-     * @param element Element for checking
-     * @param condition Equality condition
-     */
-    contains(element: T, condition: EqualityCondition<T>): boolean;
     
     
     /**
