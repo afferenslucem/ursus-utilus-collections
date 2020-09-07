@@ -1,5 +1,5 @@
 import { assert } from "chai";
-import { combine } from './operators';
+import { combine, of } from './operators';
 import _ from '../index';
 
 
@@ -44,6 +44,19 @@ describe('combine', function () {
         const expect = [];
 
         const result = combine(obj, items);
+
+        assert.deepEqual(expect, result);
+    });
+});
+
+
+describe('of', function () {  
+    it('should create collection from object', () => {
+        const obj = 1;
+
+        const expect = [1];
+
+        const result = of(obj).toArray();
 
         assert.deepEqual(expect, result);
     });

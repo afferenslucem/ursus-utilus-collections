@@ -29,6 +29,18 @@ const appended = _([1, 2, 3]).append(4).toArray();
 console.log(appended); // [1, 2, 3, 4]
 ```
 
+## defaultIfEmpty
+
+Method signature: `defaultIfEmpty(value: T | T[] | ICollection<T>): ICollection<T>`.
+
+Returns the elements of the collection or the specified value in a collection if the original collection is empty.
+
+```typescript
+const defaultValue = _([1, 2, 3, 4, 5]).where(item => item > 7).defaultIfEmpty(0).toArray();
+
+console.log(defaultValue); // [ 0 ]
+```
+
 ## distinct
 
 Method signature: `distinct(): ICollection<T>`.

@@ -25,7 +25,7 @@ import { ZipNativeAlgorithm } from "../algorithms/zip/zip.native/zip.algorithm.n
 import { AllAggregator } from "../aggregators/all/all-aggregator";
 import { ElementAtAggregator } from "../aggregators/element-at/element-at";
 import { ElementAtOrDefaultAggregator } from "../aggregators/element-at-or-default/element-at-or-default-aggregator";
-import { combine } from "../utils/operators";
+import { combine, of } from "../utils/operators";
 import { CountWhileAggregator } from "../aggregators/count-while/count-while-aggregator";
 
 export class Collection<T> implements ICollection<T> {
@@ -191,6 +191,10 @@ export class Collection<T> implements ICollection<T> {
 
     public append(item: T): ICollection<T> {
         return new AppendCollection(this, item);
+    }
+
+    public defaultIfEmpty(value: T | T[] | ICollection<T>): ICollection<T> {
+        return new DefaultCollection(this, value);
     }
 
     public distinct(): ICollection<T>;
@@ -621,5 +625,32 @@ export class AppendCollection<T> extends Collection<T> {
         const result = array.concat(temp);
 
         return result;
+    }
+}
+
+export class DefaultCollection<T> extends Collection<T> {    
+    private reserved: ICollection<T>;
+
+    public constructor(iterable: Collection<T>, reserved: T | T[] | ICollection<T>) {
+        super(iterable);
+
+        if(reserved instanceof Collection) {
+            this.reserved = reserved;
+        } else if (Array.isArray(reserved)) {
+            this.reserved = new Collection(reserved);
+        } else {
+            // @ts-ignore
+            this.reserved = of(reserved);
+        }
+    }
+
+    protected materialize(): Array<T> {
+        const result = this.inner.toArray();
+
+        if (result.length > 0) {
+            return result;
+        } else {
+            return this.reserved.toArray();
+        }
     }
 }

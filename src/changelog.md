@@ -9,6 +9,7 @@
 * Overloading for Contains
 * Prepend
 * Append
+* DefaultIfEmpty
 
 # Deleted
 

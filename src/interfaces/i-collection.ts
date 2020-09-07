@@ -217,6 +217,11 @@ export interface ICollection<T> extends IIterable<T> {
     append(item: T): ICollection<T>;
 
     /**
+     * Returns the elements of the collection or the specified value in a collection if the original collection is empty.
+     */
+    defaultIfEmpty(value: T | T[] | ICollection<T>): ICollection<T>;
+
+    /**
      * Returns distinct elements from a collection
      */
     distinct(): ICollection<T>;
