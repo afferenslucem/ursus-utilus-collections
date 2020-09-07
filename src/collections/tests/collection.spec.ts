@@ -1,4 +1,5 @@
 import { assert } from 'chai';
+import _ from '../../index';
 import {Collection} from '../collection';
 import { Exception } from '../../exceptions/exceptions';
 

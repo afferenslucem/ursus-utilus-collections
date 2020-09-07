@@ -222,15 +222,15 @@ export interface ICollection<T> extends IIterable<T> {
     defaultIfEmpty(value: T | T[] | ICollection<T>): ICollection<T>;
 
     /**
-     * Returns distinct elements from a collection
+     * Returns distinct elements from a collection using default equality comparer
      */
     distinct(): ICollection<T>;
 
     /**
-     * Returns distinct elements by field from a collection
-     * @param mapping Rule for taking field
+     * Returns distinct elements from a collection using specified equality comparer
+     * @param comparer Rule for comparing
      */
-    distinct<TKey>(mapping: MapCondition<T, TKey>): ICollection<T>;
+    distinct(comparer: EqualityCondition<T>): ICollection<T>;
 
 
     /**
@@ -362,6 +362,17 @@ export interface ICollection<T> extends IIterable<T> {
      * Concatenates two sequences.
      */
     concat(items: T[] | ICollection<T>): ICollection<T>;
+
+
+    /**
+     * Produces the set union of two collections by using the default equality comparer.
+     */
+    union(items: T[] | ICollection<T>): ICollection<T>;
+
+    /**
+     * Produces the set union of two collections by using the specified  equality comparer.
+     */
+    union(items: T[] | ICollection<T>, comparer: EqualityCondition<T>): ICollection<T>;
 
 
     /**

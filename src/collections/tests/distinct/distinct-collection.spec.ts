@@ -54,7 +54,7 @@ describe('DistinctCollection', function () {
     it('should return distinctBy', () => {
         const expected = [[1, 1], [3, 2]];
 
-        const result = new DistinctCollection(new Collection([[1, 1], [2, 1], [3, 2]]), item => item[1]).toArray();
+        const result = new DistinctCollection(new Collection([[1, 1], [2, 1], [3, 2]]), (a, b) => a[1] == b[1]).toArray();
 
         assert.deepEqual(result, expected)
     });
@@ -74,8 +74,10 @@ describe('DistinctCollection', function () {
 
         const expected = [[1, 1], [3, 2]];
 
-        const result = collection.distinct(item => item[1]).toArray();
+        const result = collection.distinct((a, b) => a[1] == b[1]).toArray();
+        const control = collection.distinct().toArray();
 
         assert.deepEqual(result, expected)
+        assert.deepEqual(control, collection.toArray())
     });
 });

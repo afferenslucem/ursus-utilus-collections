@@ -198,9 +198,15 @@ export class Collection<T> implements ICollection<T> {
     }
 
     public distinct(): ICollection<T>;
-    public distinct<K>(mapping: MapCondition<T, K>): ICollection<T>
-    public distinct<K>(mapping?: MapCondition<T, K>): ICollection<T> {
-        return new DistinctCollection(this, mapping);
+    public distinct(comparer: EqualityCondition<T>): ICollection<T>
+    public distinct(comparer?: EqualityCondition<T>): ICollection<T> {
+        return new DistinctCollection(this, comparer);
+    }
+
+    public union(items: T[] | ICollection<T>): ICollection<T>;
+    public union(items: T[] | ICollection<T>, comparer: EqualityCondition<T>): ICollection<T>;
+    public union(items: T[] | ICollection<T>, comparer?: EqualityCondition<T>): ICollection<T> {
+        return new UnionCollection(this, new Collection(items), comparer);
     }
     
     public groupBy<TKey>(key: MapCondition<T, TKey>): ICollection<IGroupedData<TKey, ICollection<T>>>;
@@ -507,8 +513,8 @@ export class ReverseCollection<T> extends Collection<T> {
     }
 }
 
-export class DistinctCollection<T, K = T> extends Collection<T> {    
-    public constructor(iterable: Collection<T>, private map?: MapCondition<T, K>) {
+export class DistinctCollection<T> extends Collection<T> {    
+    public constructor(iterable: Collection<T>, private comparer?: EqualityCondition<T>) {
         // @ts-ignore
         super(iterable);
     }
@@ -518,11 +524,11 @@ export class DistinctCollection<T, K = T> extends Collection<T> {
         
         const algo = this.chooseAlgorithm(array);
 
-        return algo.run(array, this.map);
+        return algo.run(array, this.comparer);
     }
 
     protected chooseAlgorithm(array: T[]): IAlgorithm<T[]> {
-        if(!this.map){
+        if(!this.comparer){
             return new DistinctAlgorithm<T>();
         } else {
             return new AlgorithmSolver().solve(new DistinctByCustomAlgorithm<T>(), new DistinctByNativeAlgorithm<T>(), array);
@@ -652,5 +658,16 @@ export class DefaultCollection<T> extends Collection<T> {
         } else {
             return this.reserved.toArray();
         }
+    }
+}
+
+export class UnionCollection<T> extends Collection<T> {   
+    public constructor(iterable: Collection<T>, private outer: ICollection<T>, private comparer?: EqualityCondition<T>) {
+        super(iterable);
+    }
+
+    protected materialize(): Array<T> {
+        // @ts-ignore
+        return this.inner.concat(this.outer).distinct(this.comparer).toArray();
     }
 }

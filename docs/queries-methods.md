@@ -45,7 +45,7 @@ console.log(defaultValue); // [ 0 ]
 
 Method signature: `distinct(): ICollection<T>`.
 
-Returns distinct elements from a collection.
+Returns distinct elements from a collection using default equality comparer
 
 ```typescript
 const distinct = _([1, 3, 2, 2, 3, 1, 1, 2]).distinct().toArray();
@@ -53,11 +53,11 @@ const distinct = _([1, 3, 2, 2, 3, 1, 1, 2]).distinct().toArray();
 console.log(distinct); // [ 1, 3, 2 ]
 ```
 
-### Distinct by field
+### distinct with custom comparer
 
-Method signature: `distinct<V>(mapping: (item: T) => V): ICollection<T>`.
+Method signature: `distinct<V>(comparer: (first: T, second: T) => boolean): ICollection<T>`.
 
-Returns distinct elements by field from a collection.
+Returns distinct elements from a collection using specified equality comparer
 
 ```typescript
 const cats = [{
@@ -77,7 +77,7 @@ const cats = [{
     age: 2
 }]
 
-const distinct = _(cats).distinct(item => item.age).toArray();
+const distinct = _(cats).distinct((first, second) => first.age === second.age).toArray();
 // getiing cats distinct by age
 
 console.log(distinct)

@@ -11,6 +11,8 @@
 * Append
 * DefaultIfEmpty
 * Of
+* Repeat
+* ofType
 
 # Deleted
 
