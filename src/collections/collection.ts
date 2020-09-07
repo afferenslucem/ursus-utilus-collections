@@ -128,6 +128,10 @@ export class Collection<T> implements ICollection<T> {
         })
     }
 
+    public prepend(item: T): ICollection<T> {
+        return new PrependCollection(this, item);
+    }
+
     public min(predicate?: CompareCondition<T> | undefined): T {
         return new MinAggregator(this, predicate).aggregate();
     }
@@ -466,5 +470,20 @@ export class ZipCollection<T1, T2, TResult = [T1, T2]> extends Collection<TResul
 
     protected chooseAlgorithm(array: T1[]): IAlgorithm<TResult[]> {
         return new AlgorithmSolver().solve(new ZipCustomAlgorithm<T1, T2, TResult>(), new ZipNativeAlgorithm<T1, T2, TResult>(), array);
+    }
+}
+
+export class PrependCollection<T> extends Collection<T> {    
+    public constructor(iterable: Collection<T>, private prepender: T) {
+        super(iterable);
+    }
+
+    protected materialize(): Array<T> {
+        const array = this.inner.toArray();
+        const temp = Array.of(this.prepender);
+
+        const result = temp.concat(array);
+
+        return result;
     }
 }
