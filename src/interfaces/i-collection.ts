@@ -501,4 +501,17 @@ export interface ICollection<T> extends IIterable<T> {
      * @param element 
      */
     toLookup<TKey, TElement>(key: MapCondition<T, TKey>, element: MapCondition<T, TElement>): Map<TKey, TElement[]>;
+
+    /**
+     * Creates a Map<TKey, T> from an collection according to a specified key selector function.
+     * @param key key selector
+     */
+    toMap<TKey>(key: MapCondition<T, TKey>): Map<TKey, T>;
+
+    /**
+     * Creates a Map<TKey, TElement> from an collection according to specified key selector and element selector functions.
+     * @param key 
+     * @param element 
+     */
+    toMap<TKey, TElement>(key: MapCondition<T, TKey>, element: MapCondition<T, TElement>): Map<TKey, TElement>;
 }
