@@ -189,6 +189,10 @@ export class Collection<T> implements ICollection<T> {
         return new ReverseCollection(this);
     }
 
+    public append(item: T): ICollection<T> {
+        return new AppendCollection(this, item);
+    }
+
     public distinct(): ICollection<T>;
     public distinct<K>(mapping: MapCondition<T, K>): ICollection<T>
     public distinct<K>(mapping?: MapCondition<T, K>): ICollection<T> {
@@ -600,6 +604,21 @@ export class PrependCollection<T> extends Collection<T> {
         const temp = Array.of(this.prepender);
 
         const result = temp.concat(array);
+
+        return result;
+    }
+}
+
+export class AppendCollection<T> extends Collection<T> {    
+    public constructor(iterable: Collection<T>, private appender: T) {
+        super(iterable);
+    }
+
+    protected materialize(): Array<T> {
+        const array = this.inner.toArray();
+        const temp = Array.of(this.appender);
+
+        const result = array.concat(temp);
 
         return result;
     }

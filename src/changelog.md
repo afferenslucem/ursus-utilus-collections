@@ -8,6 +8,7 @@
 * TakeWhile
 * Overloading for Contains
 * Prepend
+* Append
 
 # Deleted
 

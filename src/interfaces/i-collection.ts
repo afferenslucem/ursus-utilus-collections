@@ -210,6 +210,12 @@ export interface ICollection<T> extends IIterable<T> {
 
     // Querring
 
+
+    /**
+     * Appends a value to the end of the sequence.
+     */
+    append(item: T): ICollection<T>;
+
     /**
      * Returns distinct elements from a collection
      */

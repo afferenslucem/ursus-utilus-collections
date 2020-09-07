@@ -1,9 +1,11 @@
 # Querring Methods
 
+* [append](#append)
 * [distinct](#distinct)
 * [groupBy](#groupBy)
 * [orderBy](#orderBy)
 * [orderByDescending](#orderByDescending)
+* [prepend](#prepend)
 * [reverse](#reverse)
 * [select](#select)
 * [selectMany](#selectMany)
@@ -14,6 +16,18 @@
 * [take](#take)
 * [takeWhile](#takeWhile)
 * [where](#where)
+
+## append
+
+Method signature: `append(item: T): ICollection<T>`.
+
+Appends a value to the end of the sequence.
+
+```typescript
+const appended = _([1, 2, 3]).append(4).toArray();
+
+console.log(appended); // [1, 2, 3, 4]
+```
 
 ## distinct
 
@@ -191,9 +205,9 @@ Method signature: `prepend(item: T): ICollection<T>`.
 Adds a value to the beginning of the sequence.
 
 ```typescript
-const prepended = _([1, 2, 3]).prepend(2).toArray();
+const prepended = _([1, 2, 3]).prepend(0).toArray();
 
-console.log(prepended); // [2, 1, 2, 3]
+console.log(prepended); // [0, 1, 2, 3]
 ```
 
 ## reverse
