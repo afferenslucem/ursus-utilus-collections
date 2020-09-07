@@ -16,6 +16,7 @@
 * Repeat
 * ofType
 * Union
+* Intersect
 * SkipLast
 * TakeLast
 * Single

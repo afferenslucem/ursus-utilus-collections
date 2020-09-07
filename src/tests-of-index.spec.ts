@@ -1,6 +1,5 @@
-import _, { ICollection } from '.';
+import _ from '.';
 import { assert } from 'chai';
-import { Collection } from './collections/collection';
 import { Exception } from './exceptions/exceptions';
 
 describe('Index', function () {  

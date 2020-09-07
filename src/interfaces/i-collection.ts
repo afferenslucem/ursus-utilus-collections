@@ -395,6 +395,32 @@ export interface ICollection<T> extends IIterable<T> {
      * Concatenates two collections.
      */
     concat(items: T[] | ICollection<T>): ICollection<T>;
+    
+
+    /**
+     * Produces the set collection of two sequences by using the default equality comparer to compare values.
+     */
+    intersect(items: T[] | ICollection<T>): ICollection<T>;
+
+    /**
+     * Produces the set collection of two sequences by using the specified equality comparer to compare values.
+     * @param comparer function to compare values
+     */
+    intersect(items: T[] | ICollection<T>, comparer: EqualityCondition<T>): ICollection<T>;
+
+
+    /**
+     * Correlates the elements of two collections based on matching keys.
+     * @param iterable Collection for joining
+     * @param firstKey Key taking function
+     * @param secondKey Key taking function
+     * @param zipFunc Function for merging elements
+     */
+    join<T2, TKey, TResult>(
+        iterable: ICollection<T2> | T2[],
+        firstKey: MapCondition<T, TKey>,
+        secondKey: MapCondition<T2, TKey>,
+        zipFunc: ZipCondition<T, T2, TResult>): ICollection<TResult>
 
 
     /**
@@ -419,19 +445,6 @@ export interface ICollection<T> extends IIterable<T> {
      * @param zipFunc Function for merging elements
      */
     zip<T2, TResult>(iterable: ICollection<T2> | T2[], zipFunc: ZipCondition<T, T2, TResult>): ICollection<TResult>
-    
-    /**
-     * Correlates the elements of two collections based on matching keys.
-     * @param iterable Collection for joining
-     * @param firstKey Key taking function
-     * @param secondKey Key taking function
-     * @param zipFunc Function for merging elements
-     */
-    join<T2, TKey, TResult>(
-        iterable: ICollection<T2> | T2[],
-        firstKey: MapCondition<T, TKey>,
-        secondKey: MapCondition<T2, TKey>,
-        zipFunc: ZipCondition<T, T2, TResult>): ICollection<TResult>
 
     // Materializing
 

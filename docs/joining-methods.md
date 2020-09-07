@@ -1,7 +1,9 @@
 # Joining Methods
 
 * [concat](#concat)
+* [intersect](#intersect)
 * [join](#join)
+* [union](#union)
 * [zip](#zip)
 
 ## concat
@@ -14,6 +16,54 @@ Concatenates two sequences.
 const concated = _([1, 2, 3).concat([4, 5, 6]).toArray();
 
 console.log(concated); // [ 1, 2, 3, 4, 5, 6 ]
+```
+
+## intersect
+
+Method signature: `intersect(items: T[] | ICollection<T>): ICollection<T>`.
+
+Produces the set collection of two sequences by using the default equality comparer to compare values.
+
+```typescript
+const intersect = _([0, 1, 2, 3]).intersect([2, 3, 4, 4, 5, 6]).toArray();
+
+console.log(intersect) // [ 2, 3 ];
+```
+
+### intersect with custom comparer
+
+Method signature: `intersect(items: T[] | ICollection<T>, comparer: EqualityCondition<T>): ICollection<T>`.
+
+Produces the set collection of two sequences by using the specified equality comparer to compare values.
+
+```typescript
+const cats = [{
+    name: 'Tom',
+    age: 1
+},
+{
+    name: 'Bonny',
+    age: 3
+},
+{
+    name: 'Lulya',
+    age: 2
+}]
+
+const cats2 = [{
+    name: 'Bonny',
+    age: 3
+},
+{
+    name: 'Cherry',
+    age: 2
+}]
+
+const intersect = _(cats).intersect(cats2, (a, b) => a.name === b.name && a.age === b.age).toArray();
+// getiing intersect cats
+
+console.log(union)
+// [ { name: 'Bonny', age: 3 } ]
 ```
 
 ## join
@@ -63,8 +113,6 @@ console.log(joined);
 //     {name: 'Lulya', age: 'Young'},
 // ]
 ```
-
-* [union](#union)
 
 ## union
 

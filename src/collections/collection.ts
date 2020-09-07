@@ -29,6 +29,7 @@ import { combine, of } from "../utils/operators";
 import { CountWhileAggregator } from "../aggregators/count-while/count-while-aggregator";
 import { SingleAggregator } from "../aggregators/single/single-aggregator";
 import { SingleOrDefaultAggregator } from "../aggregators/single-or-default/single-or-defaulr-aggregator";
+import { equalityCompare } from "../utils/equality-compare";
 
 export class Collection<T> implements ICollection<T> {
     // @ts-ignore
@@ -186,7 +187,7 @@ export class Collection<T> implements ICollection<T> {
         return new AllAggregator(this, predicate).aggregate();
     }
 
-    public contains(element: T, condition: EqualityCondition<T> = (a: T, b: T) => a === b): boolean {
+    public contains(element: T, condition: EqualityCondition<T> = equalityCompare): boolean {
         return this.any(item => condition(item, element));
     }
 
@@ -230,6 +231,12 @@ export class Collection<T> implements ICollection<T> {
     public union(items: T[] | ICollection<T>, comparer: EqualityCondition<T>): ICollection<T>;
     public union(items: T[] | ICollection<T>, comparer?: EqualityCondition<T>): ICollection<T> {
         return new UnionCollection(this, new Collection(items), comparer);
+    }
+
+    public intersect(items: T[] | ICollection<T>): ICollection<T>;
+    public intersect(items: T[] | ICollection<T>, comparer: EqualityCondition<T>): ICollection<T>;
+    public intersect(items: T[] | ICollection<T>, comparer?: EqualityCondition<T>): ICollection<T> {
+        return new IntersectCollection(this, new Collection(items), comparer);
     }
     
     public groupBy<TKey>(key: MapCondition<T, TKey>): ICollection<IGroupedData<TKey, ICollection<T>>>;
@@ -718,5 +725,27 @@ export class UnionCollection<T> extends Collection<T> {
     protected materialize(): Array<T> {
         // @ts-ignore
         return this.inner.concat(this.outer).distinct(this.comparer).toArray();
+    }
+}
+
+export class IntersectCollection<T> extends Collection<T> {   
+    public constructor(iterable: Collection<T>, private outer: ICollection<T>, private comparer?: EqualityCondition<T>) {
+        super(iterable);
+    }
+
+    protected materialize(): Array<T> {
+        const first = this.inner.toArray();
+
+        const result = [];
+
+        for(let i = 0, len = first.length; i < len; i++) {
+            // @ts-ignore
+            if(this.outer.contains(first[i], this.comparer)) {
+                result.push(first[i])
+            }
+        }
+
+        // @ts-ignore
+        return new Collection(result).distinct(equalityCompare).toArray();
     }
 }
