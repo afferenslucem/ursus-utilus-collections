@@ -238,6 +238,12 @@ export class Collection<T> implements ICollection<T> {
     public intersect(items: T[] | ICollection<T>, comparer?: EqualityCondition<T>): ICollection<T> {
         return new IntersectCollection(this, new Collection(items), comparer);
     }
+
+    public except(items: T[] | ICollection<T>): ICollection<T>;
+    public except(items: T[] | ICollection<T>, comparer: EqualityCondition<T>): ICollection<T>;
+    public except(items: T[] | ICollection<T>, comparer?: EqualityCondition<T>): ICollection<T> {
+        return new ExceptCollection(this, new Collection(items), comparer);
+    }
     
     public groupBy<TKey>(key: MapCondition<T, TKey>): ICollection<IGroupedData<TKey, ICollection<T>>>;
     public groupBy<TKey, TValue>(key: MapCondition<T, TKey>, group: MapCondition<ICollection<T>, TValue>): ICollection<IGroupedData<TKey, TValue>>;
@@ -741,6 +747,28 @@ export class IntersectCollection<T> extends Collection<T> {
         for(let i = 0, len = first.length; i < len; i++) {
             // @ts-ignore
             if(this.outer.contains(first[i], this.comparer)) {
+                result.push(first[i])
+            }
+        }
+
+        // @ts-ignore
+        return new Collection(result).distinct(equalityCompare).toArray();
+    }
+}
+
+export class ExceptCollection<T> extends Collection<T> {   
+    public constructor(iterable: Collection<T>, private outer: ICollection<T>, private comparer?: EqualityCondition<T>) {
+        super(iterable);
+    }
+
+    protected materialize(): Array<T> {
+        const first = this.inner.toArray();
+
+        const result = [];
+
+        for(let i = 0, len = first.length; i < len; i++) {
+            // @ts-ignore
+            if(!this.outer.contains(first[i], this.comparer)) {
                 result.push(first[i])
             }
         }

@@ -10,7 +10,7 @@
 
 Method signature: `concat(items: T[] | ICollection<T>): ICollection<T>`.
 
-Concatenates two sequences.
+Concatenates two collections.
 
 ```typescript
 const concated = _([1, 2, 3).concat([4, 5, 6]).toArray();
@@ -18,11 +18,58 @@ const concated = _([1, 2, 3).concat([4, 5, 6]).toArray();
 console.log(concated); // [ 1, 2, 3, 4, 5, 6 ]
 ```
 
+## except
+
+Method signature: `except(items: T[] | ICollection<T>): ICollection<T>`.
+
+Produces the set collection of two collections by using the default equality comparer to compare values.
+
+```typescript
+const onlyInFirst = _([0, 1, 2, 3, 4, 5, 6, 7, 8]).except([2, 3, 4, 4, 5, 6]).toArray();
+
+console.log(onlyInFirst) // [ 0, 1, 7, 8 ];
+```
+
+### except with custom comparer
+
+Method signature: `except(items: T[] | ICollection<T>, comparer: EqualityCondition<T>): ICollection<T>`.
+
+Produces the set collection of two collections by using the specified equality comparer to compare values.
+
+```typescript
+const cats = [{
+    name: 'Tom',
+    age: 1
+},
+{
+    name: 'Bonny',
+    age: 3
+},
+{
+    name: 'Lulya',
+    age: 2
+}]
+
+const cats2 = [{
+    name: 'Bonny',
+    age: 3
+},
+{
+    name: 'Lulya',
+    age: 2
+}]
+
+const onlyInFirst = _(cats).except(cats2, (a, b) => a.name === b.name && a.age === b.age).toArray();
+
+console.log(onlyInFirst)
+// [ { name: 'Tom', age: 1 } ]
+```
+
 ## intersect
 
 Method signature: `intersect(items: T[] | ICollection<T>): ICollection<T>`.
 
-Produces the set collection of two sequences by using the default equality comparer to compare values.
+Produces the set collection of two collections by using the default equality comparer to compare values.
 
 ```typescript
 const intersect = _([0, 1, 2, 3]).intersect([2, 3, 4, 4, 5, 6]).toArray();
@@ -34,7 +81,7 @@ console.log(intersect) // [ 2, 3 ];
 
 Method signature: `intersect(items: T[] | ICollection<T>, comparer: EqualityCondition<T>): ICollection<T>`.
 
-Produces the set collection of two sequences by using the specified equality comparer to compare values.
+Produces the set collection of two collections by using the specified equality comparer to compare values.
 
 ```typescript
 const cats = [{

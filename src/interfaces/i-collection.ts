@@ -398,12 +398,24 @@ export interface ICollection<T> extends IIterable<T> {
     
 
     /**
-     * Produces the set collection of two sequences by using the default equality comparer to compare values.
+     * Produces the set difference of two collections by using the default equality comparer to compare values.
+     */
+    except(items: T[] | ICollection<T>): ICollection<T>;
+
+    /**
+     * Produces the set difference of two collections by using the specified comparer to compare values.
+     * @param comparer function to compare values
+     */
+    except(items: T[] | ICollection<T>, comparer: EqualityCondition<T>): ICollection<T>;
+    
+
+    /**
+     * Produces the set collection of two collections by using the default equality comparer to compare values.
      */
     intersect(items: T[] | ICollection<T>): ICollection<T>;
 
     /**
-     * Produces the set collection of two sequences by using the specified equality comparer to compare values.
+     * Produces the set collection of two collections by using the specified equality comparer to compare values.
      * @param comparer function to compare values
      */
     intersect(items: T[] | ICollection<T>, comparer: EqualityCondition<T>): ICollection<T>;
