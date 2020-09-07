@@ -1,4 +1,4 @@
-import { FilterCondition, MapCondition, CompareCondition, ReduceCondition, ReduceWithAccumulatorCondition, ZipCondition, EqualityCondition } from "../commands/delegates";
+import { FilterCondition, MapCondition, CompareCondition, ReduceCondition, ReduceWithAccumulatorCondition, ZipCondition, EqualityCondition, GroupJoinCondition } from "../commands/delegates";
 import { IIterable } from "./i-iterable";
 import { ISortingCollection } from "./i-sorting-collection";
 import { IGroupedData } from "./i-grouped-data";
@@ -419,6 +419,20 @@ export interface ICollection<T> extends IIterable<T> {
      * @param comparer function to compare values
      */
     intersect(items: T[] | ICollection<T>, comparer: EqualityCondition<T>): ICollection<T>;
+
+
+    /**
+     * Correlates the elements of two sequences based on equality of keys and groups the results.
+     * @param iterable Collection for joining
+     * @param firstKey Key taking function
+     * @param secondKey Key taking function
+     * @param zipFunc Function for merging elements
+     */
+    groupJoin<T2, TKey, TResult>(
+        iterable: ICollection<T2> | T2[],
+        firstKey: MapCondition<T, TKey>,
+        secondKey: MapCondition<T2, TKey>,
+        zipFunc: GroupJoinCondition<T, T2, TResult>): ICollection<TResult>
 
 
     /**

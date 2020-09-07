@@ -1,5 +1,5 @@
 import { ICollection } from "../interfaces/i-collection";
-import { FilterCondition, MapCondition, CompareCondition, ReduceCondition, ServiceMapCondition, ReduceWithAccumulatorCondition, ZipCondition, EqualityCondition } from "../commands/delegates";
+import { FilterCondition, MapCondition, CompareCondition, ReduceCondition, ServiceMapCondition, ReduceWithAccumulatorCondition, ZipCondition, EqualityCondition, GroupJoinCondition } from "../commands/delegates";
 import { ISortingCollection } from "../interfaces/i-sorting-collection";
 import _ from '../index';
 import { SortSettings, Comparer, SortDirection } from "../utils/comparer";
@@ -30,6 +30,7 @@ import { CountWhileAggregator } from "../aggregators/count-while/count-while-agg
 import { SingleAggregator } from "../aggregators/single/single-aggregator";
 import { SingleOrDefaultAggregator } from "../aggregators/single-or-default/single-or-defaulr-aggregator";
 import { equalityCompare } from "../utils/equality-compare";
+import { SSL_OP_NO_TLSv1_1 } from "constants";
 
 export class Collection<T> implements ICollection<T> {
     // @ts-ignore
@@ -282,6 +283,14 @@ export class Collection<T> implements ICollection<T> {
         secondKey: MapCondition<T2, TKey>,
         zipFunc: ZipCondition<T, T2, TResult>): ICollection<TResult> {
             return new JoinCollection<T, T2, TKey, TResult>(this, new Collection(iterable), firstKey, secondKey, zipFunc);
+        }
+
+    groupJoin<T2, TKey, TResult>(
+        iterable: ICollection<T2> | T2[],
+        firstKey: MapCondition<T, TKey>,
+        secondKey: MapCondition<T2, TKey>,
+        zipFunc: GroupJoinCondition<T, T2, TResult>): ICollection<TResult> {
+            return new GroupJoinCollection<T, T2, TKey, TResult>(this, new Collection(iterable), firstKey, secondKey, zipFunc);
         }
 
     public elementAt(position: number): T {
@@ -661,6 +670,43 @@ export class JoinCollection<T1, T2, TKey, TResult> extends Collection<TResult> {
                 return []
             }
         }).select(item => this.zipFunc(item[0], item[1])).toArray()
+
+        return result;
+    }
+}
+
+export class GroupJoinCollection<T1, T2, TKey, TResult> extends Collection<TResult> {    
+    public constructor(
+        iterable: Collection<T1>,
+        private outer: Collection<T2>, 
+        private firstKey: MapCondition<T1, TKey>,
+        private secondKey: MapCondition<T2, TKey>,
+        private zipFunc: GroupJoinCondition<T1, T2, TResult>) {
+        // @ts-ignore
+        super(iterable);
+    }
+
+    protected materialize(): Array<TResult> {
+        // @ts-ignore
+        const left = this.inner as ICollection<T1>;
+        
+        const right = this.outer.groupBy(this.secondKey).aggregate((map, item) => {
+            map.set(item.key, item.group);
+            return map;
+        }, new Map<TKey, ICollection<T2>>());
+
+        const result = left.select<[T1, ICollection<T2>] | null>(item => {
+            const target = right.get(this.firstKey(item))
+
+            if(target) {
+                return [item, target];
+            } else {
+                return null
+            } 
+        })
+        .where(item => item !== null)
+        // @ts-ignore
+        .select(item => this.zipFunc(item[0], item[1])).toArray()
 
         return result;
     }

@@ -2,6 +2,7 @@
 
 * [concat](#concat)
 * [intersect](#intersect)
+* [groupJoin](#groupJoin)
 * [join](#join)
 * [union](#union)
 * [zip](#zip)
@@ -111,6 +112,53 @@ const intersect = _(cats).intersect(cats2, (a, b) => a.name === b.name && a.age 
 
 console.log(union)
 // [ { name: 'Bonny', age: 3 } ]
+```
+
+## groupJoin
+
+Method signature: `groupJoin<T2, TKey, TResult>(iterable: ICollection<T2> | T2[], firstKey: MapCondition<T, TKey>, secondKey: MapCondition<T2, TKey>, zipFunc: GroupJoinCondition<T, T2, TResult>): ICollection<TResult>`
+
+Correlates the elements of two collections based on equality of keys and groups the results.
+
+```typescript
+const cats = [{
+    name: 'Barsik',
+    age: 9
+},{
+    name: 'Cherry',
+    age: 4
+},{
+    name: 'Feya',
+    age: 4
+},{
+    name: 'Lulya',
+    age: 1
+},];
+
+const ages = [{
+    years: 1,
+    name: "Young"
+},{
+    years: 4,
+    name: "Middle"
+},{
+    years: 9,
+    name: "Old"
+}]
+
+const joined = _(ages).groupJoin(
+    cats,
+    age => age.years,
+    cat => cat.age,
+    (age, cats) => ({age: age.name, cats: cats.select(cat => cat.name)})
+    ).toArray();
+
+console.log(joined);
+// [
+//     {age: 'Young', cats: _(['Lulya'])},
+//     {age: 'Middle', cats: _(['Cherry', 'Feya'])},
+//     {age: 'Old', cats: _(['Barsik'])},
+// ]
 ```
 
 ## join

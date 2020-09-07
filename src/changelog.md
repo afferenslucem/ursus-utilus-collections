@@ -17,6 +17,7 @@
 * ofType
 * Union
 * Intersect
+* Except
 * SkipLast
 * TakeLast
 * Single
