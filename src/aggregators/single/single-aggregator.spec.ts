@@ -23,7 +23,7 @@ describe('SingleAggregator', function () {
 
         assert.throws(() => {
             const result = new SingleAggregator(collection).aggregate();
-        }, Exception.SoManyElements)
+        }, Exception.NoMatches)
     });
 
     it('should return alone element', () => {
@@ -52,6 +52,6 @@ describe('SingleAggregator', function () {
     it('should throw error', () => {
         assert.throws(() => {
             _.empty().single();
-        }, Exception.SoManyElements)
+        }, Exception.NoMatches)
     });
 });

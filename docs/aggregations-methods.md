@@ -18,6 +18,9 @@ Aggregating methods trigger computation of your query. All your chain of methods
 * [max](#max)
 * [min](#min)
 * [sum](#sum)
+* [single](#single)
+* [singleOrDefault](#singleOrDefault)
+* [sum](#sum)
 
 ## aggregate
 
@@ -444,6 +447,50 @@ console.log(result); // 1
 const anoserResult = _([1, 2, 3]).single()
 
 // Fired new Error('Elements count greater then 1.');
+
+const anoserResult = _([]).single()
+
+// Fired new Error('No matches found.');
+```
+
+## singleOrDefault
+
+Method signature: `singleOrDefault(): T | null`.
+
+Returns the only element of a collection, or a null if the collection is empty; this method throws an exception if there is more than one element in the collection.
+
+```typescript
+const result = _([1]).singleOrDefault()
+
+console.log(result); // 1
+
+const anoserResult = _([1, 2, 3]).singleOrDefault()
+
+// Fired new Error('Elements count greater then 1.');
+
+const anoserResult = _([]).singleOrDefault()
+
+console.log(result); // null
+```
+
+### singleOrDefault with specified default
+
+Method signature: `singleOrDefault($default: T): T`.
+
+Returns the only element of a collection, or a specified default if the collection is empty; this method throws an exception if there is more than one element in the collection.
+
+```typescript
+const result = _([1]).singleOrDefault()
+
+console.log(result); // 1
+
+const anoserResult = _([1, 2, 3]).singleOrDefault()
+
+// Fired new Error('Elements count greater then 1.');
+
+const anoserResult = _([]).singleOrDefault(0)
+
+console.log(result); // 0
 ```
 
 ## sum

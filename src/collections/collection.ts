@@ -28,6 +28,7 @@ import { ElementAtOrDefaultAggregator } from "../aggregators/element-at-or-defau
 import { combine, of } from "../utils/operators";
 import { CountWhileAggregator } from "../aggregators/count-while/count-while-aggregator";
 import { SingleAggregator } from "../aggregators/single/single-aggregator";
+import { SingleOrDefaultAggregator } from "../aggregators/single-or-default/single-or-defaulr-aggregator";
 
 export class Collection<T> implements ICollection<T> {
     // @ts-ignore
@@ -73,6 +74,11 @@ export class Collection<T> implements ICollection<T> {
     public single(): T {
         return new SingleAggregator<T>(this).aggregate();
     }
+    public singleOrDefault(): T | null;
+    public singleOrDefault($default: T): T;
+    public singleOrDefault($default?: T): T | null {
+        return new SingleOrDefaultAggregator<T>(this, $default).aggregate();
+    }
 
     public take(shouldTake: number): ICollection<T> {
         return new TakingCollection(this, shouldTake);
@@ -94,12 +100,14 @@ export class Collection<T> implements ICollection<T> {
         }
     }
 
-    public firstOrDefault($default?: T | null): T | null;
+    public firstOrDefault(): T | null;
     public firstOrDefault($default: T): T;
-    public firstOrDefault($default: T | null, predicate?: FilterCondition<T>): T | null {
+    public firstOrDefault($default?: T | null, predicate?: FilterCondition<T>): T | null {
         if(predicate) {
+            // @ts-ignore
             return new ElementAtOrDefaultAggregator<T>(this.where(predicate), 0, $default).aggregate();
         } else {
+            // @ts-ignore
             return new ElementAtOrDefaultAggregator<T>(this, 0, $default).aggregate();
         }
     }
@@ -113,13 +121,15 @@ export class Collection<T> implements ICollection<T> {
         }
     }
 
-    public lastOrDefault($default?: T | null): T | null
+    public lastOrDefault(): T | null
     public lastOrDefault($default: T): T
-    public lastOrDefault($default: T | null, predicate?: FilterCondition<T>): T | null {
+    public lastOrDefault($default?: T | null, predicate?: FilterCondition<T>): T | null {
         if(predicate) {
             const collection = this.where(predicate);
+            // @ts-ignore
             return new ElementAtOrDefaultAggregator<T>(collection, collection.count() - 1, $default).aggregate();
         } else {
+            // @ts-ignore
             return new ElementAtOrDefaultAggregator<T>(this, this.count() - 1, $default).aggregate();
         }
     }

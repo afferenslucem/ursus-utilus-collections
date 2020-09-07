@@ -19,6 +19,7 @@
 * SkipLast
 * TakeLast
 * Single
+* SingleOrDefault
 
 ## Deleted
 

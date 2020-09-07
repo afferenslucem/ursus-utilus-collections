@@ -11,8 +11,10 @@ export class SingleAggregator<T> extends Aggregator<T> {
     public aggregate(): T {
         const array = this.collection.toArray();
 
-        if(array.length != 1) {
-            throw new Error(Exception.SoManyElements);
+        if(array.length > 1) {
+            throw Exception.SoManyElements;
+        } else if(array.length === 0) {
+            throw Exception.NoMatches;
         } else {
             return array[0];
         }

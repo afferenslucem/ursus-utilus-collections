@@ -197,10 +197,24 @@ export interface ICollection<T> extends IIterable<T> {
 
 
     /**
-     * Returns the only element of a sequence, and throws an exception if there is not exactly one element in the sequence.
-     * @throws 'Elements count greater then 1.'
+     * Returns the only element of a collection, and throws an exception if there is not exactly one element in the collection.
+     * @throws 'Elements count greater then 1.' If collection has more then one element.
+     * @throws 'No matches found.' If collection is empty.
      */
     single(): T;
+
+
+    /**
+     * Returns the only element of a collection, or a null if the collection is empty; this method throws an exception if there is more than one element in the collection.
+     * @throws 'Elements count greater then 1.' If collection has more then one element.
+     */
+    singleOrDefault(): T | null;
+
+    /**
+     * Returns the only element of a collection, or a specified default if the collection is empty; this method throws an exception if there is more than one element in the collection.
+     * @throws 'Elements count greater then 1.' If collection has more then one element.
+     */
+    singleOrDefault($default: T): T;
 
 
     /**
@@ -219,7 +233,7 @@ export interface ICollection<T> extends IIterable<T> {
 
 
     /**
-     * Appends a value to the end of the sequence.
+     * Appends a value to the end of the collection.
      */
     append(item: T): ICollection<T>;
 
@@ -283,7 +297,7 @@ export interface ICollection<T> extends IIterable<T> {
 
 
     /**
-     * Adds a value to the beginning of the sequence.
+     * Adds a value to the beginning of the collection.
      */
     prepend(item: T): ICollection<T>;
 
@@ -378,7 +392,7 @@ export interface ICollection<T> extends IIterable<T> {
     // Joining
 
     /**
-     * Concatenates two sequences.
+     * Concatenates two collections.
      */
     concat(items: T[] | ICollection<T>): ICollection<T>;
 
