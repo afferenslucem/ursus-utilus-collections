@@ -13,6 +13,7 @@ export function of<T>(obj: T) : ICollection<T> {
     return new Collection([obj]);
 }
 
+
 export function range(from: number, to: number, step = 1) : ICollection<number> {
     const result = [];
 
@@ -25,10 +26,10 @@ export function range(from: number, to: number, step = 1) : ICollection<number> 
 
 const RANDOM_MAX = 10e10;
 
-export function random (count: number, max = RANDOM_MAX): ICollection<number> {
+export function random (length: number, max = RANDOM_MAX): ICollection<number> {
     const result = [];
 
-    for(let i = 0; i < count; i++) {
+    for(let i = 0; i < length; i++) {
         const item = Math.floor(Math.random() * RANDOM_MAX) % max;
         result.push(item);
     }

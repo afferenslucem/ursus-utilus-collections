@@ -8,14 +8,37 @@ const exp = function<T>(items: T[]): ICollection<T> {
     return new Collection(items);
 };
 
+/**
+ * Generates a collection of integral numbers within a specified range.
+ * @param from Start value
+ * @param to End value
+ * @param step Generation step
+ */
 exp.range = range;
 
+/**
+ * Generates random collection of specified length
+ * @param length Collection lenght
+ * @param max Max value for generation
+ */
 exp.random = random;
 
+/**
+ * Generates collection
+ * @param obj Collection count
+ */
 exp.of = of;
 
+/**
+ * Creates empty collection
+ */
 exp.empty = empty;
 
+/**
+ * Generates a collection that contains one repeated value.
+ * @param value value for generation
+ * @param length Collection lenght
+ */
 exp.repeat = repeat;
 
 /**
