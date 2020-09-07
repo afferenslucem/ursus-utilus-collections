@@ -135,7 +135,7 @@ const eq = _.range(1, 5).collectionEqual([1, 2, 3, 4, 5])
 console.log(eq); //true
 ```
 
-## contains with equality comparer
+## collectionEqual with equality comparer
 
 Method signature: `collectionEqual(collection: T[] | ICollection<T>, (first: T, second: T) => boolean): boolean`.
 

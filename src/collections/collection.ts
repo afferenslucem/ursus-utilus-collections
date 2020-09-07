@@ -32,6 +32,7 @@ import { SingleOrDefaultAggregator } from "../aggregators/single-or-default/sing
 import { equalityCompare } from "../utils/equality-compare";
 import { SSL_OP_NO_TLSv1_1 } from "constants";
 import { CollectionEqualAggregator } from "../aggregators/collectionEqual/collection-equal-aggregaor";
+import { LookupAggregator } from "../aggregators/lookup/lookup-aggregator";
 
 export class Collection<T> implements ICollection<T> {
     // @ts-ignore
@@ -315,6 +316,12 @@ export class Collection<T> implements ICollection<T> {
             this.computed = this.materialize();
         }
         return this.computed
+    }
+
+    public toLookup<TKey>(key: MapCondition<T, TKey>): Map<TKey, T[]>;
+    public toLookup<TKey, TValue>(key: MapCondition<T, TKey>, value: MapCondition<T, TValue>): Map<TKey, TValue[]>;
+    public toLookup<TKey, TValue = T>(key: MapCondition<T, TKey>, value?: MapCondition<T, TValue>): Map<TKey, TValue[]> {
+        return new LookupAggregator<T, TKey, TValue>(this, key, value).aggregate();
     }
 
     public [Symbol.iterator](): IterableIterator<T> {

@@ -22,6 +22,7 @@
 * TakeLast
 * Single
 * SingleOrDefault
+* CollectionEqual
 
 ## Deleted
 
