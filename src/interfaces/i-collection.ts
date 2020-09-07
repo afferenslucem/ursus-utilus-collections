@@ -197,6 +197,13 @@ export interface ICollection<T> extends IIterable<T> {
 
 
     /**
+     * Returns the only element of a sequence, and throws an exception if there is not exactly one element in the sequence.
+     * @throws 'Elements count greater then 1.'
+     */
+    single(): T;
+
+
+    /**
      * Computes the sum of a collection of numeric values.
      */
     sum(): number;

@@ -430,6 +430,22 @@ const el = _(cats).min((a, b) => a.age - b.age) // Find cat with minimum age
 console.log(el); // { name: 'Tom', age: 1 }
 ```
 
+## single
+
+Method signature: `single(): T`.
+
+Returns the only element of a sequence, and throws an exception if there is not exactly one element in the sequence.
+
+```typescript
+const result = _([1]).single()
+
+console.log(result); // 1
+
+const anoserResult = _([1, 2, 3]).single()
+
+// Fired new Error('Elements count greater then 1.');
+```
+
 ## sum
 
 Method signature: `sum(): number`.

@@ -18,6 +18,7 @@
 * Union
 * SkipLast
 * TakeLast
+* Single
 
 ## Deleted
 

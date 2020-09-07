@@ -27,6 +27,7 @@ import { ElementAtAggregator } from "../aggregators/element-at/element-at";
 import { ElementAtOrDefaultAggregator } from "../aggregators/element-at-or-default/element-at-or-default-aggregator";
 import { combine, of } from "../utils/operators";
 import { CountWhileAggregator } from "../aggregators/count-while/count-while-aggregator";
+import { SingleAggregator } from "../aggregators/single/single-aggregator";
 
 export class Collection<T> implements ICollection<T> {
     // @ts-ignore
@@ -67,6 +68,10 @@ export class Collection<T> implements ICollection<T> {
 
     public skipWhile(condition: FilterCondition<T>): ICollection<T> {
         return new SkippingWhileCollection(this, condition);
+    }
+
+    public single(): T {
+        return new SingleAggregator<T>(this).aggregate();
     }
 
     public take(shouldTake: number): ICollection<T> {
