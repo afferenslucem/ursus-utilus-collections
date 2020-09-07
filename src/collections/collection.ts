@@ -143,6 +143,10 @@ export class Collection<T> implements ICollection<T> {
         })
     }
 
+    public prepend(item: T): ICollection<T> {
+        return new PrependCollection(this, item);
+    }
+
     public min(predicate?: CompareCondition<T> | undefined): T {
         return new MinAggregator(this, predicate).aggregate();
     }
@@ -581,6 +585,21 @@ export class JoinCollection<T1, T2, TKey, TResult> extends Collection<TResult> {
                 return []
             }
         }).select(item => this.zipFunc(item[0], item[1])).toArray()
+
+        return result;
+    }
+}
+
+export class PrependCollection<T> extends Collection<T> {    
+    public constructor(iterable: Collection<T>, private prepender: T) {
+        super(iterable);
+    }
+
+    protected materialize(): Array<T> {
+        const array = this.inner.toArray();
+        const temp = Array.of(this.prepender);
+
+        const result = temp.concat(array);
 
         return result;
     }

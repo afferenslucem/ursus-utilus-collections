@@ -263,6 +263,12 @@ export interface ICollection<T> extends IIterable<T> {
      */
     orderByDescending<TKey>(key: MapCondition<T, TKey>, condition: CompareCondition<TKey>): ISortingCollection<T>;
 
+
+    /**
+     * Adds a value to the beginning of the sequence.
+     */
+    prepend(item: T): ICollection<T>;
+
     
     /**
      * Inverts the order of the elements in a collection

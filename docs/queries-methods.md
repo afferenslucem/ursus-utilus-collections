@@ -184,6 +184,15 @@ console.log(ordered);
 //  { name: 'Bonny', age: 3 } ]
 ```
 
+## prepend
+
+Method signature: `prepend(item: T): ICollection<T>`.
+
+Adds a value to the beginning of the sequence.
+
+```typescript
+```
+
 ## reverse
 
 Method signature: `reverse(): ICollection<T>`.
