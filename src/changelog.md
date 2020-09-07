@@ -17,6 +17,7 @@
 * ofType
 * Union
 * SkipLast
+* TakeLast
 
 ## Deleted
 
