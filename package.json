@@ -21,7 +21,11 @@
     "mapping",
     "LINQ",
     "sorting",
-    "grouping"
+    "grouping",
+    "zip",
+    "union",
+    "except",
+    "join"
   ],
   "author": "afferenslucem",
   "license": "ISC",
