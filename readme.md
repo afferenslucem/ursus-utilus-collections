@@ -20,7 +20,7 @@ import _ from 'declarray'
 const result = _([1, 2, 3, 4]).where(item => !(item % 2)).toArray();
 // result is [2, 4]
 
-const anotherResult = _([1, 2, 3, 4]).map(item => item ** 2).toArray();
+const anotherResult = _([1, 2, 3, 4]).select(item => item ** 2).toArray();
 // [1, 4, 9, 16]
 ```
 
