@@ -1,6 +1,7 @@
 # Joining Methods
 
 * [concat](#concat)
+* [except](#except)
 * [intersect](#intersect)
 * [groupJoin](#groupJoin)
 * [join](#join)

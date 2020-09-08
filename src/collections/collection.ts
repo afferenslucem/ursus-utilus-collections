@@ -30,7 +30,6 @@ import { CountWhileAggregator } from "../aggregators/count-while/count-while-agg
 import { SingleAggregator } from "../aggregators/single/single-aggregator";
 import { SingleOrDefaultAggregator } from "../aggregators/single-or-default/single-or-defaulr-aggregator";
 import { equalityCompare } from "../utils/equality-compare";
-import { SSL_OP_NO_TLSv1_1 } from "constants";
 import { CollectionEqualAggregator } from "../aggregators/collectionEqual/collection-equal-aggregaor";
 import { LookupAggregator } from "../aggregators/lookup/lookup-aggregator";
 import { MapAggregator } from "../aggregators/map/map-aggregator";
@@ -50,57 +49,57 @@ export class Collection<T> implements ICollection<T> {
         }
     }
 
-    public where(condition: FilterCondition<T>): ICollection<T> {
-        return new FilteringCollection<T>(this, condition);
-    }
+    // Aggregating
 
-    public select<TOut>(condition: ServiceMapCondition<T, TOut>): ICollection<TOut> {                
+    public aggregate(predicate: ReduceCondition<T>, accumulator?: T): T;
+    public aggregate<T2>(predicate: ReduceWithAccumulatorCondition<T, T2>, accumulator: T2): T2 {
         // @ts-ignore
-        return new MappingCollection<T, TOut>(this, condition);
+        return new ReduceAggregator<T, T2>(this, predicate, accumulator).aggregate();
     }
 
-    public selectMany<TOut>(condition: ServiceMapCondition<T, TOut[]>): ICollection<TOut> {                
-        // @ts-ignore
-        return new MappingManyCollection<T, TOut>(this, condition);
+    public all(predicate: FilterCondition<T>): boolean {
+        return new AllAggregator(this, predicate).aggregate();
     }
 
-    public skip(shouldSkip: number): ICollection<T> {
-        return new SkippingCollection(this, shouldSkip);
+    public any(predicate: FilterCondition<T>): boolean {
+        return new AnyAggregator(this, predicate).aggregate();
     }
 
-    public skipLast(shouldSkip: number): ICollection<T> {
-        return new SkippingLastCollection(this, shouldSkip);
-    }
+    public average(map?: MapCondition<T, number>): number {
+        const sum = map ?
+            new SumAggregator(this.select(map)).aggregate() :
+            // @ts-ignore
+            new SumAggregator(this).aggregate();
 
-    public skipWhile(condition: FilterCondition<T>): ICollection<T> {
-        return new SkippingWhileCollection(this, condition);
-    }
-
-    public single(): T {
-        return new SingleAggregator<T>(this).aggregate();
-    }
-    public singleOrDefault(): T | null;
-    public singleOrDefault($default: T): T;
-    public singleOrDefault($default?: T): T | null {
-        return new SingleOrDefaultAggregator<T>(this, $default).aggregate();
-    }
-
-    public take(shouldTake: number): ICollection<T> {
-        return new TakingCollection(this, shouldTake);
-    }
-
-    public takeLast(shouldSkip: number): ICollection<T> {
-        return new TakingLastCollection(this, shouldSkip);
-    }
-
-    public takeWhile(condition: FilterCondition<T>): ICollection<T> {
-        return new TakingWhileCollection(this, condition);
+        return sum / this.count()
     }
 
     public collectionEqual(collection: T[] | ICollection<T>): boolean;
     public collectionEqual(collection: T[] | ICollection<T>, comparer: EqualityCondition<T>): boolean;
     public collectionEqual(collection: T[] | ICollection<T>, comparer?: EqualityCondition<T>): boolean {
         return new CollectionEqualAggregator<T>(this, new Collection(collection), comparer).aggregate();
+    }
+
+    public contains(element: T, condition: EqualityCondition<T> = equalityCompare): boolean {
+        return this.any(item => condition(item, element));
+    }
+
+    public count(predicate?: FilterCondition<T>): number {
+        return new CountAggregator(this, predicate).aggregate();
+    }
+
+    public countWhile(predicate: FilterCondition<T>): number {
+        return new CountWhileAggregator(this, predicate).aggregate();
+    }
+    
+    public elementAt(position: number): T {
+        return new ElementAtAggregator<T>(this, position).aggregate()
+    }
+
+    public elementAtOrDefault(position: number): T | null;
+    public elementAtOrDefault(position: number, $default: T): T;
+    public elementAtOrDefault(position: number, $default: T | null = null): T| null {
+        return new ElementAtOrDefaultAggregator<T>(this, position, $default).aggregate()
     }
 
     public first(predicate?: FilterCondition<T>): T {
@@ -145,18 +144,53 @@ export class Collection<T> implements ICollection<T> {
         }
     }
 
-    public sort(condition?: CompareCondition<T> | undefined): ICollection<T> {
-        return new SortingCollection<T>(this, {
-            compare: condition,
-            direcion: SortDirection.Asc
-        })
+    public max(predicate?: CompareCondition<T> | undefined): T {
+        return new MaxAggregator(this, predicate).aggregate();
     }
 
-    public sortDescending(condition?: CompareCondition<T> | undefined): ICollection<T> {
-        return new SortingCollection<T>(this, {
-            compare: condition,
-            direcion: SortDirection.Desc
-        })
+    public min(predicate?: CompareCondition<T> | undefined): T {
+        return new MinAggregator(this, predicate).aggregate();
+    }
+
+    public single(): T {
+        return new SingleAggregator<T>(this).aggregate();
+    }
+
+    public singleOrDefault(): T | null;
+    public singleOrDefault($default: T): T;
+    public singleOrDefault($default?: T): T | null {
+        return new SingleOrDefaultAggregator<T>(this, $default).aggregate();
+    }
+
+    public sum(map?: MapCondition<T, number>): number {
+        if(map) {
+            return new SumAggregator(this.select(map)).aggregate();
+        } else {
+            // @ts-ignore
+            return new SumAggregator(this).aggregate();
+        }
+    }
+
+    // Querring
+
+    public append(item: T): ICollection<T> {
+        return new AppendCollection(this, item);
+    }
+
+    public defaultIfEmpty(value: T | T[] | ICollection<T>): ICollection<T> {
+        return new DefaultCollection(this, value);
+    }
+
+    public distinct(): ICollection<T>;
+    public distinct(comparer: EqualityCondition<T>): ICollection<T>
+    public distinct(comparer?: EqualityCondition<T>): ICollection<T> {
+        return new DistinctCollection(this, comparer);
+    }
+    
+    public groupBy<TKey>(key: MapCondition<T, TKey>): ICollection<IGroupedData<TKey, ICollection<T>>>;
+    public groupBy<TKey, TValue>(key: MapCondition<T, TKey>, group: MapCondition<ICollection<T>, TValue>): ICollection<IGroupedData<TKey, TValue>>;
+    public groupBy<TKey, TValue>(key: MapCondition<T, TKey>, group?: MapCondition<ICollection<T>, TValue>): ICollection<IGroupedData<TKey, TValue>> {
+        return new GroupingCollection<T, TKey, TValue>(this, key, group);
     }
 
     public orderBy<E>(map: MapCondition<T, E>, condition?: CompareCondition<E> | undefined): ISortingCollection<T> {
@@ -181,66 +215,72 @@ export class Collection<T> implements ICollection<T> {
         return new PrependCollection(this, item);
     }
 
-    public min(predicate?: CompareCondition<T> | undefined): T {
-        return new MinAggregator(this, predicate).aggregate();
-    }
-
-    public max(predicate?: CompareCondition<T> | undefined): T {
-        return new MaxAggregator(this, predicate).aggregate();
-    }
-
-    public any(predicate: FilterCondition<T>): boolean {
-        return new AnyAggregator(this, predicate).aggregate();
-    }
-
-    public all(predicate: FilterCondition<T>): boolean {
-        return new AllAggregator(this, predicate).aggregate();
-    }
-
-    public contains(element: T, condition: EqualityCondition<T> = equalityCompare): boolean {
-        return this.any(item => condition(item, element));
-    }
-
-    public sum(map?: MapCondition<T, number>): number {
-        if(map) {
-            return new SumAggregator(this.select(map)).aggregate();
-        } else {
-            // @ts-ignore
-            return new SumAggregator(this).aggregate();
-        }
-    }
-
-    public average(map?: MapCondition<T, number>): number {
-        const sum = map ?
-            new SumAggregator(this.select(map)).aggregate() :
-            // @ts-ignore
-            new SumAggregator(this).aggregate();
-
-        return sum / this.count()
-    }
-
     public reverse(): ICollection<T> {
         return new ReverseCollection(this);
     }
 
-    public append(item: T): ICollection<T> {
-        return new AppendCollection(this, item);
+    public select<TOut>(condition: ServiceMapCondition<T, TOut>): ICollection<TOut> {                
+        // @ts-ignore
+        return new MappingCollection<T, TOut>(this, condition);
     }
 
-    public defaultIfEmpty(value: T | T[] | ICollection<T>): ICollection<T> {
-        return new DefaultCollection(this, value);
+    public selectMany<TOut>(condition: ServiceMapCondition<T, TOut[]>): ICollection<TOut> {                
+        // @ts-ignore
+        return new MappingManyCollection<T, TOut>(this, condition);
     }
 
-    public distinct(): ICollection<T>;
-    public distinct(comparer: EqualityCondition<T>): ICollection<T>
-    public distinct(comparer?: EqualityCondition<T>): ICollection<T> {
-        return new DistinctCollection(this, comparer);
+    public skip(shouldSkip: number): ICollection<T> {
+        return new SkippingCollection(this, shouldSkip);
     }
 
-    public union(items: T[] | ICollection<T>): ICollection<T>;
-    public union(items: T[] | ICollection<T>, comparer: EqualityCondition<T>): ICollection<T>;
-    public union(items: T[] | ICollection<T>, comparer?: EqualityCondition<T>): ICollection<T> {
-        return new UnionCollection(this, new Collection(items), comparer);
+    public skipLast(shouldSkip: number): ICollection<T> {
+        return new SkippingLastCollection(this, shouldSkip);
+    }
+
+    public skipWhile(condition: FilterCondition<T>): ICollection<T> {
+        return new SkippingWhileCollection(this, condition);
+    }
+
+    public sort(condition?: CompareCondition<T> | undefined): ICollection<T> {
+        return new SortingCollection<T>(this, {
+            compare: condition,
+            direcion: SortDirection.Asc
+        })
+    }
+
+    public sortDescending(condition?: CompareCondition<T> | undefined): ICollection<T> {
+        return new SortingCollection<T>(this, {
+            compare: condition,
+            direcion: SortDirection.Desc
+        })
+    }
+
+    public take(shouldTake: number): ICollection<T> {
+        return new TakingCollection(this, shouldTake);
+    }
+
+    public takeLast(shouldSkip: number): ICollection<T> {
+        return new TakingLastCollection(this, shouldSkip);
+    }
+
+    public takeWhile(condition: FilterCondition<T>): ICollection<T> {
+        return new TakingWhileCollection(this, condition);
+    }
+
+    public where(condition: FilterCondition<T>): ICollection<T> {
+        return new FilteringCollection<T>(this, condition);
+    }
+
+    // Joining
+
+    public concat(items: T[] | ICollection<T>): ICollection<T> {
+        return new ConcatCollection<T>(this, Array.isArray(items) ? new Collection(items) : items);
+    }
+
+    public except(items: T[] | ICollection<T>): ICollection<T>;
+    public except(items: T[] | ICollection<T>, comparer: EqualityCondition<T>): ICollection<T>;
+    public except(items: T[] | ICollection<T>, comparer?: EqualityCondition<T>): ICollection<T> {
+        return new ExceptCollection(this, new Collection(items), comparer);
     }
 
     public intersect(items: T[] | ICollection<T>): ICollection<T>;
@@ -249,35 +289,26 @@ export class Collection<T> implements ICollection<T> {
         return new IntersectCollection(this, new Collection(items), comparer);
     }
 
-    public except(items: T[] | ICollection<T>): ICollection<T>;
-    public except(items: T[] | ICollection<T>, comparer: EqualityCondition<T>): ICollection<T>;
-    public except(items: T[] | ICollection<T>, comparer?: EqualityCondition<T>): ICollection<T> {
-        return new ExceptCollection(this, new Collection(items), comparer);
-    }
-    
-    public groupBy<TKey>(key: MapCondition<T, TKey>): ICollection<IGroupedData<TKey, ICollection<T>>>;
-    public groupBy<TKey, TValue>(key: MapCondition<T, TKey>, group: MapCondition<ICollection<T>, TValue>): ICollection<IGroupedData<TKey, TValue>>;
-    public groupBy<TKey, TValue>(key: MapCondition<T, TKey>, group?: MapCondition<ICollection<T>, TValue>): ICollection<IGroupedData<TKey, TValue>> {
-        return new GroupingCollection<T, TKey, TValue>(this, key, group);
+    public groupJoin<T2, TKey, TResult>(
+        iterable: ICollection<T2> | T2[],
+        firstKey: MapCondition<T, TKey>,
+        secondKey: MapCondition<T2, TKey>,
+        zipFunc: GroupJoinCondition<T, T2, TResult>): ICollection<TResult> {
+        return new GroupJoinCollection<T, T2, TKey, TResult>(this, new Collection(iterable), firstKey, secondKey, zipFunc);
     }
 
-    public concat(items: T[] | ICollection<T>): ICollection<T> {
-        return new ConcatCollection<T>(this, Array.isArray(items) ? new Collection(items) : items);
+    public join<T2, TKey, TResult>(
+        iterable: ICollection<T2> | T2[],
+        firstKey: MapCondition<T, TKey>,
+        secondKey: MapCondition<T2, TKey>,
+        zipFunc: ZipCondition<T, T2, TResult>): ICollection<TResult> {
+        return new JoinCollection<T, T2, TKey, TResult>(this, new Collection(iterable), firstKey, secondKey, zipFunc);
     }
 
-    public count(predicate?: FilterCondition<T>): number {
-        return new CountAggregator(this, predicate).aggregate();
-    }
-
-    public countWhile(predicate: FilterCondition<T>): number {
-        return new CountWhileAggregator(this, predicate).aggregate();
-    }
-
-    public aggregate(predicate: ReduceCondition<T>, accumulator?: T): T;
-
-    public aggregate<T2>(predicate: ReduceWithAccumulatorCondition<T, T2>, accumulator: T2): T2 {
-        // @ts-ignore
-        return new ReduceAggregator<T, T2>(this, predicate, accumulator).aggregate();
+    public union(items: T[] | ICollection<T>): ICollection<T>;
+    public union(items: T[] | ICollection<T>, comparer: EqualityCondition<T>): ICollection<T>;
+    public union(items: T[] | ICollection<T>, comparer?: EqualityCondition<T>): ICollection<T> {
+        return new UnionCollection(this, new Collection(items), comparer);
     }
 
     public zip<T2, TResult>(iterable: ICollection<T2> | T2[], zipFunc?: ZipCondition<T, T2, TResult>): ICollection<TResult>;
@@ -286,31 +317,7 @@ export class Collection<T> implements ICollection<T> {
         return new ZipCollection<T, T2, TResult>(this, new Collection<T2>(iterable), zipFunc)
     }
 
-    join<T2, TKey, TResult>(
-        iterable: ICollection<T2> | T2[],
-        firstKey: MapCondition<T, TKey>,
-        secondKey: MapCondition<T2, TKey>,
-        zipFunc: ZipCondition<T, T2, TResult>): ICollection<TResult> {
-            return new JoinCollection<T, T2, TKey, TResult>(this, new Collection(iterable), firstKey, secondKey, zipFunc);
-        }
-
-    groupJoin<T2, TKey, TResult>(
-        iterable: ICollection<T2> | T2[],
-        firstKey: MapCondition<T, TKey>,
-        secondKey: MapCondition<T2, TKey>,
-        zipFunc: GroupJoinCondition<T, T2, TResult>): ICollection<TResult> {
-            return new GroupJoinCollection<T, T2, TKey, TResult>(this, new Collection(iterable), firstKey, secondKey, zipFunc);
-        }
-
-    public elementAt(position: number): T {
-        return new ElementAtAggregator<T>(this, position).aggregate()
-    }
-
-    public elementAtOrDefault(position: number): T | null;
-    public elementAtOrDefault(position: number, $default: T): T;
-    public elementAtOrDefault(position: number, $default: T | null = null): T| null {
-        return new ElementAtOrDefaultAggregator<T>(this, position, $default).aggregate()
-    }
+    // Materializing
 
     public toArray(): T[] {
         if (this.computed == null) {
@@ -330,6 +337,8 @@ export class Collection<T> implements ICollection<T> {
     public toMap<TKey, TValue = T>(key: MapCondition<T, TKey>, value?: MapCondition<T, TValue>): Map<TKey, TValue> {
         return new MapAggregator<T, TKey, TValue>(this, key, value).aggregate();
     }
+
+    ///////////////////////////
 
     public [Symbol.iterator](): IterableIterator<T> {
         return this.getIterator();
