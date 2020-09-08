@@ -14,7 +14,6 @@
 * DefaultIfEmpty
 * Of
 * Repeat
-* ofType
 * Union
 * Intersect
 * Except
@@ -23,6 +22,8 @@
 * Single
 * SingleOrDefault
 * CollectionEqual
+* ToLookup
+* ToMap
 
 ## Deleted
 
