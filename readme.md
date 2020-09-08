@@ -4,7 +4,7 @@
 
 **Declarray** is my own linq like library for manipulations with collections. I did it just for improve my skills at my free time.
 This lib allows filter, sort, change and etc. collection in declarative style.
-Declarray supports lazy computations. Your expression will computed once and only when you will call method `.toArray()` or one of [Aggregating Methods](https://github.com/afferenslucem/declarray/wiki/Aggregating-Methods).
+Declarray supports lazy computations. Your expression will computed once and only when you will call method [Materializing Methods](https://github.com/afferenslucem/declarray/wiki/Materializing-Methods) or one of [Aggregating Methods](https://github.com/afferenslucem/declarray/wiki/Aggregating-Methods).
 
 ## Installation
 
