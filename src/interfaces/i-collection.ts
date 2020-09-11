@@ -1,7 +1,7 @@
-import { FilterCondition, MapCondition, CompareCondition, ReduceCondition, ReduceWithAccumulatorCondition, ZipCondition, EqualityCondition, GroupJoinCondition } from "../commands/delegates";
 import { IIterable } from "./i-iterable";
 import { ISortingCollection } from "./i-sorting-collection";
 import { IGroupedData } from "./i-grouped-data";
+import { ReduceCondition, ReduceWithAccumulatorCondition, FilterCondition, MapCondition, EqualityCondition, CompareCondition, GroupJoinCondition, ZipCondition } from "../delegates";
 
 export interface ICollection<T> extends IIterable<T> {
 

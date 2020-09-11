@@ -1,5 +1,5 @@
 import { ICollection } from "./i-collection";
-import { CompareCondition, MapCondition } from "../commands/delegates";
+import { CompareCondition, MapCondition } from "../delegates";
 
 export interface ISortingCollection<T> extends ICollection<T> {
     
