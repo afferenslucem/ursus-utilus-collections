@@ -1,4 +1,4 @@
-import { MapCondition, CompareCondition } from "../commands/delegates";
+import { MapCondition, CompareCondition } from "../delegates";
 
 export enum SortDirection {
     Asc = 1,

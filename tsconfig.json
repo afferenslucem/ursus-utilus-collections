@@ -10,7 +10,8 @@
     "declaration": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "lib"
+    "outDir": "lib",
+    "noImplicitAny": false
   },
   "include": [
     "src/**/*.ts"

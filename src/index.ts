@@ -1,11 +1,11 @@
-import { Collection } from './collections/collection';
 import { ICollection } from './interfaces/i-collection';
 import { range, random, of, empty, repeat } from './utils/operators';
+import { Collection } from './collection';
 
 export * from './interfaces/i-collection';
 
 const exp = function<T>(items: T[]): ICollection<T> {
-    return new Collection(items);
+    return new Collection<T>(items);
 };
 
 /**
