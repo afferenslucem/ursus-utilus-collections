@@ -1,11 +1,7 @@
 {
   "name": "declarray",
   "version": "5.8.0",
-<<<<<<< Updated upstream
-  "description": "Collections manipulation utils",
-=======
   "description": "Tools for working with arrays in LINQ style",
->>>>>>> Stashed changes
   "typings": "lib/index",
   "main": "lib/index.js",
   "scripts": {
