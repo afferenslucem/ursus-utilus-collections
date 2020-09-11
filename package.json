@@ -1,7 +1,11 @@
 {
   "name": "declarray",
   "version": "5.8.0",
+<<<<<<< Updated upstream
   "description": "Collections manipulation utils",
+=======
+  "description": "Tools for working with arrays in LINQ style",
+>>>>>>> Stashed changes
   "typings": "lib/index",
   "main": "lib/index.js",
   "scripts": {
@@ -17,15 +21,16 @@
   },
   "keywords": [
     "collections",
-    "filtering",
-    "mapping",
+    "where",
+    "select",
     "LINQ",
-    "sorting",
-    "grouping",
+    "sort",
+    "group",
     "zip",
     "union",
     "except",
-    "join"
+    "join",
+    "arrays"
   ],
   "author": "afferenslucem",
   "license": "ISC",
