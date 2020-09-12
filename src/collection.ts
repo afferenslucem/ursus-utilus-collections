@@ -596,6 +596,10 @@ export class SortingCollection<T, V = T> extends Collection<T> implements ISorti
     }
 }
 
+interface IDictionary<TKey, TValue> {
+    [id: TKey] : TValue
+}
+
 export class GroupingCollection<T, TKey, TValue = ICollection<T>> extends Collection<IGroupedData<TKey, TValue>> {    
     public constructor(iterable: Collection<T>, private key: MapCondition<T, TKey>, private groupMapping?: MapCondition<ICollection<T>, TValue>) {
         // @ts-ignore
@@ -606,37 +610,38 @@ export class GroupingCollection<T, TKey, TValue = ICollection<T>> extends Collec
         // @ts-ignore
         const array = this.inner.toArray() as T[];
         // @ts-ignore
-        const storage = array.reduce<Map<TKey, TValue[]>>(
-            (acc: Map<TKey, TValue[]>, item: T) => {
+        const storage = array.reduce<IDictionary<TKey, [TKey, TValue[]]>>(
+            (acc: IDictionary<TKey, [TKey, TValue[]]>, item: T) => {
             const key = this.key(item);
 
-            let array = acc.get(key);
+            // @ts-ignore
+            let data = acc[key];
 
-            if (array) {
+            if (data) {
                 // @ts-ignore
-                array.push(item)
+                data[1].push(item)
             } else {
                 // @ts-ignore
-                array = [item];
+                data = [key, [item]];
                 // @ts-ignore
-                acc.set(key, array);
+                acc[key] = data;
             }
 
             return acc;
-        }, new Map<TKey, TValue[]>())
+        }, {})
 
         if(this.groupMapping) {
             // @ts-ignore
-            return Array.from(storage.entries()).map(item => ({
-                key: item[0],
+            return Object.entries(storage).map(item => ({
+                key: item[1][0],
                 // @ts-ignore
-                group: this.groupMapping(new Collection(item[1]))
+                group: this.groupMapping(new Collection(item[1][1]))
             }))
         } else {
             // @ts-ignore
-            return Array.from(storage.entries()).map(item => ({
-                key: item[0],
-                group: new Collection(item[1])
+            return Object.entries(storage).map(item => ({
+                key: item[1][0],
+                group: new Collection(item[1][1])
             }));
         }
     }

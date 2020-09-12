@@ -29,10 +29,10 @@ describe('LookupAggregator', function () {
         const result = Array.from(_(cats).toLookup(item => item.age));
 
         assert.deepEqual(result, [
-            [9,
+            [1,
                 [{
-                    name: 'Barsik',
-                    age: 9
+                    name: 'Lulya',
+                    age: 1
                 }]
             ],
             [4,
@@ -44,10 +44,10 @@ describe('LookupAggregator', function () {
                     age: 4
                 }]
             ],
-            [1,
+            [9,
                 [{
-                    name: 'Lulya',
-                    age: 1
+                    name: 'Barsik',
+                    age: 9
                 }]
             ],
         ])
@@ -71,13 +71,13 @@ describe('LookupAggregator', function () {
         const result = Array.from(_(cats).toLookup(item => item.age, item => item.name));
 
         assert.deepEqual(result, [
-            [9,
-                ['Barsik',]
-            ],
+            [1, ['Lulya']],
             [4,
                 ['Cherry', 'Feya',]
             ],
-            [1, ['Lulya']],
+            [9,
+                ['Barsik',]
+            ],
         ])
     });
 });

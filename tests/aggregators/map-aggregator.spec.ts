@@ -29,10 +29,10 @@ describe('MapAggregator', function () {
         const result = Array.from(_(cats).toMap(item => item.age))
 
         assert.deepEqual(result, [
-            [9,
+            [1,
                 {
-                    name: 'Barsik',
-                    age: 9
+                    name: 'Lulya',
+                    age: 1
                 }
             ],
             [4,
@@ -41,10 +41,10 @@ describe('MapAggregator', function () {
                     age: 4
                 }
             ],
-            [1,
+            [9,
                 {
-                    name: 'Lulya',
-                    age: 1
+                    name: 'Barsik',
+                    age: 9
                 }
             ],
         ])
@@ -68,9 +68,9 @@ describe('MapAggregator', function () {
         const result = Array.from(_(cats).toMap(item => item.age, item => item.name))
 
         assert.deepEqual(result, [
-            [9, 'Barsik'],
-            [4, 'Cherry'],
             [1, 'Lulya'],
+            [4, 'Cherry'],
+            [9, 'Barsik'],
         ])
     });
 });
