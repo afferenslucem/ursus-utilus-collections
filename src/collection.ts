@@ -597,6 +597,7 @@ export class SortingCollection<T, V = T> extends Collection<T> implements ISorti
 }
 
 interface IDictionary<TKey, TValue> {
+    // @ts-ignore
     [id: TKey] : TValue
 }
 
