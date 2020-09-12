@@ -472,9 +472,7 @@ export class MappingManyCollection<T, T2> extends Collection<T> {
 
         if(partsOfResult.length === 0) return [];
 
-        const result = new Collection(partsOfResult).aggregate((a, b) => a.concat(b))
-
-        return result;
+        return partsOfResult.reduce((a, b) => a.concat(b))
     }
 }
 
