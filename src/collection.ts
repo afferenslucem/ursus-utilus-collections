@@ -8,7 +8,6 @@ import { SortDirection, SortSettings, Comparer } from "./utils/comparer";
 import { combine, of } from "./utils/operators";
 import { compare } from "./utils/compare";
 
-
 export class Collection<T> implements ICollection<T> {
     // @ts-ignore
     protected inner: Collection<T>;
@@ -607,30 +606,41 @@ export class GroupingCollection<T, TKey, TValue = ICollection<T>> extends Collec
 
     protected materialize(): IGroupedData<TKey, TValue>[] {
         // @ts-ignore
-        const storage = (this.inner as Collection<T>).aggregate<Map<TKey, TValue[]>>(
+        const array = this.inner.toArray() as T[];
+        // @ts-ignore
+        const storage = array.reduce<Map<TKey, TValue[]>>(
             (acc: Map<TKey, TValue[]>, item: T) => {
             const key = this.key(item);
-            const array = acc.get(key) || [];
-            // @ts-ignore
-            array.push(item)
-            acc.set(key, array)
+
+            let array = acc.get(key);
+
+            if (array) {
+                // @ts-ignore
+                array.push(item)
+            } else {
+                // @ts-ignore
+                array = [item];
+                // @ts-ignore
+                acc.set(key, array);
+            }
 
             return acc;
         }, new Map<TKey, TValue[]>())
-        
-        const temp = Array.from(storage.entries()).map(item => ({
-            key: item[0],
-            group: new Collection(item[1])
-        }))
 
-        const result = this.groupMapping ? temp.map(item => {
+        if(this.groupMapping) {
             // @ts-ignore
-            item.group = this.groupMapping(item.group);
-            return item;
-        }) : temp;
-
-        //@ts-ignore
-        return result;
+            return Array.from(storage.entries()).map(item => ({
+                key: item[0],
+                // @ts-ignore
+                group: this.groupMapping(new Collection(item[1]))
+            }))
+        } else {
+            // @ts-ignore
+            return Array.from(storage.entries()).map(item => ({
+                key: item[0],
+                group: new Collection(item[1])
+            }));
+        }
     }
 }
 
@@ -720,7 +730,7 @@ export class JoinCollection<T1, T2, TKey, TResult> extends Collection<TResult> {
         // @ts-ignore
         const left = this.inner as ICollection<T1>;
         
-        const right = this.outer.groupBy(this.secondKey).aggregate((map, item) => {
+        const right = this.outer.groupBy(this.secondKey).toArray().reduce((map, item) => {
             map.set(item.key, item.group);
             return map;
         }, new Map<TKey, ICollection<T2>>());
@@ -733,7 +743,7 @@ export class JoinCollection<T1, T2, TKey, TResult> extends Collection<TResult> {
             } else {
                 return []
             }
-        }).select<TResult>(item => this.zipFunc(item[0], item[1])).toArray()
+        }).toArray().map<TResult>(item => this.zipFunc(item[0], item[1]))
 
         return result;
     }
@@ -754,12 +764,12 @@ export class GroupJoinCollection<T1, T2, TKey, TResult> extends Collection<TResu
         // @ts-ignore
         const left = this.inner as ICollection<T1>;
         
-        const right = this.outer.groupBy(this.secondKey).aggregate((map, item) => {
+        const right = this.outer.groupBy(this.secondKey).toArray().reduce((map, item) => {
             map.set(item.key, item.group);
             return map;
         }, new Map<TKey, ICollection<T2>>());
 
-        const result = left.select<[T1, ICollection<T2>] | null>(item => {
+        const result = left.toArray().map<[T1, ICollection<T2>] | null>(item => {
             const target = right.get(this.firstKey(item))
 
             if(target) {
@@ -768,9 +778,9 @@ export class GroupJoinCollection<T1, T2, TKey, TResult> extends Collection<TResu
                 return null
             } 
         })
-        .where(item => item !== null)
+        .filter(item => item !== null)
         // @ts-ignore
-        .select<TResult>(item => this.zipFunc(item[0], item[1])).toArray()
+        .map<TResult>(item => this.zipFunc(item[0], item[1]));
 
         return result;
     }
