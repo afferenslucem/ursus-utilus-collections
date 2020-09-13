@@ -1,6 +1,6 @@
 {
   "name": "declarray",
-  "version": "5.8.0",
+  "version": "5.8.1",
   "description": "Tools for working with arrays in LINQ style",
   "typings": "lib/index",
   "main": "lib/index.js",
