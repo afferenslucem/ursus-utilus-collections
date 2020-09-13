@@ -1,10 +1,9 @@
 import { DictionaryException } from "../exceptions/dictionary-exceptions";
-import { Exception } from "../exceptions/exceptions";
 import { IEqualityComparer } from "../interfaces/i-equality-comparer";
-import { AbstractEqualityComparer, DefaultEqualityComparer } from "../utils/abstract-equlity-comparer";
+import { DefaultEqualityComparer } from "../utils/abstract-equlity-comparer";
 
 export class Dictionary<TKey, TValue> {
-    private storage: { [id: string] : Array<[TKey, TValue]> | undefined } = {};
+    private storage: { [id: string] : Array<[TKey, TValue]> } = {};
 
     private comparer: IEqualityComparer<TKey>;
 
@@ -113,7 +112,7 @@ export class Dictionary<TKey, TValue> {
     }
 
     public entries(): Array<[TKey, TValue]> {
-        return Object.entries(this.storage).reduce((acc, item) => acc.filter(item => item[1]).concat(item[1]), [] as Array<[TKey, TValue]>)
+        return Object.entries(this.storage).reduce((acc, item) => acc.concat(item[1]), [] as Array<[TKey, TValue]>)
     }
 
     private searchIndexForKey(key: TKey, batch: Array<[TKey, TValue]>): number {
