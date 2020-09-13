@@ -1,11 +1,11 @@
 import _ from '../../src/index'
 import { assert } from 'chai';
 
-describe('MapAggregator', function () {
+describe('DictionaryAggregator', function () {
     it('should maps empty', () => {
         const cats = [];
 
-        const result = Array.from(_(cats).toMap(item => item.age))
+        const result = _(cats).toDictionary(item => item.age).entries()
 
         assert.deepEqual(result, [
         ])
@@ -26,7 +26,7 @@ describe('MapAggregator', function () {
             age: 1
         },];
 
-        const result = Array.from(_(cats).toMap(item => item.age))
+        const result = _(cats).toDictionary(item => item.age).entries()
 
         assert.deepEqual(result, [
             [1,
@@ -65,7 +65,7 @@ describe('MapAggregator', function () {
             age: 1
         },];
 
-        const result = Array.from(_(cats).toMap(item => item.age, item => item.name))
+        const result = _(cats).toDictionary(item => item.age, item => item.name).entries()
 
         assert.deepEqual(result, [
             [1, 'Lulya'],

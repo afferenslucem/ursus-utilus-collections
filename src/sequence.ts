@@ -7,6 +7,7 @@ import { SortDirection, SortSettings, Comparer } from "./utils/comparer";
 import { combine, of } from "./utils/operators";
 import { compare } from "./utils/compare";
 import { ISequence } from "./interfaces/i-collection";
+import { Dictionary } from "./collections/distionary";
 
 export class Sequence<T> implements ISequence<T> {
     // @ts-ignore
@@ -349,41 +350,59 @@ export class Sequence<T> implements ISequence<T> {
         return this.computed
     }
 
-    public toLookup<TKey>(key: MapCondition<T, TKey>): Map<TKey, T[]>;
-    public toLookup<TKey, TValue>(key: MapCondition<T, TKey>, value: MapCondition<T, TValue>): Map<TKey, TValue[]>;
-    public toLookup<TKey, TValue = T>(key: MapCondition<T, TKey>, value?: MapCondition<T, TValue>): Map<TKey, TValue[]> {
-        const grouped = value != null ? 
-            // @ts-ignore
-            this.groupBy(key, group => group.select<TValue>(value).toArray()) :
-            this.groupBy(key, group => group.toArray());
-        
-        const materialized = grouped.toArray();
+    public toLookup<TKey>(key: MapCondition<T, TKey>): Dictionary<TKey, T[]>;
+    public toLookup<TKey, TValue>(key: MapCondition<T, TKey>, value: MapCondition<T, TValue>): Dictionary<TKey, TValue[]>;
+    public toLookup<TKey, TValue = T>(key: MapCondition<T, TKey>, value?: MapCondition<T, TValue>): Dictionary<TKey, TValue[]> {
+        const materialized = this.toArray();
 
-        const result = new Map<TKey, TValue[] | T[]>();
+        const result = new Dictionary<TKey, (TValue | T)[]>();
 
-        for(let i = 0, len = materialized.length; i < len; i++) {
-            result.set(materialized[i].key, materialized[i].group)
+        if(value) {
+            for(let i = 0, len = materialized.length; i < len; i++) {
+                const keyItem = key(materialized[i]);
+                const valueItem = value(materialized[i]);
+    
+                const arr = result.tryGet(keyItem) || [];
+                arr.push(valueItem);
+
+                result.addOrUpdate(keyItem, arr)
+            }
+        } else {
+            for(let i = 0, len = materialized.length; i < len; i++) {
+                const keyItem = key(materialized[i]);
+    
+                const arr = result.tryGet(keyItem) || [];
+                arr.push(materialized[i]);
+
+                result.addOrUpdate(keyItem, arr)
+            }
         }
 
         // @ts-ignore
         return result;
     }
 
-    public toMap<TKey>(key: MapCondition<T, TKey>): Map<TKey, T>;
-    public toMap<TKey, TValue>(key: MapCondition<T, TKey>, value: MapCondition<T, TValue>): Map<TKey, TValue>;
-    public toMap<TKey, TValue = T>(key: MapCondition<T, TKey>, value?: MapCondition<T, TValue>): Map<TKey, TValue> {
-        const grouped = value != null ? 
-            // @ts-ignore
-            this.groupBy(key, group => group.select<TValue>(value).first()) :
-            this.groupBy(key, group => group.first());
-        
-        const materialized = grouped.toArray();
+    public toDictionary<TKey>(key: MapCondition<T, TKey>): Dictionary<TKey, T>;
+    public toDictionary<TKey, TValue>(key: MapCondition<T, TKey>, value: MapCondition<T, TValue>): Dictionary<TKey, TValue>;
+    public toDictionary<TKey, TValue = T>(key: MapCondition<T, TKey>, value?: MapCondition<T, TValue>): Dictionary<TKey, TValue> {        
+        const materialized = this.toArray();
 
-        const result = new Map<TKey, TValue | T>();
+        const result = new Dictionary<TKey, TValue | T>();
 
-        for(let i = 0, len = materialized.length; i < len; i++) {
-            result.set(materialized[i].key, materialized[i].group)
+        if(value) {
+            for(let i = 0, len = materialized.length; i < len; i++) {
+                const keyItem = key(materialized[i]);
+                const valueItem = value(materialized[i]);
+    
+                result.addIfNotExists(keyItem, valueItem)
+            }
+        } else {
+            for(let i = 0, len = materialized.length; i < len; i++) {
+                const keyItem = key(materialized[i]);
+                result.addIfNotExists(keyItem, materialized[i])
+            }
         }
+
 
         // @ts-ignore
         return result;

@@ -5,7 +5,7 @@ describe('LookupAggregator', function () {
     it('should lookup empty', () => {
         const cats = [];
 
-        const result = Array.from(_(cats).toLookup(item => item.age));
+        const result = _(cats).toLookup(item => item.age).entries();
 
         assert.deepEqual(result, [])
     });
@@ -26,7 +26,7 @@ describe('LookupAggregator', function () {
             age: 1
         },];
 
-        const result = Array.from(_(cats).toLookup(item => item.age));
+        const result = _(cats).toLookup(item => item.age).entries();
 
         assert.deepEqual(result, [
             [1,
@@ -68,7 +68,7 @@ describe('LookupAggregator', function () {
             age: 1
         },];
 
-        const result = Array.from(_(cats).toLookup(item => item.age, item => item.name));
+        const result = _(cats).toLookup(item => item.age, item => item.name).entries();
 
         assert.deepEqual(result, [
             [1, ['Lulya']],

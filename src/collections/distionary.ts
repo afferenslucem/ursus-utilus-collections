@@ -29,6 +29,14 @@ export class Dictionary<TKey, TValue> {
         }
     }
 
+    public addIfNotExists(key: TKey, value: TValue): void {
+        if(this.has(key)) {
+            return;
+        } else {
+            this.add(key, value);
+        }
+    }
+
     public update(key: TKey, value: TValue): void {
         const hash = this.comparer.getHashCode(key);
 
@@ -113,6 +121,10 @@ export class Dictionary<TKey, TValue> {
 
     public entries(): Array<[TKey, TValue]> {
         return Object.entries(this.storage).reduce((acc, item) => acc.concat(item[1]), [] as Array<[TKey, TValue]>)
+    }
+
+    public has(key: TKey): boolean {
+        return this.tryGet(key) !== undefined;
     }
 
     private searchIndexForKey(key: TKey, batch: Array<[TKey, TValue]>): number {

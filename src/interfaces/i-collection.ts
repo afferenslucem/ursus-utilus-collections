@@ -2,6 +2,7 @@ import { IIterable } from "./i-iterable";
 import { ISortingCollection } from "./i-sorting-collection";
 import { IGroupedData } from "./i-grouped-data";
 import { ReduceCondition, ReduceWithAccumulatorCondition, FilterCondition, MapCondition, EqualityCondition, CompareCondition, GroupJoinCondition, ZipCondition } from "../delegates";
+import { Dictionary } from "../collections/distionary";
 
 export interface ISequence<T> extends IIterable<T> {
 
@@ -489,28 +490,28 @@ export interface ISequence<T> extends IIterable<T> {
     toArray(): T[];
 
     /**
-     * Creates a Map<TKey, T[]> from an sequence according to a specified key selector function.
+     * Creates a Dictionary<TKey, T[]> from an sequence according to a specified key selector function.
      * @param key key selector
      */
-    toLookup<TKey>(key: MapCondition<T, TKey>): Map<TKey, T[]>;
+    toLookup<TKey>(key: MapCondition<T, TKey>): Dictionary<TKey, T[]>;
 
     /**
-     * Creates a Map<TKey, TElement[]> from an sequence according to specified key selector and element selector functions.
+     * Creates a Dictionary<TKey, TElement[]> from an sequence according to specified key selector and element selector functions.
      * @param key 
      * @param element 
      */
-    toLookup<TKey, TElement>(key: MapCondition<T, TKey>, element: MapCondition<T, TElement>): Map<TKey, TElement[]>;
+    toLookup<TKey, TElement>(key: MapCondition<T, TKey>, element: MapCondition<T, TElement>): Dictionary<TKey, TElement[]>;
 
     /**
-     * Creates a Map<TKey, T> from an sequence according to a specified key selector function.
+     * Creates a Dictionary<TKey, T> from a sequence according to a specified key selector function using by default equality comparer.
      * @param key key selector
      */
-    toMap<TKey>(key: MapCondition<T, TKey>): Map<TKey, T>;
+    toDictionary<TKey>(key: MapCondition<T, TKey>): Dictionary<TKey, T>;
 
     /**
-     * Creates a Map<TKey, TElement> from an sequence according to specified key selector and element selector functions.
+     * Creates a Dictionary<TKey, TElement> from a sequence according to specified key selector and element selector functions using by default equality comparer.
      * @param key 
      * @param element 
      */
-    toMap<TKey, TElement>(key: MapCondition<T, TKey>, element: MapCondition<T, TElement>): Map<TKey, TElement>;
+    toDictionary<TKey, TElement>(key: MapCondition<T, TKey>, element: MapCondition<T, TElement>): Dictionary<TKey, TElement>;
 }
