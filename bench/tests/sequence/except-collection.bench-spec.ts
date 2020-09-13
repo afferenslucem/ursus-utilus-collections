@@ -17,7 +17,10 @@ function benchBy(array: number[]): Suite {
     const second = _.random(array.length, 500).toArray();
     return getSuite('ExceptCollection')
     .add('declarray.except', () => {
-        return _(array).except(second, (a, b) => (a % 25) === (b % 25)).toArray();
+        return _(array).except(second, {
+            equal: (a, b) => a % 25 === b % 25,
+            getHashCode: a => a % 25
+        }).toArray();
     })
     .add('lodash.differenceBy', () => {
         return lodash(array).differenceBy(second, item => item % 25).value();

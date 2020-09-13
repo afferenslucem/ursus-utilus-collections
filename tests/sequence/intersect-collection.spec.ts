@@ -8,7 +8,10 @@ describe('IntersectCollection', function () {
     });
 
     it('should create with comparer', () => {
-        const result = new IntersectCollection(new Sequence([1, 2, 3]), new Sequence([1, 2, 3]), (a, b) => a == b);
+        const result = new IntersectCollection(new Sequence([1, 2, 3]), new Sequence([1, 2, 3]), {
+            equal: (a, b) => a === b,
+            getHashCode: a => a
+        });
     });
 
     it('should return intersected', () => {
@@ -49,7 +52,10 @@ describe('IntersectCollection', function () {
             age: 2
         }]
 
-        const result = _(cats).intersect(cats2, (a, b) => a.name === b.name && a.age === b.age).toArray();
+        const result = _(cats).intersect(cats2, {
+            equal: (a, b) => a.age === b.age && a.name === b.name,
+            getHashCode: a => a.name
+        }).toArray();
 
         const expected = [{
             name: 'Bonny',

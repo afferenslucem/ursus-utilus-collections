@@ -18,7 +18,10 @@ function benchBy(array: number[]): Suite {
     const second = _.random(array.length, 500).toArray();
     return getSuite('IntersectCollection')
     .add('declarray.intersect', () => {
-        return _(array).intersect(second, (a, b) => (a % 25) === (b % 25)).toArray();
+        return _(array).intersect(second, {
+            equal: (a, b) => a % 25 === b % 25,
+            getHashCode: a => a % 25
+        }).toArray();
     })
     .add('lodash.intersectionBy', () => {
         return lodash(array).intersectionBy(second, item => item % 25).value();

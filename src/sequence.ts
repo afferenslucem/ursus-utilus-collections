@@ -9,6 +9,7 @@ import { compare } from "./utils/compare";
 import { ISequence } from "./interfaces/i-collection";
 import { Dictionary } from "./collections/distionary";
 import { IEqualityComparer } from "./interfaces/i-equality-comparer";
+import { HashSet } from "./collections/hash-set";
 
 export class Sequence<T> implements ISequence<T> {
     // @ts-ignore
@@ -207,8 +208,8 @@ export class Sequence<T> implements ISequence<T> {
     }
 
     public distinct(): ISequence<T>;
-    public distinct(comparer: EqualityCondition<T>): ISequence<T>
-    public distinct(comparer?: EqualityCondition<T>): ISequence<T> {
+    public distinct(comparer: IEqualityComparer<T>): ISequence<T>
+    public distinct(comparer?: IEqualityComparer<T>): ISequence<T> {
         return new DistinctCollection(this, comparer);
     }
     
@@ -303,15 +304,15 @@ export class Sequence<T> implements ISequence<T> {
     }
 
     public except(items: T[] | ISequence<T>): ISequence<T>;
-    public except(items: T[] | ISequence<T>, comparer: EqualityCondition<T>): ISequence<T>;
-    public except(items: T[] | ISequence<T>, comparer?: EqualityCondition<T>): ISequence<T> {
-        return new ExceptCollection(this, new Sequence(items), comparer);
+    public except(items: T[] | ISequence<T>, comparer: IEqualityComparer<T>): ISequence<T>;
+    public except(items: T[] | ISequence<T>, comparer?: IEqualityComparer<T>): ISequence<T> {
+        return new ExceptCollection<T>(this, new Sequence(items), comparer);
     }
 
     public intersect(items: T[] | ISequence<T>): ISequence<T>;
-    public intersect(items: T[] | ISequence<T>, comparer: EqualityCondition<T>): ISequence<T>;
-    public intersect(items: T[] | ISequence<T>, comparer?: EqualityCondition<T>): ISequence<T> {
-        return new IntersectCollection(this, new Sequence(items), comparer);
+    public intersect(items: T[] | ISequence<T>, comparer: IEqualityComparer<T>): ISequence<T>;
+    public intersect(items: T[] | ISequence<T>, comparer?: IEqualityComparer<T>): ISequence<T> {
+        return new IntersectCollection<T>(this, new Sequence(items), comparer);
     }
 
     public groupJoin<T2, TKey, TResult>(
@@ -331,9 +332,9 @@ export class Sequence<T> implements ISequence<T> {
     }
 
     public union(items: T[] | ISequence<T>): ISequence<T>;
-    public union(items: T[] | ISequence<T>, comparer: EqualityCondition<T>): ISequence<T>;
-    public union(items: T[] | ISequence<T>, comparer?: EqualityCondition<T>): ISequence<T> {
-        return new UnionCollection(this, new Sequence(items), comparer);
+    public union(items: T[] | ISequence<T>, comparer: IEqualityComparer<T>): ISequence<T>;
+    public union(items: T[] | ISequence<T>, comparer?: IEqualityComparer<T>): ISequence<T> {
+        return new UnionCollection<T>(this, new Sequence(items), comparer);
     }
 
     public zip<T2, TResult>(iterable: ISequence<T2> | T2[], zipFunc?: ZipCondition<T, T2, TResult>): ISequence<TResult>;
@@ -349,6 +350,20 @@ export class Sequence<T> implements ISequence<T> {
             this.computed = this.materialize();
         }
         return this.computed
+    }
+
+    public toHashSet(): HashSet<T>;
+    public toHashSet(eqalityComparer: IEqualityComparer<T>): HashSet<T>
+    public toHashSet(eqalityComparer?: IEqualityComparer<T>): HashSet<T> {
+        const result = new HashSet(eqalityComparer);
+
+        const array = this.toArray();
+
+        for(let i = 0, len = array.length; i < len; i++) {
+            result.add(array[i]);
+        }
+
+        return result;
     }
 
     public toLookup<TKey>(key: MapCondition<T, TKey>): Dictionary<TKey, T[]>;
@@ -686,27 +701,23 @@ export class ReverseCollection<T> extends Sequence<T> {
 }
 
 export class DistinctCollection<T> extends Sequence<T> {    
-    public constructor(iterable: Sequence<T>, private comparer?: EqualityCondition<T>) {
+    public constructor(iterable: Sequence<T>, private comparer?: IEqualityComparer<T>) {
         // @ts-ignore
         super(iterable);
     }
 
     protected materialize(): T[] {
         if(this.comparer) {
-            const result: T[] = [];
+            const result: HashSet<T> = new HashSet<T>(this.comparer);
     
             const array = this.inner.toArray();
     
             for(let i = 0, len = array.length; i < len; i++) {
                 // @ts-ignore
-                if(result.some(item => this.comparer(item, array[i]))) {
-                    continue;
-                } else {
-                    result.push(array[i])
-                }
+                result.add(array[i])
             }
     
-            return result;
+            return result.entries();
         } else {
             return Array.from(new Set(this.inner.toArray()));
         }
@@ -874,7 +885,7 @@ export class DefaultCollection<T> extends Sequence<T> {
 }
 
 export class UnionCollection<T> extends Sequence<T> {   
-    public constructor(iterable: Sequence<T>, private outer: ISequence<T>, private comparer?: EqualityCondition<T>) {
+    public constructor(iterable: Sequence<T>, private outer: ISequence<T>, private comparer?: IEqualityComparer<T>) {
         super(iterable);
     }
 
@@ -888,55 +899,47 @@ export class UnionCollection<T> extends Sequence<T> {
 }
 
 export class IntersectCollection<T> extends Sequence<T> {   
-    public constructor(iterable: Sequence<T>, private outer: Sequence<T>, private comparer?: EqualityCondition<T>) {
+    public constructor(iterable: Sequence<T>, private outer: Sequence<T>, private comparer?: IEqualityComparer<T>) {
         super(iterable);
     }
 
     protected materialize(): Array<T> {
         const first = this.inner.toArray();
-        const second = this.outer.toArray();
+        // @ts-ignore
+        const second = this.outer.toHashSet(this.comparer);
 
         const result: T[] = [];
 
-        const comparer = this.comparer || equalityCompare;
-
         for(let i = 0, len = first.length; i < len; i++) {
-            if(second.some(item => comparer(first[i], item))) {
+            if(second.has(first[i])) {
                 result.push(first[i])
             }
         }
 
-        if(this.comparer) {
-            return new Sequence(result).distinct(this.comparer).toArray();
-        } else {
-            return new Sequence(result).distinct().toArray();
-        }
+        // @ts-ignore
+        return new Sequence(result).distinct(this.comparer).toArray();
     }
 }
 
 export class ExceptCollection<T> extends Sequence<T> {   
-    public constructor(iterable: Sequence<T>, private outer: ISequence<T>, private comparer: EqualityCondition<T> = equalityCompare) {
+    public constructor(iterable: Sequence<T>, private outer: ISequence<T>, private comparer?: IEqualityComparer<T>) {
         super(iterable);
     }
 
     protected materialize(): Array<T> {
         const first = this.inner.toArray();
-        const second = this.outer.toArray();
+        // @ts-ignore
+        const second = this.outer.toHashSet(this.comparer);
 
         const result: T[] = [];
 
-        const comparer = this.comparer || equalityCompare;
-
         for(let i = 0, len = first.length; i < len; i++) {
-            if(!second.some(item => comparer(first[i], item))) {
+            if(!second.has(first[i])) {
                 result.push(first[i])
             }
         }
 
-        if(this.comparer) {
-            return new Sequence(result).distinct(this.comparer).toArray();
-        } else {
-            return new Sequence(result).distinct().toArray();
-        }
+        // @ts-ignore
+        return new Sequence(result).distinct(this.comparer).toArray();
     }
 }

@@ -4,6 +4,7 @@ import { IGroupedData } from "./i-grouped-data";
 import { ReduceCondition, ReduceWithAccumulatorCondition, FilterCondition, MapCondition, EqualityCondition, CompareCondition, GroupJoinCondition, ZipCondition } from "../delegates";
 import { Dictionary } from "../collections/distionary";
 import { IEqualityComparer } from "./i-equality-comparer";
+import { HashSet } from "../collections/hash-set";
 
 export interface ISequence<T> extends IIterable<T> {
 
@@ -262,7 +263,7 @@ export interface ISequence<T> extends IIterable<T> {
      * Returns distinct elements from a sequence using specified equality comparer
      * @param comparer Rule for comparing
      */
-    distinct(comparer: EqualityCondition<T>): ISequence<T>;
+    distinct(comparer: IEqualityComparer<T>): ISequence<T>;
 
 
     /**
@@ -417,7 +418,7 @@ export interface ISequence<T> extends IIterable<T> {
      * Produces the set difference of two collections by using the specified comparer to compare values.
      * @param comparer function to compare values
      */
-    except(items: T[] | ISequence<T>, comparer: EqualityCondition<T>): ISequence<T>;
+    except(items: T[] | ISequence<T>, comparer: IEqualityComparer<T>): ISequence<T>;
     
 
     /**
@@ -429,7 +430,7 @@ export interface ISequence<T> extends IIterable<T> {
      * Produces the set sequence of two collections by using the specified equality comparer to compare values.
      * @param comparer function to compare values
      */
-    intersect(items: T[] | ISequence<T>, comparer: EqualityCondition<T>): ISequence<T>;
+    intersect(items: T[] | ISequence<T>, comparer: IEqualityComparer<T>): ISequence<T>;
 
 
     /**
@@ -468,7 +469,7 @@ export interface ISequence<T> extends IIterable<T> {
     /**
      * Produces the set union of two collections by using the specified  equality comparer.
      */
-    union(items: T[] | ISequence<T>, comparer: EqualityCondition<T>): ISequence<T>;
+    union(items: T[] | ISequence<T>, comparer: IEqualityComparer<T>): ISequence<T>;
 
 
     /**
@@ -489,6 +490,9 @@ export interface ISequence<T> extends IIterable<T> {
      * Creates an array from sequence
      */
     toArray(): T[];
+
+    toHashSet(): HashSet<T>;
+    toHashSet(eqalityComparer: IEqualityComparer<T>): HashSet<T>
 
     /**
      * Creates a Dictionary<TKey, T[]> from an sequence according to a specified key selector function.

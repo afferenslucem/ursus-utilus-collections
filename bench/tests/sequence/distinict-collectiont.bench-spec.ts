@@ -19,7 +19,10 @@ function bench(array: number[]): Suite {
 function benchDistinctBy(array: number[]): Suite {
     return getSuite('DistinctByCollection')
     .add('declarray.distinct', () => {
-        return _(array).distinct((a, b) => Math.abs(a) == Math.abs(b)).toArray();
+        return _(array).distinct({
+            equal: (a, b) => Math.abs(a) === Math.abs(b),
+            getHashCode: a => Math.abs(a)
+        }).toArray();
     })
     .add('lodash.uniqBy', () => {
         return lodash(array).uniqBy(item => item * 2).value();

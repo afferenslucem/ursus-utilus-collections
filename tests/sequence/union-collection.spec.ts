@@ -7,7 +7,10 @@ describe('UnionCollection', function () {
         const result = new UnionCollection(new Sequence([1, 2, 3]), new Sequence([1, 2, 3]));
     });
     it('should create with comparer', () => {
-        const result = new UnionCollection(new Sequence([1, 2, 3]), new Sequence([1, 2, 3]), (a, b) => a == b);
+        const result = new UnionCollection(new Sequence([1, 2, 3]), new Sequence([1, 2, 3]), {
+            equal: (a, b) => a == b,
+            getHashCode: a => a.toString()
+        });
     });
 
     it('should return concated', () => {
@@ -48,20 +51,23 @@ describe('UnionCollection', function () {
             age: 2
         }]
 
-        const result = _(cats).union(cats2, (a, b) => a.age === b.age).toArray();
+        const result = _(cats).union(cats2, {
+            equal: (a, b) => a.age == b.age,
+            getHashCode: a => a.age.toString()
+        }).toArray();
 
         const expected = [{
             name: 'Tom',
             age: 1
         },
         {
-            name: 'Bonny',
-            age: 3
-        },
-        {
             name: 'Lulya',
             age: 2
-        }]
+        },
+        {
+            name: 'Bonny',
+            age: 3
+        },]
 
         assert.deepEqual(result, expected)
     });
