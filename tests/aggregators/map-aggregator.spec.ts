@@ -50,9 +50,9 @@ describe('DictionaryAggregator', function () {
         ])
     });
 
-    it('should lookup cats by age and select name', () => {
+    it('should maps cats by model whith comparer by name', () => {
         const cats = [{
-            name: 'Barsik',
+            name: 'Cherry',
             age: 9
         }, {
             name: 'Cherry',
@@ -65,12 +65,87 @@ describe('DictionaryAggregator', function () {
             age: 1
         },];
 
-        const result = _(cats).toDictionary(item => item.age, item => item.name).entries()
+        const result = _(cats).toDictionary(item => item, {
+            equal: (a, b) => a.name == b.name,
+            getHashCode: (a) => a.name
+        }).entries()
 
         assert.deepEqual(result, [
-            [1, 'Lulya'],
-            [4, 'Cherry'],
-            [9, 'Barsik'],
+            [
+                {
+                    name: 'Cherry',
+                    age: 9
+                },
+                {
+                    name: 'Cherry',
+                    age: 9
+                }
+            ],
+            [
+                {
+                    name: 'Feya',
+                    age: 4
+                },
+                {
+                    name: 'Feya',
+                    age: 4
+                }
+            ],
+            [
+                {
+                    name: 'Lulya',
+                    age: 1
+                },
+                {
+                    name: 'Lulya',
+                    age: 1
+                }
+            ],
+        ])
+    });
+
+    it('should maps cats by model whith comparer by name and select name', () => {
+        const cats = [{
+            name: 'Cherry',
+            age: 9
+        }, {
+            name: 'Cherry',
+            age: 4
+        }, {
+            name: 'Feya',
+            age: 4
+        }, {
+            name: 'Lulya',
+            age: 1
+        },];
+
+        const result = _(cats).toDictionary(item => item, {
+            equal: (a, b) => a.name == b.name,
+            getHashCode: (a) => a.name
+        }, item => item.name).entries()
+
+        assert.deepEqual(result, [
+            [
+                {
+                    name: 'Cherry',
+                    age: 9
+                }, 
+                'Cherry'
+            ],
+            [
+                {
+                    name: 'Feya',
+                    age: 4
+                },
+                'Feya'
+            ],
+            [
+                {
+                    name: 'Lulya',
+                    age: 1
+                },
+                'Lulya'
+            ],
         ])
     });
 });

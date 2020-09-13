@@ -8,6 +8,7 @@ import { combine, of } from "./utils/operators";
 import { compare } from "./utils/compare";
 import { ISequence } from "./interfaces/i-collection";
 import { Dictionary } from "./collections/distionary";
+import { IEqualityComparer } from "./interfaces/i-equality-comparer";
 
 export class Sequence<T> implements ISequence<T> {
     // @ts-ignore
@@ -383,11 +384,17 @@ export class Sequence<T> implements ISequence<T> {
     }
 
     public toDictionary<TKey>(key: MapCondition<T, TKey>): Dictionary<TKey, T>;
+    public toDictionary<TKey>(key: MapCondition<T, TKey>, eqalityComparer: IEqualityComparer<TKey>): Dictionary<TKey, T>;
     public toDictionary<TKey, TValue>(key: MapCondition<T, TKey>, value: MapCondition<T, TValue>): Dictionary<TKey, TValue>;
-    public toDictionary<TKey, TValue = T>(key: MapCondition<T, TKey>, value?: MapCondition<T, TValue>): Dictionary<TKey, TValue> {        
+    public toDictionary<TKey, TValue>(key: MapCondition<T, TKey>, eqalityComparer: IEqualityComparer<TKey>, value: MapCondition<T, TValue>): Dictionary<TKey, TValue>;
+    public toDictionary<TKey, TValue = T>(key: MapCondition<T, TKey>, eqalityComparer?: IEqualityComparer<TKey> | MapCondition<T, TValue>, value?: MapCondition<T, TValue>): Dictionary<TKey, TValue> {        
         const materialized = this.toArray();
 
-        const result = new Dictionary<TKey, TValue | T>();
+        const result = typeof eqalityComparer === "object" ? new Dictionary<TKey, TValue | T>(eqalityComparer) :  new Dictionary<TKey, TValue | T>();
+
+        if(typeof eqalityComparer === "function")  {
+            value = eqalityComparer;
+        }
 
         if(value) {
             for(let i = 0, len = materialized.length; i < len; i++) {

@@ -3,6 +3,7 @@ import { ISortingCollection } from "./i-sorting-collection";
 import { IGroupedData } from "./i-grouped-data";
 import { ReduceCondition, ReduceWithAccumulatorCondition, FilterCondition, MapCondition, EqualityCondition, CompareCondition, GroupJoinCondition, ZipCondition } from "../delegates";
 import { Dictionary } from "../collections/distionary";
+import { IEqualityComparer } from "./i-equality-comparer";
 
 export interface ISequence<T> extends IIterable<T> {
 
@@ -509,9 +510,22 @@ export interface ISequence<T> extends IIterable<T> {
     toDictionary<TKey>(key: MapCondition<T, TKey>): Dictionary<TKey, T>;
 
     /**
+     * Creates a Dictionary<TKey, T> from a sequence according to a specified key selector function using by specified equality comparer.
+     * @param key key selector
+     */
+    toDictionary<TKey>(key: MapCondition<T, TKey>, eqalityComparer: IEqualityComparer<TKey>): Dictionary<TKey, T>;
+
+    /**
      * Creates a Dictionary<TKey, TElement> from a sequence according to specified key selector and element selector functions using by default equality comparer.
      * @param key 
      * @param element 
      */
     toDictionary<TKey, TElement>(key: MapCondition<T, TKey>, element: MapCondition<T, TElement>): Dictionary<TKey, TElement>;
+    
+    /**
+     * Creates a Dictionary<TKey, TElement> from a sequence according to specified key selector and element selector functions using by specified equality comparer.
+     * @param key 
+     * @param element 
+     */
+    toDictionary<TKey, TElement>(key: MapCondition<T, TKey>, eqalityComparer: IEqualityComparer<TKey>, element: MapCondition<T, TElement>): Dictionary<TKey, TElement>;
 }
