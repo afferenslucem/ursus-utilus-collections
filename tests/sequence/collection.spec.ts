@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 import _ from '../../src/index';
-import { Sequence } from '../../src/collection';
+import { Sequence } from '../../src/sequence';
 import { Exception } from '../../src/exceptions/exceptions';
 
 describe('Sequence', function () {

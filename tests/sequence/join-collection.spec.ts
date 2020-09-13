@@ -1,6 +1,6 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { JoinCollection, Sequence } from '../../src/collection';
+import { JoinCollection, Sequence } from '../../src/sequence';
 
 describe('JoinCollection', function () {  
     it('should create', () => {

@@ -9,7 +9,7 @@
     "build": "tsc --p tsconfig.json",
     "pack": "npm run build && npm pack",
     "bench": "ts-mocha \"./bench/tests/**/*.bench-spec.ts\"",
-    "bench:opt": "ts-mocha -p tsconfig.spec.json \"bench/tests/collections/grouping-collection.bench-spec.ts\""
+    "bench:opt": "ts-mocha -p tsconfig.spec.json \"bench/tests/sequence/grouping-collection.bench-spec.ts\""
   },
   "repository": {
     "type": "git",

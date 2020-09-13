@@ -1,6 +1,6 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { PrependCollection, Sequence } from '../../src/collection';
+import { PrependCollection, Sequence } from '../../src/sequence';
 
 describe('PrependCollection', function () {  
     it('should create', () => {

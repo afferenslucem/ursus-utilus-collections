@@ -1,6 +1,6 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { ZipCollection, Sequence } from '../../src/collection';
+import { ZipCollection, Sequence } from '../../src/sequence';
 
 describe('ZipCollection', function () {  
     it('should create', () => {

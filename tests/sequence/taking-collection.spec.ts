@@ -1,6 +1,6 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { TakingCollection, Sequence, TakingWhileCollection, TakingLastCollection } from '../../src/collection';
+import { TakingCollection, Sequence, TakingWhileCollection, TakingLastCollection } from '../../src/sequence';
 
 describe('TakingCollection', function () {  
     it('should create', () => {

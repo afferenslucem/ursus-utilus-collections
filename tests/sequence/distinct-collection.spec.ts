@@ -1,6 +1,6 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { DistinctCollection, Sequence } from '../../src/collection';
+import { DistinctCollection, Sequence } from '../../src/sequence';
 
 describe('DistinctCollection', function () {  
     it('should create', () => {

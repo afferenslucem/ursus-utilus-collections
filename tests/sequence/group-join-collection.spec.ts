@@ -1,6 +1,6 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { GroupJoinCollection, Sequence } from '../../src/collection';
+import { GroupJoinCollection, Sequence } from '../../src/sequence';
 
 describe('GroupJoinCollection', function () {  
     it('should create', () => {

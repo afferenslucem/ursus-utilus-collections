@@ -1,6 +1,6 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { ReverseCollection, Sequence } from '../../src/collection';
+import { ReverseCollection, Sequence } from '../../src/sequence';
 
 describe('ReverseCollection', function () {  
     it('should create', () => {

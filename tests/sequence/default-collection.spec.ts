@@ -1,6 +1,6 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { DefaultCollection, Sequence } from '../../src/collection';
+import { DefaultCollection, Sequence } from '../../src/sequence';
 
 describe('DefaultCollection', function () {  
     it('should create from collection', () => {

@@ -1,6 +1,6 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { ConcatCollection, Sequence } from '../../src/collection';
+import { ConcatCollection, Sequence } from '../../src/sequence';
 
 describe('ConcatCollection', function () {  
     it('should create', () => {

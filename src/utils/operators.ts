@@ -1,5 +1,5 @@
 import { ISequence } from "../interfaces/i-collection";
-import { Sequence } from "../collection";
+import { Sequence } from "../sequence";
 
 export function combine<T, T2>(obj: T, arr: T2[] | ISequence<T2>): Array<[T, T2]> {
     if(Array.isArray(arr)) {

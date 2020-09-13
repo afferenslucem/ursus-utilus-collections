@@ -1,6 +1,6 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { FilteringCollection, Sequence } from '../../src/collection';
+import { FilteringCollection, Sequence } from '../../src/sequence';
 
 describe('FilteringCollection', function () {  
     it('should create', () => {

@@ -1,6 +1,6 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { IntersectCollection, Sequence } from '../../src/collection';
+import { IntersectCollection, Sequence } from '../../src/sequence';
 
 describe('IntersectCollection', function () {
     it('should create without comparer', () => {

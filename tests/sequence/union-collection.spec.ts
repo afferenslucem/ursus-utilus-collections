@@ -1,6 +1,6 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { UnionCollection, Sequence } from '../../src/collection';
+import { UnionCollection, Sequence } from '../../src/sequence';
 
 describe('UnionCollection', function () {
     it('should create without comparer', () => {

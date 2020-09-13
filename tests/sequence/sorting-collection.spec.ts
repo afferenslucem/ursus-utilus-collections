@@ -1,6 +1,6 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { SortingCollection, Sequence } from '../../src/collection';
+import { SortingCollection, Sequence } from '../../src/sequence';
 import { SortDirection } from '../../src/utils/comparer';
 
 describe('SortingCollection', function () {

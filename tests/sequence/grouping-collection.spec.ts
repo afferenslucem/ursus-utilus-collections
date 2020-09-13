@@ -1,6 +1,6 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { GroupingCollection, Sequence } from '../../src/collection';
+import { GroupingCollection, Sequence } from '../../src/sequence';
 import { IGroupedData } from '../../src/interfaces/i-grouped-data';
 
 describe('GroupingCollection', function () {

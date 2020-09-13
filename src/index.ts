@@ -1,6 +1,6 @@
 import { ISequence } from './interfaces/i-collection';
 import { range, random, of, empty, repeat } from './utils/operators';
-import { Sequence } from './collection';
+import { Sequence } from './sequence';
 
 const exp = function<T>(items: T[]): ISequence<T> {
     return new Sequence<T>(items);

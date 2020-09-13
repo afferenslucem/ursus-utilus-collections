@@ -1,6 +1,6 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { SkippingCollection, Sequence, SkippingLastCollection, SkippingWhileCollection } from '../../src/collection';
+import { SkippingCollection, Sequence, SkippingLastCollection, SkippingWhileCollection } from '../../src/sequence';
 import { Exception } from '../../src/exceptions/exceptions';
 
 describe('SkippingCollection', function () {  

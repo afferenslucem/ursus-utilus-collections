@@ -1,6 +1,6 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { MappingManyCollection, Sequence } from '../../src/collection';
+import { MappingManyCollection, Sequence } from '../../src/sequence';
 
 describe('MappingManyCollection', function () {  
     it('should create', () => {

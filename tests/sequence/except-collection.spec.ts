@@ -1,6 +1,6 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { ExceptCollection, Sequence } from '../../src/collection';
+import { ExceptCollection, Sequence } from '../../src/sequence';
 
 describe('ExceptCollection', function () {
     it('should create without comparer', () => {

@@ -1,7 +1,7 @@
 
 import _ from '../../src/index'
 import { assert } from "chai";
-import { AppendCollection, Sequence } from '../../src/collection';
+import { AppendCollection, Sequence } from '../../src/sequence';
 
 describe('ApependCollection', function () {  
     it('should create', () => {

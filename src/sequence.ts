@@ -1,4 +1,3 @@
-import { ISequence } from ".";
 import { Exception } from "./exceptions/exceptions";
 import { ReduceCondition, ReduceWithAccumulatorCondition, FilterCondition, MapCondition, EqualityCondition, CompareCondition, ServiceMapCondition, GroupJoinCondition, ZipCondition } from "./delegates";
 import { equalityCompare } from "./utils/equality-compare";
@@ -7,6 +6,7 @@ import { ISortingCollection } from "./interfaces/i-sorting-collection";
 import { SortDirection, SortSettings, Comparer } from "./utils/comparer";
 import { combine, of } from "./utils/operators";
 import { compare } from "./utils/compare";
+import { ISequence } from "./interfaces/i-collection";
 
 export class Sequence<T> implements ISequence<T> {
     // @ts-ignore
