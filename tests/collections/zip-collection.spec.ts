@@ -1,14 +1,14 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { ZipCollection, Collection } from '../../src/collection';
+import { ZipCollection, Sequence } from '../../src/collection';
 
 describe('ZipCollection', function () {  
     it('should create', () => {
-        const result = new ZipCollection(new Collection([1, 2, 3]), new Collection([3, 2, 1]));
+        const result = new ZipCollection(new Sequence([1, 2, 3]), new Sequence([3, 2, 1]));
     });
 
     it('should zip', () => {
-        const result = new ZipCollection(new Collection([1, 2, 3]), new Collection([3, 2, 1])).toArray();
+        const result = new ZipCollection(new Sequence([1, 2, 3]), new Sequence([3, 2, 1])).toArray();
 
         const expected = [[1, 3], [2, 2], [3, 1]];
 
@@ -16,7 +16,7 @@ describe('ZipCollection', function () {
     });
 
     it('should zip by func', () => {
-        const result = new ZipCollection(new Collection([1, 2, 3]), new Collection([3, 2, 1]), (a, b) => a + b).toArray();
+        const result = new ZipCollection(new Sequence([1, 2, 3]), new Sequence([3, 2, 1]), (a, b) => a + b).toArray();
 
         const expected = [4, 4, 4];
 
@@ -24,7 +24,7 @@ describe('ZipCollection', function () {
     });
 
     it('should zip with shorter collection', () => {
-        const result = new ZipCollection(new Collection([1, 2, 3, 4]), new Collection([3, 2, 1])).toArray();
+        const result = new ZipCollection(new Sequence([1, 2, 3, 4]), new Sequence([3, 2, 1])).toArray();
 
         const expected = [[1, 3], [2, 2], [3, 1]];
 
@@ -32,7 +32,7 @@ describe('ZipCollection', function () {
     });
 
     it('should zip with longer collection', () => {
-        const result = new ZipCollection(new Collection([1, 2, 3]), new Collection([3, 2, 1, 0])).toArray();
+        const result = new ZipCollection(new Sequence([1, 2, 3]), new Sequence([3, 2, 1, 0])).toArray();
 
         const expected = [[1, 3], [2, 2], [3, 1]];
 
@@ -75,7 +75,7 @@ describe('ZipCollection', function () {
     //     const array = _.range(1, 150_000).toArray();
 
     //     // @ts-ignore
-    //     const result = new ZipCollection(new Collection(array), _([])).chooseAlgorithm(array);
+    //     const result = new ZipCollection(new Sequence(array), _([])).chooseAlgorithm(array);
 
     //     assert.isTrue(result instanceof ZipCustomAlgorithm)
     // });
@@ -84,7 +84,7 @@ describe('ZipCollection', function () {
     //     const array = _.range(1, 10_000).toArray();
 
     //     // @ts-ignore
-    //     const result = new ZipCollection(new Collection(array), _([])).chooseAlgorithm(array);
+    //     const result = new ZipCollection(new Sequence(array), _([])).chooseAlgorithm(array);
 
     //     assert.isTrue(result instanceof ZipNativeAlgorithm)
     // });  

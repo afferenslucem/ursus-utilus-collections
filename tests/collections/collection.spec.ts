@@ -1,29 +1,29 @@
 import { assert } from 'chai';
 import _ from '../../src/index';
-import { Collection } from '../../src/collection';
+import { Sequence } from '../../src/collection';
 import { Exception } from '../../src/exceptions/exceptions';
 
-describe('Collection', function () {
+describe('Sequence', function () {
     it('should create materialized collection by array', () => {
         const items = [1, 2, 3];
-        const collection = new Collection(items)
+        const collection = new Sequence(items)
         assert.isTrue(collection.materialized, 'Is not materialized');
     });
 
     it('should create collection by array', () => {
         const items = [1, 2, 3];
-        const collection = new Collection(items)
+        const collection = new Sequence(items)
     });
 
     it('should create collection by collection', () => {
         const items = [1, 2, 3];
-        const collection = new Collection(items);
-        const collectionByOtherCollection = new Collection(collection);
+        const collection = new Sequence(items);
+        const collectionByOtherCollection = new Sequence(collection);
     });
     
     it('should return true for containing element', () => {
         const items = [1, 2, 3];
-        const collection = new Collection(items)
+        const collection = new Sequence(items)
 
         const expected = true;
 
@@ -34,7 +34,7 @@ describe('Collection', function () {
     
     it('should return false for not containing element', () => {
         const items = [1, 2, 3];
-        const collection = new Collection(items)
+        const collection = new Sequence(items)
 
         const expected = false;
 
@@ -46,21 +46,21 @@ describe('Collection', function () {
     it('should throw error by creation from object', () => {
         assert.throws(() => {
             // @ts-ignore
-            const collection = new Collection({});
+            const collection = new Sequence({});
         }, Exception.WrongCollectionException)
     });
 
     it('should throw error by creation from string', () => {
         assert.throws(() => {
             // @ts-ignore
-            const collection = new Collection('hello');
+            const collection = new Sequence('hello');
         }, Exception.WrongCollectionException)
     });
 
     it('should throw error by creation from number', () => {
         assert.throws(() => {
             // @ts-ignore
-            const collection = new Collection(1);
+            const collection = new Sequence(1);
         }, Exception.WrongCollectionException)
     });
 });

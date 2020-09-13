@@ -10,9 +10,9 @@
 
 ## concat
 
-Method signature: `concat(items: T[] | ICollection<T>): ICollection<T>`.
+Method signature: `concat(items: T[] | Isequence<T>): Isequence<T>`.
 
-Concatenates two collections.
+Concatenates two sequences.
 
 ```typescript
 const concated = _([1, 2, 3).concat([4, 5, 6]).toArray();
@@ -22,9 +22,9 @@ console.log(concated); // [ 1, 2, 3, 4, 5, 6 ]
 
 ## except
 
-Method signature: `except(items: T[] | ICollection<T>): ICollection<T>`.
+Method signature: `except(items: T[] | Isequence<T>): Isequence<T>`.
 
-Produces the set collection of two collections by using the default equality comparer to compare values.
+Produces the set sequence of two sequences by using the default equality comparer to compare values.
 
 ```typescript
 const onlyInFirst = _([0, 1, 2, 3, 4, 5, 6, 7, 8]).except([2, 3, 4, 4, 5, 6]).toArray();
@@ -34,9 +34,9 @@ console.log(onlyInFirst) // [ 0, 1, 7, 8 ];
 
 ### except with custom comparer
 
-Method signature: `except(items: T[] | ICollection<T>, comparer: (first: T, second: T) => boolean): ICollection<T>`.
+Method signature: `except(items: T[] | Isequence<T>, comparer: (first: T, second: T) => boolean): Isequence<T>`.
 
-Produces the set collection of two collections by using the specified equality comparer to compare values.
+Produces the set sequence of two sequences by using the specified equality comparer to compare values.
 
 ```typescript
 const cats = [{
@@ -69,9 +69,9 @@ console.log(onlyInFirst)
 
 ## intersect
 
-Method signature: `intersect(items: T[] | ICollection<T>): ICollection<T>`.
+Method signature: `intersect(items: T[] | Isequence<T>): Isequence<T>`.
 
-Produces the set collection of two collections by using the default equality comparer to compare values.
+Produces the set sequence of two sequences by using the default equality comparer to compare values.
 
 ```typescript
 const intersect = _([0, 1, 2, 3]).intersect([2, 3, 4, 4, 5, 6]).toArray();
@@ -81,9 +81,9 @@ console.log(intersect) // [ 2, 3 ];
 
 ### intersect with custom comparer
 
-Method signature: `intersect(items: T[] | ICollection<T>, comparer: (first: T, second: T) => boolean): ICollection<T>`.
+Method signature: `intersect(items: T[] | Isequence<T>, comparer: (first: T, second: T) => boolean): Isequence<T>`.
 
-Produces the set collection of two collections by using the specified equality comparer to compare values.
+Produces the set sequence of two sequences by using the specified equality comparer to compare values.
 
 ```typescript
 const cats = [{
@@ -117,9 +117,9 @@ console.log(union)
 
 ## groupJoin
 
-Method signature: `groupJoin<T2, TKey, TResult>(iterable: ICollection<T2> | T2[], firstKey: MapCondition<T, TKey>, secondKey: MapCondition<T2, TKey>, zipFunc: (first: T1, seconds: ICollection<T2>) => TResult): ICollection<TResult>`
+Method signature: `groupJoin<T2, TKey, TResult>(iterable: Isequence<T2> | T2[], firstKey: MapCondition<T, TKey>, secondKey: MapCondition<T2, TKey>, zipFunc: (first: T1, seconds: Isequence<T2>) => TResult): Isequence<TResult>`
 
-Correlates the elements of two collections based on equality of keys and groups the results.
+Correlates the elements of two sequences based on equality of keys and groups the results.
 
 ```typescript
 const cats = [{
@@ -164,9 +164,9 @@ console.log(joined);
 
 ## join
 
-Method signature: `join<T2, TKey, TResult>(iterable: ICollection<T2> | T2[], firstKey: (item: T1) => TKey, secondKey: (item: T2) => TKey, zipFunc: (first: T1, second: T2) => TResult)`
+Method signature: `join<T2, TKey, TResult>(iterable: Isequence<T2> | T2[], firstKey: (item: T1) => TKey, secondKey: (item: T2) => TKey, zipFunc: (first: T1, second: T2) => TResult)`
 
-Correlates the elements of two collections based on matching keys.
+Correlates the elements of two sequences based on matching keys.
 
 ```typescript
 const cats = [{
@@ -212,9 +212,9 @@ console.log(joined);
 
 ## union
 
-Method signature: `union(items: T[] | ICollection<T>): ICollection<T>`.
+Method signature: `union(items: T[] | Isequence<T>): Isequence<T>`.
 
-Produces the set union of two collections by using the default equality comparer.
+Produces the set union of two sequences by using the default equality comparer.
 
 ```typescript
 const union = _([0, 1, 2, 3]).union([2, 3, 4, 4, 5, 6]).toArray();
@@ -224,9 +224,9 @@ console.log(union) // [0, 1, 2, 3, 4, 5, 6];
 
 ### union with custom comparer
 
-Method signature: `union(items: T[] | ICollection<T>, comparer: (first: T, second: T) => boolean): ICollection<T>`.
+Method signature: `union(items: T[] | Isequence<T>, comparer: (first: T, second: T) => boolean): Isequence<T>`.
 
-Produces the set union of two collections by using the specified equality comparer.
+Produces the set union of two sequences by using the specified equality comparer.
 
 ```typescript
 const cats = [{
@@ -259,9 +259,9 @@ console.log(union)
 
 ## zip
 
-Method signature: `zip<T2>(iterable: ICollection<T2> | T2[]): ICollection<[T, T2]>`.
+Method signature: `zip<T2>(iterable: Isequence<T2> | T2[]): Isequence<[T, T2]>`.
 
-Returns new collection with converted corresponding elements to tuples.
+Returns new sequence with converted corresponding elements to tuples.
 
 ```typescript
 const zipped = _([1, 2, 3).zip([4, 5, 6]).toArray();
@@ -271,9 +271,9 @@ console.log(zipped); // [ [1, 4], [2, 5], [3, 6] ]
 
 ### zip with function
 
-Method signature: `zip<T2, TResult>(iterable: ICollection<T2> | T2[], zipFunc: (first: T1, second: T2) => TResult): ICollection<TResult>`.
+Method signature: `zip<T2, TResult>(iterable: Isequence<T2> | T2[], zipFunc: (first: T1, second: T2) => TResult): Isequence<TResult>`.
 
-Applies a specified function to the corresponding elements of two collections, producing a collection of the results.
+Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
 
 ```typescript
 const zipped = _([1, 2, 3).zip([4, 5, 6], (a, b) => a + b).toArray();

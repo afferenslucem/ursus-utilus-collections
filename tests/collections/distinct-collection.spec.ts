@@ -1,16 +1,16 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { DistinctCollection, Collection } from '../../src/collection';
+import { DistinctCollection, Sequence } from '../../src/collection';
 
 describe('DistinctCollection', function () {  
     it('should create', () => {
-        const result = new DistinctCollection(new Collection([1, 2, 3]));
+        const result = new DistinctCollection(new Sequence([1, 2, 3]));
     });
 
     it('should return distinct', () => {
         const expected = [1, 2, 3];
 
-        const result = new DistinctCollection(new Collection([1, 1, 2, 1, 3, 2, 3])).toArray();
+        const result = new DistinctCollection(new Sequence([1, 1, 2, 1, 3, 2, 3])).toArray();
 
         assert.deepEqual(result, expected)
     });
@@ -18,7 +18,7 @@ describe('DistinctCollection', function () {
     it('should return distinctBy', () => {
         const expected = [[1, 1], [3, 2]];
 
-        const result = new DistinctCollection(new Collection([[1, 1], [2, 1], [3, 2]]), (a, b) => a[1] == b[1]).toArray();
+        const result = new DistinctCollection(new Sequence([[1, 1], [2, 1], [3, 2]]), (a, b) => a[1] == b[1]).toArray();
 
         assert.deepEqual(result, expected)
     });

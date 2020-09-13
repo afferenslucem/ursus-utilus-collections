@@ -1,4 +1,4 @@
-import { ICollection } from "./interfaces/i-collection";
+import { ISequence } from "./interfaces/i-collection";
 
 export type FilterCondition<T> = (item: T, index?: number) => boolean;
 
@@ -15,4 +15,4 @@ export type ReduceWithAccumulatorCondition<T, V> = (acc: V, second: T) => V;
 
 export type ZipCondition<T1, T2, TResult> = (first: T1, second: T2) => TResult;
 
-export type GroupJoinCondition<T1, T2, TResult> = (first: T1, seconds: ICollection<T2>) => TResult;
+export type GroupJoinCondition<T1, T2, TResult> = (first: T1, seconds: ISequence<T2>) => TResult;

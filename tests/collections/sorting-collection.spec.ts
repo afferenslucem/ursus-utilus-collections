@@ -1,16 +1,16 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { SortingCollection, Collection } from '../../src/collection';
+import { SortingCollection, Sequence } from '../../src/collection';
 import { SortDirection } from '../../src/utils/comparer';
 
 describe('SortingCollection', function () {
     it('should create', () => {
-        const result = new SortingCollection(new Collection([1, 2, 3]));
+        const result = new SortingCollection(new Sequence([1, 2, 3]));
     });
 
     it('should sort', () => {
         const items = [3, 2, 1]
-        const result = new SortingCollection(new Collection(items)).toArray();
+        const result = new SortingCollection(new Sequence(items)).toArray();
 
         const expected = [1, 2, 3];
 
@@ -20,7 +20,7 @@ describe('SortingCollection', function () {
 
     it('should sort desc', () => {
         const items = [1, 2, 3]
-        const result = new SortingCollection(new Collection(items), {
+        const result = new SortingCollection(new Sequence(items), {
             direcion: SortDirection.Desc
         }).toArray();
 
@@ -31,7 +31,7 @@ describe('SortingCollection', function () {
     });
 
     it('should sort by lambda', () => {
-        const result = new SortingCollection(new Collection([1, 2, 3]), {
+        const result = new SortingCollection(new Sequence([1, 2, 3]), {
             compare: (a, b) => b - a,
             direcion: SortDirection.Asc
         }).toArray();
@@ -42,7 +42,7 @@ describe('SortingCollection', function () {
     });
 
     it('should sort by lambda desc', () => {
-        const result = new SortingCollection(new Collection([1, 2, 3]), {
+        const result = new SortingCollection(new Sequence([1, 2, 3]), {
             compare: (a, b) => a - b,
             direcion: SortDirection.Desc
         }).toArray();
@@ -53,7 +53,7 @@ describe('SortingCollection', function () {
     });
         
     it('should sort by field', () => {
-        const result = new SortingCollection(new Collection([[3, 4], [2, 4], [2, 3], [1, 2]]), {
+        const result = new SortingCollection(new Sequence([[3, 4], [2, 4], [2, 3], [1, 2]]), {
             mapping: item => item[0],
             direcion: SortDirection.Asc
         }).toArray();
@@ -64,7 +64,7 @@ describe('SortingCollection', function () {
     });
         
     it('should sort by field desc', () => {
-        const result = new SortingCollection(new Collection([[2, 3], [1, 2], [3, 4], [2, 4], ]), {
+        const result = new SortingCollection(new Sequence([[2, 3], [1, 2], [3, 4], [2, 4], ]), {
             mapping: item => item[0],
             direcion: SortDirection.Desc
         }).toArray();
@@ -75,7 +75,7 @@ describe('SortingCollection', function () {
     });
 
     it('should sort cascade', () => {
-        const result = new SortingCollection(new Collection([[3, 4], [2, 4], [2, 3], [1, 2]]), {
+        const result = new SortingCollection(new Sequence([[3, 4], [2, 4], [2, 3], [1, 2]]), {
             mapping: item => item[0],
             direcion: SortDirection.Asc
         }).thenBy(item => item[1]).toArray();
@@ -86,7 +86,7 @@ describe('SortingCollection', function () {
     });
 
     it('should sort cascade desc', () => {
-        const result = new SortingCollection(new Collection([[2, 3], [1, 2], [3, 4], [2, 4], ]), {
+        const result = new SortingCollection(new Sequence([[2, 3], [1, 2], [3, 4], [2, 4], ]), {
             mapping: item => item[0],
             direcion: SortDirection.Desc
         }).thenByDescending(item => item[1]).toArray();
@@ -97,7 +97,7 @@ describe('SortingCollection', function () {
     });
 
     it('should sort cascade with condition', () => {
-        const result = new SortingCollection<number[], number>(new Collection([[3, 4], [2, 4], [2, 3], [1, 2]]), {
+        const result = new SortingCollection<number[], number>(new Sequence([[3, 4], [2, 4], [2, 3], [1, 2]]), {
             mapping: item => item[0],
             compare: (first, second) => second - first,
             direcion: SortDirection.Asc
@@ -109,7 +109,7 @@ describe('SortingCollection', function () {
     });
 
     it('should sort cascade with condition desc', () => {
-        const result = new SortingCollection<number[], number>(new Collection([[3, 4], [2, 4], [2, 3], [1, 2]]), {
+        const result = new SortingCollection<number[], number>(new Sequence([[3, 4], [2, 4], [2, 3], [1, 2]]), {
             mapping: item => item[0],
             compare: (first, second) => second - first,
             direcion: SortDirection.Desc

@@ -1,16 +1,16 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { ConcatCollection, Collection } from '../../src/collection';
+import { ConcatCollection, Sequence } from '../../src/collection';
 
 describe('ConcatCollection', function () {  
     it('should create', () => {
-        const result = new ConcatCollection(new Collection([1, 2, 3]), new Collection([1, 2, 3]));
+        const result = new ConcatCollection(new Sequence([1, 2, 3]), new Sequence([1, 2, 3]));
     });
 
     it('should concat with collection', () => {
         const expected = [1, 2, 3, 4, 5, 6];
 
-        const result = new ConcatCollection(new Collection([1, 2, 3]), new Collection([4, 5, 6])).toArray();
+        const result = new ConcatCollection(new Sequence([1, 2, 3]), new Sequence([4, 5, 6])).toArray();
 
         assert.deepEqual(result, expected)
     });

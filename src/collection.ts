@@ -1,4 +1,4 @@
-import { ICollection } from ".";
+import { ISequence } from ".";
 import { Exception } from "./exceptions/exceptions";
 import { ReduceCondition, ReduceWithAccumulatorCondition, FilterCondition, MapCondition, EqualityCondition, CompareCondition, ServiceMapCondition, GroupJoinCondition, ZipCondition } from "./delegates";
 import { equalityCompare } from "./utils/equality-compare";
@@ -8,13 +8,13 @@ import { SortDirection, SortSettings, Comparer } from "./utils/comparer";
 import { combine, of } from "./utils/operators";
 import { compare } from "./utils/compare";
 
-export class Collection<T> implements ICollection<T> {
+export class Sequence<T> implements ISequence<T> {
     // @ts-ignore
-    protected inner: Collection<T>;
+    protected inner: Sequence<T>;
     private computed: T[] | null = null;
 
-    public constructor(iterable: T[] | ICollection<T>) {
-        if (iterable instanceof Collection) {
+    public constructor(iterable: T[] | ISequence<T>) {
+        if (iterable instanceof Sequence) {
             this.inner = iterable;
         } else if (Array.isArray(iterable)) {
             this.computed = iterable;
@@ -50,9 +50,9 @@ export class Collection<T> implements ICollection<T> {
         return this.sum(map) / this.count()
     }
 
-    public collectionEqual(collection: T[] | ICollection<T>): boolean;
-    public collectionEqual(collection: T[] | ICollection<T>, comparer: EqualityCondition<T>): boolean;
-    public collectionEqual(collection: T[] | ICollection<T>, comparer: EqualityCondition<T> = equalityCompare): boolean {
+    public sequenceEqual(collection: T[] | ISequence<T>): boolean;
+    public sequenceEqual(collection: T[] | ISequence<T>, comparer: EqualityCondition<T>): boolean;
+    public sequenceEqual(collection: T[] | ISequence<T>, comparer: EqualityCondition<T> = equalityCompare): boolean {
         const arr1 = this.toArray();
         const arr2 = Array.isArray(collection) ? collection : collection.toArray();
 
@@ -196,23 +196,23 @@ export class Collection<T> implements ICollection<T> {
 
     // Querring
 
-    public append(item: T): ICollection<T> {
+    public append(item: T): ISequence<T> {
         return new AppendCollection(this, item);
     }
 
-    public defaultIfEmpty(value: T | T[] | ICollection<T>): ICollection<T> {
+    public defaultIfEmpty(value: T | T[] | ISequence<T>): ISequence<T> {
         return new DefaultCollection(this, value);
     }
 
-    public distinct(): ICollection<T>;
-    public distinct(comparer: EqualityCondition<T>): ICollection<T>
-    public distinct(comparer?: EqualityCondition<T>): ICollection<T> {
+    public distinct(): ISequence<T>;
+    public distinct(comparer: EqualityCondition<T>): ISequence<T>
+    public distinct(comparer?: EqualityCondition<T>): ISequence<T> {
         return new DistinctCollection(this, comparer);
     }
     
-    public groupBy<TKey>(key: MapCondition<T, TKey>): ICollection<IGroupedData<TKey, ICollection<T>>>;
-    public groupBy<TKey, TValue>(key: MapCondition<T, TKey>, group: MapCondition<ICollection<T>, TValue>): ICollection<IGroupedData<TKey, TValue>>;
-    public groupBy<TKey, TValue>(key: MapCondition<T, TKey>, group?: MapCondition<ICollection<T>, TValue>): ICollection<IGroupedData<TKey, TValue>> {
+    public groupBy<TKey>(key: MapCondition<T, TKey>): ISequence<IGroupedData<TKey, ISequence<T>>>;
+    public groupBy<TKey, TValue>(key: MapCondition<T, TKey>, group: MapCondition<ISequence<T>, TValue>): ISequence<IGroupedData<TKey, TValue>>;
+    public groupBy<TKey, TValue>(key: MapCondition<T, TKey>, group?: MapCondition<ISequence<T>, TValue>): ISequence<IGroupedData<TKey, TValue>> {
         return new GroupingCollection<T, TKey, TValue>(this, key, group);
     }
 
@@ -234,110 +234,110 @@ export class Collection<T> implements ICollection<T> {
         })
     }
 
-    public prepend(item: T): ICollection<T> {
+    public prepend(item: T): ISequence<T> {
         return new PrependCollection(this, item);
     }
 
-    public reverse(): ICollection<T> {
+    public reverse(): ISequence<T> {
         return new ReverseCollection(this);
     }
 
-    public select<TOut>(condition: ServiceMapCondition<T, TOut>): ICollection<TOut> {                
+    public select<TOut>(condition: ServiceMapCondition<T, TOut>): ISequence<TOut> {                
         // @ts-ignore
         return new MappingCollection<T, TOut>(this, condition);
     }
 
-    public selectMany<TOut>(condition: ServiceMapCondition<T, TOut[]>): ICollection<TOut> {                
+    public selectMany<TOut>(condition: ServiceMapCondition<T, TOut[]>): ISequence<TOut> {                
         // @ts-ignore
         return new MappingManyCollection<T, TOut>(this, condition);
     }
 
-    public skip(shouldSkip: number): ICollection<T> {
+    public skip(shouldSkip: number): ISequence<T> {
         return new SkippingCollection(this, shouldSkip);
     }
 
-    public skipLast(shouldSkip: number): ICollection<T> {
+    public skipLast(shouldSkip: number): ISequence<T> {
         return new SkippingLastCollection(this, shouldSkip);
     }
 
-    public skipWhile(condition: FilterCondition<T>): ICollection<T> {
+    public skipWhile(condition: FilterCondition<T>): ISequence<T> {
         return new SkippingWhileCollection(this, condition);
     }
 
-    public sort(condition?: CompareCondition<T> | undefined): ICollection<T> {
+    public sort(condition?: CompareCondition<T> | undefined): ISequence<T> {
         return new SortingCollection<T>(this, {
             compare: condition,
             direcion: SortDirection.Asc
         })
     }
 
-    public sortDescending(condition?: CompareCondition<T> | undefined): ICollection<T> {
+    public sortDescending(condition?: CompareCondition<T> | undefined): ISequence<T> {
         return new SortingCollection<T>(this, {
             compare: condition,
             direcion: SortDirection.Desc
         })
     }
 
-    public take(shouldTake: number): ICollection<T> {
+    public take(shouldTake: number): ISequence<T> {
         return new TakingCollection(this, shouldTake);
     }
 
-    public takeLast(shouldSkip: number): ICollection<T> {
+    public takeLast(shouldSkip: number): ISequence<T> {
         return new TakingLastCollection(this, shouldSkip);
     }
 
-    public takeWhile(condition: FilterCondition<T>): ICollection<T> {
+    public takeWhile(condition: FilterCondition<T>): ISequence<T> {
         return new TakingWhileCollection(this, condition);
     }
 
-    public where(condition: FilterCondition<T>): ICollection<T> {
+    public where(condition: FilterCondition<T>): ISequence<T> {
         return new FilteringCollection<T>(this, condition);
     }
 
     // Joining
 
-    public concat(items: T[] | ICollection<T>): ICollection<T> {
-        return new ConcatCollection<T>(this, Array.isArray(items) ? new Collection(items) : items);
+    public concat(items: T[] | ISequence<T>): ISequence<T> {
+        return new ConcatCollection<T>(this, Array.isArray(items) ? new Sequence(items) : items);
     }
 
-    public except(items: T[] | ICollection<T>): ICollection<T>;
-    public except(items: T[] | ICollection<T>, comparer: EqualityCondition<T>): ICollection<T>;
-    public except(items: T[] | ICollection<T>, comparer?: EqualityCondition<T>): ICollection<T> {
-        return new ExceptCollection(this, new Collection(items), comparer);
+    public except(items: T[] | ISequence<T>): ISequence<T>;
+    public except(items: T[] | ISequence<T>, comparer: EqualityCondition<T>): ISequence<T>;
+    public except(items: T[] | ISequence<T>, comparer?: EqualityCondition<T>): ISequence<T> {
+        return new ExceptCollection(this, new Sequence(items), comparer);
     }
 
-    public intersect(items: T[] | ICollection<T>): ICollection<T>;
-    public intersect(items: T[] | ICollection<T>, comparer: EqualityCondition<T>): ICollection<T>;
-    public intersect(items: T[] | ICollection<T>, comparer?: EqualityCondition<T>): ICollection<T> {
-        return new IntersectCollection(this, new Collection(items), comparer);
+    public intersect(items: T[] | ISequence<T>): ISequence<T>;
+    public intersect(items: T[] | ISequence<T>, comparer: EqualityCondition<T>): ISequence<T>;
+    public intersect(items: T[] | ISequence<T>, comparer?: EqualityCondition<T>): ISequence<T> {
+        return new IntersectCollection(this, new Sequence(items), comparer);
     }
 
     public groupJoin<T2, TKey, TResult>(
-        iterable: ICollection<T2> | T2[],
+        iterable: ISequence<T2> | T2[],
         firstKey: MapCondition<T, TKey>,
         secondKey: MapCondition<T2, TKey>,
-        zipFunc: GroupJoinCondition<T, T2, TResult>): ICollection<TResult> {
-        return new GroupJoinCollection<T, T2, TKey, TResult>(this, new Collection(iterable), firstKey, secondKey, zipFunc);
+        zipFunc: GroupJoinCondition<T, T2, TResult>): ISequence<TResult> {
+        return new GroupJoinCollection<T, T2, TKey, TResult>(this, new Sequence(iterable), firstKey, secondKey, zipFunc);
     }
 
     public join<T2, TKey, TResult>(
-        iterable: ICollection<T2> | T2[],
+        iterable: ISequence<T2> | T2[],
         firstKey: MapCondition<T, TKey>,
         secondKey: MapCondition<T2, TKey>,
-        zipFunc: ZipCondition<T, T2, TResult>): ICollection<TResult> {
-        return new JoinCollection<T, T2, TKey, TResult>(this, new Collection(iterable), firstKey, secondKey, zipFunc);
+        zipFunc: ZipCondition<T, T2, TResult>): ISequence<TResult> {
+        return new JoinCollection<T, T2, TKey, TResult>(this, new Sequence(iterable), firstKey, secondKey, zipFunc);
     }
 
-    public union(items: T[] | ICollection<T>): ICollection<T>;
-    public union(items: T[] | ICollection<T>, comparer: EqualityCondition<T>): ICollection<T>;
-    public union(items: T[] | ICollection<T>, comparer?: EqualityCondition<T>): ICollection<T> {
-        return new UnionCollection(this, new Collection(items), comparer);
+    public union(items: T[] | ISequence<T>): ISequence<T>;
+    public union(items: T[] | ISequence<T>, comparer: EqualityCondition<T>): ISequence<T>;
+    public union(items: T[] | ISequence<T>, comparer?: EqualityCondition<T>): ISequence<T> {
+        return new UnionCollection(this, new Sequence(items), comparer);
     }
 
-    public zip<T2, TResult>(iterable: ICollection<T2> | T2[], zipFunc?: ZipCondition<T, T2, TResult>): ICollection<TResult>;
-    public zip<T2>(iterable: ICollection<T2> | T2[]): ICollection<[T, T2]>;
-    public zip<T2, TResult>(iterable: ICollection<T2> | T2[], zipFunc?: ZipCondition<T, T2, TResult>): ICollection<TResult> {
-        return new ZipCollection<T, T2, TResult>(this, new Collection<T2>(iterable), zipFunc)
+    public zip<T2, TResult>(iterable: ISequence<T2> | T2[], zipFunc?: ZipCondition<T, T2, TResult>): ISequence<TResult>;
+    public zip<T2>(iterable: ISequence<T2> | T2[]): ISequence<[T, T2]>;
+    public zip<T2, TResult>(iterable: ISequence<T2> | T2[], zipFunc?: ZipCondition<T, T2, TResult>): ISequence<TResult> {
+        return new ZipCollection<T, T2, TResult>(this, new Sequence<T2>(iterable), zipFunc)
     }
 
     // Materializing
@@ -408,12 +408,12 @@ export class Collection<T> implements ICollection<T> {
     }
 }
 
-export class FilteringCollection<T> extends Collection<T> {
-    public constructor(iterable: Collection<T>, private condition: FilterCondition<T>) {
+export class FilteringCollection<T> extends Sequence<T> {
+    public constructor(iterable: Sequence<T>, private condition: FilterCondition<T>) {
         super(iterable);
     }
     
-    public where(condition: FilterCondition<T>): ICollection<T> { 
+    public where(condition: FilterCondition<T>): ISequence<T> { 
         const result = new FilteringCollection<T>(this.inner, item => this.condition(item) && condition(item));
 
         return result;
@@ -426,14 +426,14 @@ export class FilteringCollection<T> extends Collection<T> {
     }
 }
 
-export class MappingCollection<T, V> extends Collection<T> {
-    public constructor(iterable: Collection<T>, private condition: MapCondition<T, V>) {
+export class MappingCollection<T, V> extends Sequence<T> {
+    public constructor(iterable: Sequence<T>, private condition: MapCondition<T, V>) {
         // @ts-ignore
         super(iterable);
     }
 
     // @ts-ignore
-    public select<TOut>(condition: MapCondition<T, TOut>): ICollection<TOut> {
+    public select<TOut>(condition: MapCondition<T, TOut>): ISequence<TOut> {
         // @ts-ignore
         const result = new MappingCollection<T, V>(this.inner, (item: T) => condition(this.condition(item)));
 
@@ -449,14 +449,14 @@ export class MappingCollection<T, V> extends Collection<T> {
     }
 }
 
-export class MappingManyCollection<T, T2> extends Collection<T> {
-    public constructor(iterable: Collection<T>, private condition: ServiceMapCondition<T, T2[]>) {
+export class MappingManyCollection<T, T2> extends Sequence<T> {
+    public constructor(iterable: Sequence<T>, private condition: ServiceMapCondition<T, T2[]>) {
         // @ts-ignore
         super(iterable);
     }
 
     // @ts-ignore
-    public selectMany<TOut>(condition: MapCondition<T, TOut[]>): ICollection<TOut> {
+    public selectMany<TOut>(condition: MapCondition<T, TOut[]>): ISequence<TOut> {
         // @ts-ignore
         const result = new MappingManyCollection<T, T2>(this.inner, (item: T) => condition(this.condition(item)));
 
@@ -476,8 +476,8 @@ export class MappingManyCollection<T, T2> extends Collection<T> {
     }
 }
 
-export class SkippingCollection<T> extends Collection<T> {
-    public constructor(iterable: Collection<T>, private shouldSkip: number) {
+export class SkippingCollection<T> extends Sequence<T> {
+    public constructor(iterable: Sequence<T>, private shouldSkip: number) {
         super(iterable);
     }
 
@@ -492,8 +492,8 @@ export class SkippingCollection<T> extends Collection<T> {
     }
 }
 
-export class SkippingLastCollection<T> extends Collection<T> {
-    public constructor(iterable: Collection<T>, private shouldSkip: number) {
+export class SkippingLastCollection<T> extends Sequence<T> {
+    public constructor(iterable: Sequence<T>, private shouldSkip: number) {
         super(iterable);
     }
 
@@ -508,8 +508,8 @@ export class SkippingLastCollection<T> extends Collection<T> {
     }
 }
 
-export class SkippingWhileCollection<T> extends Collection<T> {
-    public constructor(iterable: Collection<T>, private shouldSkip: FilterCondition<T>) {
+export class SkippingWhileCollection<T> extends Sequence<T> {
+    public constructor(iterable: Sequence<T>, private shouldSkip: FilterCondition<T>) {
         super(iterable);
     }
 
@@ -520,8 +520,8 @@ export class SkippingWhileCollection<T> extends Collection<T> {
     }
 }
 
-export class TakingCollection<T> extends Collection<T> {
-    public constructor(iterable: Collection<T>, private shouldTake: number) {
+export class TakingCollection<T> extends Sequence<T> {
+    public constructor(iterable: Sequence<T>, private shouldTake: number) {
         super(iterable);
     }
 
@@ -530,8 +530,8 @@ export class TakingCollection<T> extends Collection<T> {
     }
 }
 
-export class TakingLastCollection<T> extends Collection<T> {
-    public constructor(iterable: Collection<T>, private shouldTake: number) {
+export class TakingLastCollection<T> extends Sequence<T> {
+    public constructor(iterable: Sequence<T>, private shouldTake: number) {
         super(iterable);
     }
 
@@ -541,8 +541,8 @@ export class TakingLastCollection<T> extends Collection<T> {
     }
 }
 
-export class TakingWhileCollection<T> extends Collection<T> {
-    public constructor(iterable: Collection<T>, private shouldTake: FilterCondition<T>) {
+export class TakingWhileCollection<T> extends Sequence<T> {
+    public constructor(iterable: Sequence<T>, private shouldTake: FilterCondition<T>) {
         super(iterable);
     }
 
@@ -553,10 +553,10 @@ export class TakingWhileCollection<T> extends Collection<T> {
     }
 }
 
-export class SortingCollection<T, V = T> extends Collection<T> implements ISortingCollection<T> {
+export class SortingCollection<T, V = T> extends Sequence<T> implements ISortingCollection<T> {
     private sortSettings: SortSettings<T, V>[];
     
-    public constructor(iterable: Collection<T>, ...sortSettings: SortSettings<T, V>[]) {
+    public constructor(iterable: Sequence<T>, ...sortSettings: SortSettings<T, V>[]) {
         super(iterable);
         this.sortSettings = sortSettings;
     }
@@ -601,8 +601,8 @@ interface IDictionary<TKey, TValue> {
     [id: TKey] : TValue
 }
 
-export class GroupingCollection<T, TKey, TValue = ICollection<T>> extends Collection<IGroupedData<TKey, TValue>> {    
-    public constructor(iterable: Collection<T>, private key: MapCondition<T, TKey>, private groupMapping?: MapCondition<ICollection<T>, TValue>) {
+export class GroupingCollection<T, TKey, TValue = ISequence<T>> extends Sequence<IGroupedData<TKey, TValue>> {    
+    public constructor(iterable: Sequence<T>, private key: MapCondition<T, TKey>, private groupMapping?: MapCondition<ISequence<T>, TValue>) {
         // @ts-ignore
         super(iterable);
     }
@@ -636,20 +636,20 @@ export class GroupingCollection<T, TKey, TValue = ICollection<T>> extends Collec
             return Object.entries(storage).map(item => ({
                 key: item[1][0],
                 // @ts-ignore
-                group: this.groupMapping(new Collection(item[1][1]))
+                group: this.groupMapping(new Sequence(item[1][1]))
             }))
         } else {
             // @ts-ignore
             return Object.entries(storage).map(item => ({
                 key: item[1][0],
-                group: new Collection(item[1][1])
+                group: new Sequence(item[1][1])
             }));
         }
     }
 }
 
-export class ReverseCollection<T> extends Collection<T> {    
-    public constructor(iterable: Collection<T>) {
+export class ReverseCollection<T> extends Sequence<T> {    
+    public constructor(iterable: Sequence<T>) {
         // @ts-ignore
         super(iterable);
     }
@@ -659,8 +659,8 @@ export class ReverseCollection<T> extends Collection<T> {
     }
 }
 
-export class DistinctCollection<T> extends Collection<T> {    
-    public constructor(iterable: Collection<T>, private comparer?: EqualityCondition<T>) {
+export class DistinctCollection<T> extends Sequence<T> {    
+    public constructor(iterable: Sequence<T>, private comparer?: EqualityCondition<T>) {
         // @ts-ignore
         super(iterable);
     }
@@ -687,8 +687,8 @@ export class DistinctCollection<T> extends Collection<T> {
     }
 }
 
-export class ConcatCollection<T> extends Collection<T> {    
-    public constructor(iterable: Collection<T>, private additional: ICollection<T>) {
+export class ConcatCollection<T> extends Sequence<T> {    
+    public constructor(iterable: Sequence<T>, private additional: ISequence<T>) {
         // @ts-ignore
         super(iterable);
     }
@@ -698,8 +698,8 @@ export class ConcatCollection<T> extends Collection<T> {
     }
 }
 
-export class ZipCollection<T1, T2, TResult = [T1, T2]> extends Collection<TResult> {    
-    public constructor(iterable: Collection<T1>, private outer: Collection<T2>, 
+export class ZipCollection<T1, T2, TResult = [T1, T2]> extends Sequence<TResult> {    
+    public constructor(iterable: Sequence<T1>, private outer: Sequence<T2>, 
         // @ts-ignore
         private zipCondition: ZipCondition<T1, T2, TResult> = ((a: T1, b: T2) => [a, b] as TResult)) {
         // @ts-ignore
@@ -719,10 +719,10 @@ export class ZipCollection<T1, T2, TResult = [T1, T2]> extends Collection<TResul
     }
 }
 
-export class JoinCollection<T1, T2, TKey, TResult> extends Collection<TResult> {    
+export class JoinCollection<T1, T2, TKey, TResult> extends Sequence<TResult> {    
     public constructor(
-        iterable: Collection<T1>,
-        private outer: Collection<T2>, 
+        iterable: Sequence<T1>,
+        private outer: Sequence<T2>, 
         private firstKey: MapCondition<T1, TKey>,
         private secondKey: MapCondition<T2, TKey>,
         private zipFunc: ZipCondition<T1, T2, TResult>) {
@@ -732,12 +732,12 @@ export class JoinCollection<T1, T2, TKey, TResult> extends Collection<TResult> {
 
     protected materialize(): Array<TResult> {
         // @ts-ignore
-        const left = this.inner as ICollection<T1>;
+        const left = this.inner as ISequence<T1>;
         
         const right = this.outer.groupBy(this.secondKey).toArray().reduce((map, item) => {
             map.set(item.key, item.group);
             return map;
-        }, new Map<TKey, ICollection<T2>>());
+        }, new Map<TKey, ISequence<T2>>());
 
         const result = left.selectMany<[T1, T2]>(item => {
             const target = right.get(this.firstKey(item))
@@ -753,10 +753,10 @@ export class JoinCollection<T1, T2, TKey, TResult> extends Collection<TResult> {
     }
 }
 
-export class GroupJoinCollection<T1, T2, TKey, TResult> extends Collection<TResult> {    
+export class GroupJoinCollection<T1, T2, TKey, TResult> extends Sequence<TResult> {    
     public constructor(
-        iterable: Collection<T1>,
-        private outer: Collection<T2>, 
+        iterable: Sequence<T1>,
+        private outer: Sequence<T2>, 
         private firstKey: MapCondition<T1, TKey>,
         private secondKey: MapCondition<T2, TKey>,
         private zipFunc: GroupJoinCondition<T1, T2, TResult>) {
@@ -766,14 +766,14 @@ export class GroupJoinCollection<T1, T2, TKey, TResult> extends Collection<TResu
 
     protected materialize(): Array<TResult> {
         // @ts-ignore
-        const left = this.inner as ICollection<T1>;
+        const left = this.inner as ISequence<T1>;
         
         const right = this.outer.groupBy(this.secondKey).toArray().reduce((map, item) => {
             map.set(item.key, item.group);
             return map;
-        }, new Map<TKey, ICollection<T2>>());
+        }, new Map<TKey, ISequence<T2>>());
 
-        const result = left.toArray().map<[T1, ICollection<T2>] | null>(item => {
+        const result = left.toArray().map<[T1, ISequence<T2>] | null>(item => {
             const target = right.get(this.firstKey(item))
 
             if(target) {
@@ -790,8 +790,8 @@ export class GroupJoinCollection<T1, T2, TKey, TResult> extends Collection<TResu
     }
 }
 
-export class PrependCollection<T> extends Collection<T> {    
-    public constructor(iterable: Collection<T>, private prepender: T) {
+export class PrependCollection<T> extends Sequence<T> {    
+    public constructor(iterable: Sequence<T>, private prepender: T) {
         super(iterable);
     }
 
@@ -805,8 +805,8 @@ export class PrependCollection<T> extends Collection<T> {
     }
 }
 
-export class AppendCollection<T> extends Collection<T> {    
-    public constructor(iterable: Collection<T>, private appender: T) {
+export class AppendCollection<T> extends Sequence<T> {    
+    public constructor(iterable: Sequence<T>, private appender: T) {
         super(iterable);
     }
 
@@ -820,16 +820,16 @@ export class AppendCollection<T> extends Collection<T> {
     }
 }
 
-export class DefaultCollection<T> extends Collection<T> {    
-    private reserved: ICollection<T>;
+export class DefaultCollection<T> extends Sequence<T> {    
+    private reserved: ISequence<T>;
 
-    public constructor(iterable: Collection<T>, reserved: T | T[] | ICollection<T>) {
+    public constructor(iterable: Sequence<T>, reserved: T | T[] | ISequence<T>) {
         super(iterable);
 
-        if(reserved instanceof Collection) {
+        if(reserved instanceof Sequence) {
             this.reserved = reserved;
         } else if (Array.isArray(reserved)) {
-            this.reserved = new Collection(reserved);
+            this.reserved = new Sequence(reserved);
         } else {
             // @ts-ignore
             this.reserved = of(reserved);
@@ -847,8 +847,8 @@ export class DefaultCollection<T> extends Collection<T> {
     }
 }
 
-export class UnionCollection<T> extends Collection<T> {   
-    public constructor(iterable: Collection<T>, private outer: ICollection<T>, private comparer?: EqualityCondition<T>) {
+export class UnionCollection<T> extends Sequence<T> {   
+    public constructor(iterable: Sequence<T>, private outer: ISequence<T>, private comparer?: EqualityCondition<T>) {
         super(iterable);
     }
 
@@ -861,8 +861,8 @@ export class UnionCollection<T> extends Collection<T> {
     }
 }
 
-export class IntersectCollection<T> extends Collection<T> {   
-    public constructor(iterable: Collection<T>, private outer: Collection<T>, private comparer?: EqualityCondition<T>) {
+export class IntersectCollection<T> extends Sequence<T> {   
+    public constructor(iterable: Sequence<T>, private outer: Sequence<T>, private comparer?: EqualityCondition<T>) {
         super(iterable);
     }
 
@@ -881,15 +881,15 @@ export class IntersectCollection<T> extends Collection<T> {
         }
 
         if(this.comparer) {
-            return new Collection(result).distinct(this.comparer).toArray();
+            return new Sequence(result).distinct(this.comparer).toArray();
         } else {
-            return new Collection(result).distinct().toArray();
+            return new Sequence(result).distinct().toArray();
         }
     }
 }
 
-export class ExceptCollection<T> extends Collection<T> {   
-    public constructor(iterable: Collection<T>, private outer: ICollection<T>, private comparer: EqualityCondition<T> = equalityCompare) {
+export class ExceptCollection<T> extends Sequence<T> {   
+    public constructor(iterable: Sequence<T>, private outer: ISequence<T>, private comparer: EqualityCondition<T> = equalityCompare) {
         super(iterable);
     }
 
@@ -908,9 +908,9 @@ export class ExceptCollection<T> extends Collection<T> {
         }
 
         if(this.comparer) {
-            return new Collection(result).distinct(this.comparer).toArray();
+            return new Sequence(result).distinct(this.comparer).toArray();
         } else {
-            return new Collection(result).distinct().toArray();
+            return new Sequence(result).distinct().toArray();
         }
     }
 }

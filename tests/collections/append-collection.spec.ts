@@ -1,15 +1,15 @@
 
 import _ from '../../src/index'
 import { assert } from "chai";
-import { AppendCollection, Collection } from '../../src/collection';
+import { AppendCollection, Sequence } from '../../src/collection';
 
 describe('ApependCollection', function () {  
     it('should create', () => {
-        const result = new AppendCollection(new Collection([1, 2, 3]), 2);
+        const result = new AppendCollection(new Sequence([1, 2, 3]), 2);
     });
 
     it('should prepend', () => {
-        const result = new AppendCollection(new Collection([1, 2, 3]), 4).toArray();
+        const result = new AppendCollection(new Sequence([1, 2, 3]), 4).toArray();
 
         const expected = [1, 2, 3, 4];
 
@@ -17,7 +17,7 @@ describe('ApependCollection', function () {
     });
 
     it('should prepend to empty array', () => {
-        const result = new AppendCollection(new Collection([]), 2).toArray();
+        const result = new AppendCollection(new Sequence([]), 2).toArray();
 
         const expected = [2];
 

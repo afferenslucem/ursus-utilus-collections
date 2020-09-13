@@ -1,10 +1,10 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { GroupJoinCollection, Collection } from '../../src/collection';
+import { GroupJoinCollection, Sequence } from '../../src/collection';
 
 describe('GroupJoinCollection', function () {  
     it('should create', () => {
-        const result = new GroupJoinCollection(new Collection([1, 2, 3]), new Collection([2, 3, 4]), item => item, item => item, (a, b) => 2);
+        const result = new GroupJoinCollection(new Sequence([1, 2, 3]), new Sequence([2, 3, 4]), item => item, item => item, (a, b) => 2);
     });
 
     it('should join', () => {
@@ -40,8 +40,8 @@ describe('GroupJoinCollection', function () {
         ]
 
         const result = new GroupJoinCollection(
-            new Collection(ages),
-            new Collection(cats),
+            new Sequence(ages),
+            new Sequence(cats),
             age => age.years,
             cat => cat.age,
             (age, cats) => ({age: age.name, cats: cats.select(cat => cat.name)})).toArray();
@@ -69,8 +69,8 @@ describe('GroupJoinCollection', function () {
         const expected = []
 
         const result = new GroupJoinCollection(
-            new Collection(ages),
-            new Collection(cats),
+            new Sequence(ages),
+            new Sequence(cats),
             age => age.years,
             cat => cat.age,
             (age, cats) => ({age: age.name, cats: cats.select(cat => cat.name)})).toArray();
@@ -95,8 +95,8 @@ describe('GroupJoinCollection', function () {
         const expected = []
 
         const result = new GroupJoinCollection(
-            new Collection(ages),
-            new Collection(cats),
+            new Sequence(ages),
+            new Sequence(cats),
             age => age.years,
             cat => cat.age,
             (age, cats) => ({age: age.name, cats: cats.select(cat => cat.name)})).toArray();

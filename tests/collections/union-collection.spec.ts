@@ -1,17 +1,17 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { UnionCollection, Collection } from '../../src/collection';
+import { UnionCollection, Sequence } from '../../src/collection';
 
 describe('UnionCollection', function () {
     it('should create without comparer', () => {
-        const result = new UnionCollection(new Collection([1, 2, 3]), new Collection([1, 2, 3]));
+        const result = new UnionCollection(new Sequence([1, 2, 3]), new Sequence([1, 2, 3]));
     });
     it('should create with comparer', () => {
-        const result = new UnionCollection(new Collection([1, 2, 3]), new Collection([1, 2, 3]), (a, b) => a == b);
+        const result = new UnionCollection(new Sequence([1, 2, 3]), new Sequence([1, 2, 3]), (a, b) => a == b);
     });
 
     it('should return concated', () => {
-        const result = new UnionCollection(new Collection([1, 2, 3]), new Collection([4, 5])).toArray();
+        const result = new UnionCollection(new Sequence([1, 2, 3]), new Sequence([4, 5])).toArray();
 
         const expected = [1, 2, 3, 4, 5];
 
@@ -19,7 +19,7 @@ describe('UnionCollection', function () {
     });
 
     it('should return union', () => {
-        const result = new UnionCollection(new Collection([0, 1, 2, 3]), new Collection([2, 3, 4, 4, 5, 6])).toArray();
+        const result = new UnionCollection(new Sequence([0, 1, 2, 3]), new Sequence([2, 3, 4, 4, 5, 6])).toArray();
 
         const expected = [0, 1, 2, 3, 4, 5, 6];
 
@@ -68,7 +68,7 @@ describe('UnionCollection', function () {
     
 
     it('should return union for collection', () => {
-        const result = _([0, 1, 2, 3]).union(new Collection([2, 3, 4, 4, 5, 6])).toArray();
+        const result = _([0, 1, 2, 3]).union(new Sequence([2, 3, 4, 4, 5, 6])).toArray();
 
         const expected = [0, 1, 2, 3, 4, 5, 6];
 

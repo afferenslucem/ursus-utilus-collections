@@ -1,18 +1,18 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { IntersectCollection, Collection } from '../../src/collection';
+import { IntersectCollection, Sequence } from '../../src/collection';
 
 describe('IntersectCollection', function () {
     it('should create without comparer', () => {
-        const result = new IntersectCollection(new Collection([1, 2, 3]), new Collection([1, 2, 3]));
+        const result = new IntersectCollection(new Sequence([1, 2, 3]), new Sequence([1, 2, 3]));
     });
 
     it('should create with comparer', () => {
-        const result = new IntersectCollection(new Collection([1, 2, 3]), new Collection([1, 2, 3]), (a, b) => a == b);
+        const result = new IntersectCollection(new Sequence([1, 2, 3]), new Sequence([1, 2, 3]), (a, b) => a == b);
     });
 
     it('should return intersected', () => {
-        const result = new IntersectCollection(new Collection([1, 2, 3]), new Collection([2, 2, 3, 4, 5])).toArray();
+        const result = new IntersectCollection(new Sequence([1, 2, 3]), new Sequence([2, 2, 3, 4, 5])).toArray();
 
         const expected = [2, 3];
 
@@ -20,7 +20,7 @@ describe('IntersectCollection', function () {
     });
 
     it('should return empty', () => {
-        const result = new IntersectCollection(new Collection([0, 1, 2, 3]), new Collection([4, 4, 5, 6])).toArray();
+        const result = new IntersectCollection(new Sequence([0, 1, 2, 3]), new Sequence([4, 4, 5, 6])).toArray();
 
         const expected = [];
 

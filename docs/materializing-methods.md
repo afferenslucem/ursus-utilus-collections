@@ -10,7 +10,7 @@ Materializing methods trigger computation of your query. All your chain of metho
 
 Method signature: `toArray(): T[]`.
 
-Creates an array from collection
+Creates an array from sequence
 
 ```typescript
 const concated = _([1, 2, 3).toArray();
@@ -22,7 +22,7 @@ console.log(concated); // [ 1, 2, 3, ]
 
 Method signature: `toLookup<TKey>(key: MapCondition<T, TKey>): Map<TKey, T[]>`.
 
-Creates a `Map<TKey, T[]>` from an collection according to a specified key selector function.
+Creates a `Map<TKey, T[]>` from an sequence according to a specified key selector function.
 
 ```typescript
 const cats = [{
@@ -59,7 +59,7 @@ console.log(result);
 
 Method signature: `toLookup<TKey, TElement>(key: MapCondition<T, TKey>, element: MapCondition<T, TElement>): Map<TKey, TElement[]>`.
 
-Creates a `Map<TKey, TElement[]>` from an collection according to specified key selector and element selector functions.
+Creates a `Map<TKey, TElement[]>` from an sequence according to specified key selector and element selector functions.
 
 ```typescript
 const cats = [{
@@ -90,7 +90,7 @@ console.log(result);
 
 Method signature: `toMap<TKey>(key: MapCondition<T, TKey>): Map<TKey, T>`.
 
-Creates a `Map<TKey, T>` from an collection according to a specified key selector function.
+Creates a `Map<TKey, T>` from an sequence according to a specified key selector function.
 
 ```typescript
 const cats = [{
@@ -121,7 +121,7 @@ console.log(result)
 
 Method signature: `toMap<TKey, TElement>(key: MapCondition<T, TKey>, element: MapCondition<T, TElement>): Map<TKey, TElement>`.
 
-Creates a `Map<TKey, TElement>` from an collection according to specified key selector and element selector functions.
+Creates a `Map<TKey, TElement>` from an sequence according to specified key selector and element selector functions.
 
 ```typescript
 const cats = [{

@@ -1,4 +1,4 @@
-import { ICollection } from "./i-collection";
+import { ISequence } from "./i-collection";
 
 export interface IGroupedData<K, T> {
     key: K;

@@ -1,15 +1,15 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { SkippingCollection, Collection, SkippingLastCollection, SkippingWhileCollection } from '../../src/collection';
+import { SkippingCollection, Sequence, SkippingLastCollection, SkippingWhileCollection } from '../../src/collection';
 import { Exception } from '../../src/exceptions/exceptions';
 
 describe('SkippingCollection', function () {  
     it('should create', () => {
-        const result = new SkippingCollection(new Collection([1, 2, 3]), 2);
+        const result = new SkippingCollection(new Sequence([1, 2, 3]), 2);
     });
 
     it('should skip', () => {
-        const result = new SkippingCollection(new Collection([1, 2, 3]), 2).toArray();
+        const result = new SkippingCollection(new Sequence([1, 2, 3]), 2).toArray();
 
         const expected = [3];
 
@@ -17,7 +17,7 @@ describe('SkippingCollection', function () {
     });
 
     it('should returns [] for skip count equals array len', () => {
-        const result = new SkippingCollection(new Collection([1, 2, 3]), 3).toArray();
+        const result = new SkippingCollection(new Sequence([1, 2, 3]), 3).toArray();
 
         const expected: number[] = [];
 
@@ -26,7 +26,7 @@ describe('SkippingCollection', function () {
 
     it('should throw error when skip count greater then array len', () => {
         assert.throws(() => {
-            const result = new SkippingCollection(new Collection([1, 2, 3]), 6).toArray();
+            const result = new SkippingCollection(new Sequence([1, 2, 3]), 6).toArray();
         }, Exception.SoManySkipping)
     });
 
@@ -48,18 +48,18 @@ describe('SkippingCollection', function () {
 
     it('should throw error when skip count greater then array len', () => {
         assert.throws(() => {
-            const result = new SkippingCollection(new Collection([1, 2, 3]), 6).toArray();
+            const result = new SkippingCollection(new Sequence([1, 2, 3]), 6).toArray();
         }, Exception.SoManySkipping)
     });
 });
 
 describe('SkippingLastCollection', function () {  
     it('should create', () => {
-        const result = new SkippingLastCollection(new Collection([1, 2, 3]), 2);
+        const result = new SkippingLastCollection(new Sequence([1, 2, 3]), 2);
     });
 
     it('should skip', () => {
-        const result = new SkippingLastCollection(new Collection([1, 2, 3]), 2).toArray();
+        const result = new SkippingLastCollection(new Sequence([1, 2, 3]), 2).toArray();
 
         const expected = [1];
 
@@ -67,7 +67,7 @@ describe('SkippingLastCollection', function () {
     });
 
     it('should returns [] for skip count equals array len', () => {
-        const result = new SkippingLastCollection(new Collection([1, 2, 3]), 3).toArray();
+        const result = new SkippingLastCollection(new Sequence([1, 2, 3]), 3).toArray();
 
         const expected: number[] = [];
 
@@ -76,7 +76,7 @@ describe('SkippingLastCollection', function () {
 
     it('should throw error when skip count greater then array len', () => {
         assert.throws(() => {
-            const result = new SkippingLastCollection(new Collection([1, 2, 3]), 6).toArray();
+            const result = new SkippingLastCollection(new Sequence([1, 2, 3]), 6).toArray();
         }, Exception.SoManySkipping)
     });
 
@@ -99,11 +99,11 @@ describe('SkippingLastCollection', function () {
 
 describe('SkippingWhileCollection', function () {  
     it('should create', () => {
-        const result = new SkippingWhileCollection(new Collection([1, 2, 3]), item => item <= 2);
+        const result = new SkippingWhileCollection(new Sequence([1, 2, 3]), item => item <= 2);
     });
 
     it('should skip while < 2', () => {
-        const result = new SkippingWhileCollection(new Collection([1, 2, 3]), item => item <= 2).toArray();
+        const result = new SkippingWhileCollection(new Sequence([1, 2, 3]), item => item <= 2).toArray();
 
         const expected = [3];
 
@@ -111,7 +111,7 @@ describe('SkippingWhileCollection', function () {
     });
 
     it('should returns [] for falsy condition', () => {
-        const result = new SkippingWhileCollection(new Collection([1, 2, 3]), item => item < 6).toArray();
+        const result = new SkippingWhileCollection(new Sequence([1, 2, 3]), item => item < 6).toArray();
 
         const expected: number[] = [];
 

@@ -1,10 +1,10 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { JoinCollection, Collection } from '../../src/collection';
+import { JoinCollection, Sequence } from '../../src/collection';
 
 describe('JoinCollection', function () {  
     it('should create', () => {
-        const result = new JoinCollection(new Collection([1, 2, 3]), new Collection([2, 3, 4]), item => item, item => item, (a, b) => a + b);
+        const result = new JoinCollection(new Sequence([1, 2, 3]), new Sequence([2, 3, 4]), item => item, item => item, (a, b) => a + b);
     });
 
     it('should merge', () => {
@@ -45,8 +45,8 @@ describe('JoinCollection', function () {
         ]
 
         const result = new JoinCollection(
-            new Collection(cats),
-            new Collection(ages),
+            new Sequence(cats),
+            new Sequence(ages),
             item => item.age,
             item => item.years,
             (cat, age) => ({name: cat.name, age: age.name})).toArray();
@@ -74,8 +74,8 @@ describe('JoinCollection', function () {
         const expected = [];
 
         const result = new JoinCollection(
-            new Collection(cats),
-            new Collection(ages),
+            new Sequence(cats),
+            new Sequence(ages),
             item => item.age,
             item => item.years,
             (cat, age) => ({name: cat.name, age: age.name})).toArray();
@@ -103,8 +103,8 @@ describe('JoinCollection', function () {
         const expected = []
 
         const result = new JoinCollection(
-            new Collection(cats),
-            new Collection(ages),
+            new Sequence(cats),
+            new Sequence(ages),
             item => item.age,
             item => item.years,
             (cat, age) => ({name: cat.name, age: age.name})).toArray();

@@ -1,15 +1,15 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { GroupingCollection, Collection } from '../../src/collection';
+import { GroupingCollection, Sequence } from '../../src/collection';
 import { IGroupedData } from '../../src/interfaces/i-grouped-data';
 
 describe('GroupingCollection', function () {
     it('should create', () => {
-        const result = new GroupingCollection(new Collection([1, 2, 3]), item => item.toString());
+        const result = new GroupingCollection(new Sequence([1, 2, 3]), item => item.toString());
     });
 
     it('should group', () => {
-        const result = new GroupingCollection(new Collection([[1, 2], [2, 3], [2, 4], [3, 4]]), item => item[0]).toArray();
+        const result = new GroupingCollection(new Sequence([[1, 2], [2, 3], [2, 4], [3, 4]]), item => item[0]).toArray();
 
         const expected = [{
             key: 1,
@@ -28,7 +28,7 @@ describe('GroupingCollection', function () {
     });
 
     it('should group and aggregate', () => {
-        const result = new GroupingCollection(new Collection([[1, 2], [2, 3], [2, 4], [3, 4]]), item => item[0], item => item.first()).toArray();
+        const result = new GroupingCollection(new Sequence([[1, 2], [2, 3], [2, 4], [3, 4]]), item => item[0], item => item.first()).toArray();
 
         const expected = [{
             key: 1,
@@ -47,7 +47,7 @@ describe('GroupingCollection', function () {
     });
 
     it('should group empty', () => {
-        const result = new GroupingCollection(new Collection([]), item => item[0], item => item.first()).toArray();
+        const result = new GroupingCollection(new Sequence([]), item => item[0], item => item.first()).toArray();
 
         const expected: IGroupedData<number, number>[] = [];
 

@@ -1,22 +1,22 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { DefaultCollection, Collection } from '../../src/collection';
+import { DefaultCollection, Sequence } from '../../src/collection';
 
 describe('DefaultCollection', function () {  
     it('should create from collection', () => {
-        const result = new DefaultCollection(new Collection([1, 2, 3]), new Collection([1, 2, 3]));
+        const result = new DefaultCollection(new Sequence([1, 2, 3]), new Sequence([1, 2, 3]));
     });
 
     it('should create from array', () => {
-        const result = new DefaultCollection(new Collection([1, 2, 3]), [1, 2, 3]);
+        const result = new DefaultCollection(new Sequence([1, 2, 3]), [1, 2, 3]);
     });
 
     it('should create from object', () => {
-        const result = new DefaultCollection(new Collection([1, 2, 3]), 1);
+        const result = new DefaultCollection(new Sequence([1, 2, 3]), 1);
     });
 
     it('should return default from collection', () => {
-        const result = new DefaultCollection(new Collection([]), new Collection([1, 2, 3])).toArray();
+        const result = new DefaultCollection(new Sequence([]), new Sequence([1, 2, 3])).toArray();
 
         const expected = [1, 2, 3];
 
@@ -24,7 +24,7 @@ describe('DefaultCollection', function () {
     });
 
     it('should return default from array', () => {
-        const result = new DefaultCollection(new Collection([]), [1, 2, 3]).toArray();
+        const result = new DefaultCollection(new Sequence([]), [1, 2, 3]).toArray();
 
         const expected = [1, 2, 3];
 
@@ -32,7 +32,7 @@ describe('DefaultCollection', function () {
     });
 
     it('should return default from object', () => {
-        const result = new DefaultCollection(new Collection([]), 1).toArray();
+        const result = new DefaultCollection(new Sequence([]), 1).toArray();
 
         const expected = [1];
 

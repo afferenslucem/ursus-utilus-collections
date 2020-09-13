@@ -1,14 +1,14 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { TakingCollection, Collection, TakingWhileCollection, TakingLastCollection } from '../../src/collection';
+import { TakingCollection, Sequence, TakingWhileCollection, TakingLastCollection } from '../../src/collection';
 
 describe('TakingCollection', function () {  
     it('should create', () => {
-        const result = new TakingCollection(new Collection([1, 2, 3]), 2);
+        const result = new TakingCollection(new Sequence([1, 2, 3]), 2);
     });
 
     it('should take', () => {
-        const result = new TakingCollection(new Collection([1, 2, 3]), 2).toArray();
+        const result = new TakingCollection(new Sequence([1, 2, 3]), 2).toArray();
 
         const expected = [1, 2];
 
@@ -16,7 +16,7 @@ describe('TakingCollection', function () {
     });
 
     it('should returns array for take count equals array len', () => {
-        const result = new TakingCollection(new Collection([1, 2, 3]), 3).toArray();
+        const result = new TakingCollection(new Sequence([1, 2, 3]), 3).toArray();
 
         const expected: number[] = [1, 2, 3];
 
@@ -24,7 +24,7 @@ describe('TakingCollection', function () {
     });
 
     it('should returns array for take count greater then array len', () => {
-        const result = new TakingCollection(new Collection([1, 2, 3]), 6).toArray();
+        const result = new TakingCollection(new Sequence([1, 2, 3]), 6).toArray();
 
         const expected: number[] = [1, 2, 3];
 
@@ -58,11 +58,11 @@ describe('TakingCollection', function () {
 
 describe('TakingWhileCollection', function () {  
     it('should create', () => {
-        const result = new TakingWhileCollection(new Collection([1, 2, 3]), item => item < 2);
+        const result = new TakingWhileCollection(new Sequence([1, 2, 3]), item => item < 2);
     });
 
     it('should take < 3', () => {
-        const result = new TakingWhileCollection(new Collection([1, 2, 3]), item => item < 3).toArray();
+        const result = new TakingWhileCollection(new Sequence([1, 2, 3]), item => item < 3).toArray();
 
         const expected = [1, 2];
 
@@ -70,7 +70,7 @@ describe('TakingWhileCollection', function () {
     });
 
     it('should take for truthly condition', () => {
-        const result = new TakingWhileCollection(new Collection([1, 2, 3]), item => item < 6).toArray();
+        const result = new TakingWhileCollection(new Sequence([1, 2, 3]), item => item < 6).toArray();
 
         const expected: number[] = [1, 2, 3];
 
@@ -88,11 +88,11 @@ describe('TakingWhileCollection', function () {
 
 describe('TakingLastCollection', function () {  
     it('should create', () => {
-        const result = new TakingLastCollection(new Collection([1, 2, 3]), 2);
+        const result = new TakingLastCollection(new Sequence([1, 2, 3]), 2);
     });
 
     it('should take', () => {
-        const result = new TakingLastCollection(new Collection([1, 2, 3]), 2).toArray();
+        const result = new TakingLastCollection(new Sequence([1, 2, 3]), 2).toArray();
 
         const expected = [2, 3];
 
@@ -100,7 +100,7 @@ describe('TakingLastCollection', function () {
     });
 
     it('should returns array for take count equals array len', () => {
-        const result = new TakingLastCollection(new Collection([1, 2, 3]), 3).toArray();
+        const result = new TakingLastCollection(new Sequence([1, 2, 3]), 3).toArray();
 
         const expected: number[] = [1, 2, 3];
 
@@ -108,7 +108,7 @@ describe('TakingLastCollection', function () {
     });
 
     it('should returns array for take count greater then array len', () => {
-        const result = new TakingLastCollection(new Collection([1, 2, 3]), 6).toArray();
+        const result = new TakingLastCollection(new Sequence([1, 2, 3]), 6).toArray();
 
         const expected: number[] = [1, 2, 3];
 

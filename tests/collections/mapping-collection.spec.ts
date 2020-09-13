@@ -1,28 +1,28 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { MappingCollection, Collection } from '../../src/collection';
+import { MappingCollection, Sequence } from '../../src/collection';
 
 describe('MappingCollection', function () {  
     it('should create', () => {
-        const result = new MappingCollection(new Collection([1, 2, 3]), item => !!item);
+        const result = new MappingCollection(new Sequence([1, 2, 3]), item => !!item);
     });
 
     it('should return mapped from toArray()', () => {
-        const result = new MappingCollection(new Collection([8, 5, 4, 2, 9, 1, 4]), item => item + 1).toArray();
+        const result = new MappingCollection(new Sequence([8, 5, 4, 2, 9, 1, 4]), item => item + 1).toArray();
         const expected = [9, 6, 5, 3, 10, 2, 5];
 
         assert.deepEqual(result, expected);
     });
 
     it('should return double mapped from toArray()', () => {
-        const result = new MappingCollection(new Collection([8, 5, 4, 2, 9, 1, 4]), item => item + 1).select(item => item / 2).toArray();
+        const result = new MappingCollection(new Sequence([8, 5, 4, 2, 9, 1, 4]), item => item + 1).select(item => item / 2).toArray();
         const expected = [4.5, 3, 2.5, 1.5, 5, 1, 2.5];
 
         assert.deepEqual(result, expected);
     });
 
     it('should return empty for empty collection', () => {
-        const result = new MappingCollection(new Collection([]), item => item + 1).select(item => item / 2).toArray();
+        const result = new MappingCollection(new Sequence([]), item => item + 1).select(item => item / 2).toArray();
         const expected: number[] = [];
 
         assert.deepEqual(result, expected);
@@ -68,7 +68,7 @@ describe('MappingCollection', function () {
     //     const array = _.range(1, 150_000).toArray();
 
     //     // @ts-ignore
-    //     const result = new MappingCollection(new Collection(array), item => item).chooseAlgorithm(array);
+    //     const result = new MappingCollection(new Sequence(array), item => item).chooseAlgorithm(array);
 
     //     assert.isTrue(result instanceof MapCustomAlgorithm)
     // });
@@ -79,7 +79,7 @@ describe('MappingCollection', function () {
     //     const array = _.range(1, 10_000).toArray();
 
     //     // @ts-ignore
-    //     const result = new MappingCollection(new Collection(array), item => item).chooseAlgorithm(array);
+    //     const result = new MappingCollection(new Sequence(array), item => item).chooseAlgorithm(array);
 
     //     assert.isTrue(result instanceof MapNativeAlgorithm)
     // });    

@@ -1,18 +1,18 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { ExceptCollection, Collection } from '../../src/collection';
+import { ExceptCollection, Sequence } from '../../src/collection';
 
 describe('ExceptCollection', function () {
     it('should create without comparer', () => {
-        const result = new ExceptCollection(new Collection([1, 2, 3]), new Collection([1, 2, 3]));
+        const result = new ExceptCollection(new Sequence([1, 2, 3]), new Sequence([1, 2, 3]));
     });
 
     it('should create with comparer', () => {
-        const result = new ExceptCollection(new Collection([1, 2, 3]), new Collection([1, 2, 3]), (a, b) => a == b);
+        const result = new ExceptCollection(new Sequence([1, 2, 3]), new Sequence([1, 2, 3]), (a, b) => a == b);
     });
 
     it('should return only in first', () => {
-        const result = new ExceptCollection(new Collection([1, 2, 3]), new Collection([2, 2, 3, 4, 5])).toArray();
+        const result = new ExceptCollection(new Sequence([1, 2, 3]), new Sequence([2, 2, 3, 4, 5])).toArray();
 
         const expected = [1];
 
@@ -20,7 +20,7 @@ describe('ExceptCollection', function () {
     });
 
     it('should return empty', () => {
-        const result = new ExceptCollection(new Collection([0, 1, 2, 3]), new Collection([0, 1, 2, 3])).toArray();
+        const result = new ExceptCollection(new Sequence([0, 1, 2, 3]), new Sequence([0, 1, 2, 3])).toArray();
 
         const expected = [];
 

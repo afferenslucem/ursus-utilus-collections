@@ -20,7 +20,7 @@
 
 ## append
 
-Method signature: `append(item: T): ICollection<T>`.
+Method signature: `append(item: T): Isequence<T>`.
 
 Appends a value to the end of the sequence.
 
@@ -32,9 +32,9 @@ console.log(appended); // [1, 2, 3, 4]
 
 ## defaultIfEmpty
 
-Method signature: `defaultIfEmpty(value: T | T[] | ICollection<T>): ICollection<T>`.
+Method signature: `defaultIfEmpty(value: T | T[] | Isequence<T>): Isequence<T>`.
 
-Returns the elements of the collection or the specified value in a collection if the original collection is empty.
+Returns the elements of the sequence or the specified value in a sequence if the original sequence is empty.
 
 ```typescript
 const defaultValue = _([1, 2, 3, 4, 5]).where(item => item > 7).defaultIfEmpty(0).toArray();
@@ -44,9 +44,9 @@ console.log(defaultValue); // [ 0 ]
 
 ## distinct
 
-Method signature: `distinct(): ICollection<T>`.
+Method signature: `distinct(): Isequence<T>`.
 
-Returns distinct elements from a collection using default equality comparer
+Returns distinct elements from a sequence using default equality comparer
 
 ```typescript
 const distinct = _([1, 3, 2, 2, 3, 1, 1, 2]).distinct().toArray();
@@ -56,9 +56,9 @@ console.log(distinct); // [ 1, 3, 2 ]
 
 ### distinct with custom comparer
 
-Method signature: `distinct<V>(comparer: (first: T, second: T) => boolean): ICollection<T>`.
+Method signature: `distinct<V>(comparer: (first: T, second: T) => boolean): Isequence<T>`.
 
-Returns distinct elements from a collection using specified equality comparer
+Returns distinct elements from a sequence using specified equality comparer
 
 ```typescript
 const cats = [{
@@ -87,9 +87,9 @@ console.log(distinct)
 
 ## groupBy
 
-Method signature: `groupBy<TKey>(key: (item: T) => TKey): ICollection< IGroupedData<TKey, ICollection<T>> >`.
+Method signature: `groupBy<TKey>(key: (item: T) => TKey): Isequence< IGroupedData<TKey, Isequence<T>> >`.
 
-Groups the elements of a collection.
+Groups the elements of a sequence.
 
 ```typescript
 const cats = [{
@@ -117,9 +117,9 @@ console.log(grouped);
 
 ### Grouping with mapping result
 
-Method signature: `groupBy<TKey, TValue>(key: (item: T) => TKey, groupMap: (item: ICollection<T>) => TValue>): ICollection<IGroupedData<TKey, TValue>>`.
+Method signature: `groupBy<TKey, TValue>(key: (item: T) => TKey, groupMap: (item: Isequence<T>) => TValue>): Isequence<IGroupedData<TKey, TValue>>`.
 
-Groups the elements of a collection and aggregates it.
+Groups the elements of a sequence and aggregates it.
 
 ```typescript
 const cats = [{
@@ -147,9 +147,9 @@ console.log(grouped);
 
 ## orderBy
 
-Method signature: `orderBy<TKey>(key: (item: T) => TKey): ISortingCollection<T>`.
+Method signature: `orderBy<TKey>(key: (item: T) => TKey): ISortingsequence<T>`.
 
-Sorts the elements of a collection in ascending order to a key.
+Sorts the elements of a sequence in ascending order to a key.
 
 ```typescript
 const cats = [{
@@ -180,9 +180,9 @@ console.log(ordered);
 
 ## orderByDescending
 
-Method signature: `orderBy<TKey>(key: (item: T) => TKey): ISortingCollection<T>`.
+Method signature: `orderBy<TKey>(key: (item: T) => TKey): ISortingsequence<T>`.
 
-Sorts the elements of a collection in descending order to a key.
+Sorts the elements of a sequence in descending order to a key.
 
 ```typescript
 const cats = [{
@@ -213,7 +213,7 @@ console.log(ordered);
 
 ## prepend
 
-Method signature: `prepend(item: T): ICollection<T>`.
+Method signature: `prepend(item: T): Isequence<T>`.
 
 Adds a value to the beginning of the sequence.
 
@@ -225,7 +225,7 @@ console.log(prepended); // [0, 1, 2, 3]
 
 ## reverse
 
-Method signature: `reverse(): ICollection<T>`.
+Method signature: `reverse(): Isequence<T>`.
 
 ```typescript
 const reverced = _([1, 2, 3, 4, 5]).reverse().toArray();
@@ -235,9 +235,9 @@ console.log(reverced); // [ 5, 4, 3, 2, 1 ]
 
 ## select
 
-Method signature: `select<TResult>(condition: (item: T) => T2): ICollection<TResult>`.
+Method signature: `select<TResult>(condition: (item: T) => T2): Isequence<TResult>`.
 
-Converts each element of a collection into a new form.
+Converts each element of a sequence into a new form.
 
 ```typescript
 const selected = _([1, 2, 3, 4, 5]).select(item => item ** 2).toArray();
@@ -247,9 +247,9 @@ console.log(selected); // [ 1, 4, 9, 16, 25 ]
 
 ## selectMany
 
-Method signature: `select<TResult>(condition: (item: T) => T2): ICollection<TResult>`.
+Method signature: `select<TResult>(condition: (item: T) => T2): Isequence<TResult>`.
 
-Projects each element of a collection to an `Array<T>` and flattens the resulting collection into one collection
+Projects each element of a sequence to an `Array<T>` and flattens the resulting sequence into one sequence
 
 ```typescript
 const cats = [
@@ -270,9 +270,9 @@ console.log(allKittens); // [ 'Lory', 'Pussy', 'Browny', 'Tommy' ]
 
 ## skip
 
-Method signature: `skip(shouldSkip: number) : ICollection<T>`.
+Method signature: `skip(shouldSkip: number) : Isequence<T>`.
 
-Bypasses `shouldSkip` elements in a collection and then returns the remaining elements.
+Bypasses `shouldSkip` elements in a sequence and then returns the remaining elements.
 
 ```typescript
 const skipped = _([1, 2, 3, 4, 5]).skip(3).toArray();
@@ -282,9 +282,9 @@ console.log(skipped); // [ 4, 5 ]
 
 ## skipLast
 
-Method signature: `skipLast(shouldSkip: number) : ICollection<T>`.
+Method signature: `skipLast(shouldSkip: number) : Isequence<T>`.
 
-Returns a new collection that contains the elements from source with the last `shouldSkip` elements of the source collection omitted.
+Returns a new sequence that contains the elements from source with the last `shouldSkip` elements of the source sequence omitted.
 
 ```typescript
 const skipped = _([1, 2, 3, 4, 5]).skipLast(3).toArray();
@@ -294,9 +294,9 @@ console.log(skipped); // [ 1, 2 ]
 
 ## skipWhile
 
-Method signature: `skipWhile(shouldSkipCondition: (item: T, index?: number) => boolean): ICollection<T>`.
+Method signature: `skipWhile(shouldSkipCondition: (item: T, index?: number) => boolean): Isequence<T>`.
 
-Bypasses elements in a collection as long as a specified condition is true and then returns the remaining elements.
+Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements.
 
 ```typescript
 const skipped = _([1, 2, 3, 2, 1]).skipWhile(item => item < 3).toArray();
@@ -306,7 +306,7 @@ console.log(skipped); // [ 3, 2, 1 ]
 
 ## sort
 
-Method signature: `sort(): ICollection<T>`.
+Method signature: `sort(): Isequence<T>`.
 
 Sorts items ascending using default comparison
 
@@ -318,7 +318,7 @@ console.log(sorted); // [ 1, 2, 3, 4 ]
 
 ## sortDescending
 
-Method signature: `sortDescending(): ICollection<T>`.
+Method signature: `sortDescending(): Isequence<T>`.
 
 Sorts items descending using default comparison
 
@@ -330,9 +330,9 @@ console.log(sorted); // [ 4, 3, 2, 1 ]
 
 ## take
 
-Method signature: `take(shouldTake: number) : ICollection<T>`.
+Method signature: `take(shouldTake: number) : Isequence<T>`.
 
-Returns a `shouldTake` elements from the start of a collection.
+Returns a `shouldTake` elements from the start of a sequence.
 
 ```typescript
 const taked = _([1, 2, 3, 4, 5]).take(3).toArray();
@@ -342,9 +342,9 @@ console.log(taked); // [ 1, 2, 3 ]
 
 ## takeLast
 
-Method signature: `takeLast(shouldTake: number) : ICollection<T>`.
+Method signature: `takeLast(shouldTake: number) : Isequence<T>`.
 
-Returns a new collection that contains the last `shouldTake` elements from source.
+Returns a new sequence that contains the last `shouldTake` elements from source.
 
 ```typescript
 const taked = _([1, 2, 3, 4, 5]).takeLast(3).toArray();
@@ -354,9 +354,9 @@ console.log(taked); // [ 3, 4, 5 ]
 
 ## takeWhile
 
-Method signature: `takeWhile(shouldSkipCondition: (item: T, index?: number) => boolean): ICollection<T>`.
+Method signature: `takeWhile(shouldSkipCondition: (item: T, index?: number) => boolean): Isequence<T>`.
 
-Returns elements from a collection as long as a specified condition is true, and then skips the remaining elements.
+Returns elements from a sequence as long as a specified condition is true, and then skips the remaining elements.
 
 ```typescript
 const taken = _([1, 2, 3, 2, 1]).takeWhile(item => item < 3).toArray();
@@ -366,7 +366,7 @@ console.log(skipped); // [ 1, 2 ]
 
 ## where
 
-Method signature: `where(predicate: (item: T, index?: number) => boolean) : ICollection<T>`.
+Method signature: `where(predicate: (item: T, index?: number) => boolean) : Isequence<T>`.
 
 Filters a sequence of values based on a predicate.
 

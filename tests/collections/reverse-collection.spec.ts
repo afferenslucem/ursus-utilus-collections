@@ -1,15 +1,15 @@
 import _ from '../../src/index'
 import { assert } from "chai";
-import { ReverseCollection, Collection } from '../../src/collection';
+import { ReverseCollection, Sequence } from '../../src/collection';
 
 describe('ReverseCollection', function () {  
     it('should create', () => {
-        const result = new ReverseCollection(new Collection([1, 2, 3]));
+        const result = new ReverseCollection(new Sequence([1, 2, 3]));
     });
 
     it('should reverse', () => {
         const items = [1, 2, 3];
-        const collection = new ReverseCollection(new Collection(items))
+        const collection = new ReverseCollection(new Sequence(items))
 
         const result = collection.toArray();
 

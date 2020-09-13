@@ -1,7 +1,7 @@
-import { ICollection } from "../interfaces/i-collection";
-import { Collection } from "../collection";
+import { ISequence } from "../interfaces/i-collection";
+import { Sequence } from "../collection";
 
-export function combine<T, T2>(obj: T, arr: T2[] | ICollection<T2>): Array<[T, T2]> {
+export function combine<T, T2>(obj: T, arr: T2[] | ISequence<T2>): Array<[T, T2]> {
     if(Array.isArray(arr)) {
         return arr.map(item => [obj, item]);
     } else {
@@ -9,24 +9,24 @@ export function combine<T, T2>(obj: T, arr: T2[] | ICollection<T2>): Array<[T, T
     }
 }
 
-export function of<T>(obj: T) : ICollection<T> {
-    return new Collection<T>([obj]);
+export function of<T>(obj: T) : ISequence<T> {
+    return new Sequence<T>([obj]);
 }
 
 
-export function range(from: number, to: number, step = 1) : ICollection<number> {
+export function range(from: number, to: number, step = 1) : ISequence<number> {
     const result: number[] = [];
 
     for(let i = from; i <= to; i += step) {
         result.push(i);
     }
 
-    return new Collection<number>(result);
+    return new Sequence<number>(result);
 }
 
 const RANDOM_MAX = 10e10;
 
-export function random (length: number, max = RANDOM_MAX): ICollection<number> {
+export function random (length: number, max = RANDOM_MAX): ISequence<number> {
     const result: number[] = [];
 
     for(let i = 0; i < length; i++) {
@@ -34,15 +34,15 @@ export function random (length: number, max = RANDOM_MAX): ICollection<number> {
         result.push(item);
     }
 
-    return new Collection<number>(result);
+    return new Sequence<number>(result);
 }
 
-export function empty<T> (): ICollection<T> {
-    return new Collection<T>([]);
+export function empty<T> (): ISequence<T> {
+    return new Sequence<T>([]);
 }
 
-export function repeat<T> (value: T, length: number): ICollection<T> {
+export function repeat<T> (value: T, length: number): ISequence<T> {
     const array = new Array<T>(length).fill(value)
 
-    return new Collection<T>(array);
+    return new Sequence<T>(array);
 }
