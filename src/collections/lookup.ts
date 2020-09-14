@@ -31,6 +31,10 @@ export class Lookup<TSource, TKey, TValue> implements ILookup<TKey, TValue> {
         }
     }
 
+    /**
+     * Returns values for specified key
+     * @param key Key for search
+     */
     public get(key: TKey): TValue[] {
         const saved = this.storage.tryGet(key)
 
@@ -41,14 +45,24 @@ export class Lookup<TSource, TKey, TValue> implements ILookup<TKey, TValue> {
         }
     }
 
+    /**
+     * Returns array with key/value tuples
+     */
     public entries(): Array<[TKey, TValue[]]> {
         return this.storage.entries();
     }
 
+    /**
+     * Check existing of key
+     * @param item Item for check
+     */
     public contains(key: TKey): boolean {
         return this.storage.contains(key);
     }
 
+    /**
+     * Returns count of elements
+     */
     public get count(): number {
         return this.storage.count;
     }
