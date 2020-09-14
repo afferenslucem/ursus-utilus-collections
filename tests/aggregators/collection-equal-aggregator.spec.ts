@@ -1,5 +1,6 @@
 import { assert } from "chai";
 import _ from '../../src/index'
+import { equal } from "assert";
 
 describe('SequenceEqualAggregator', function () {    
     it('should return true', () => {
@@ -10,7 +11,9 @@ describe('SequenceEqualAggregator', function () {
     
     it('should return true', () => {
         // @ts-ignore
-        const eq = _.range(1, 5).sequenceEqual(_(['1', '2', '3', '4', '5']), (a, b) => a === Number(b));
+        const eq = _.range(1, 5).sequenceEqual(_(['1', '2', '3', '4', '5']), {
+            equal: (a, b) => Number(a) == Number(b)
+        });
 
         assert.isTrue(eq)
     });

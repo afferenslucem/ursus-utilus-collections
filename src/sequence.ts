@@ -12,6 +12,7 @@ import { IEqualityComparer } from "./interfaces/i-equality-comparer";
 import { HashSet } from "./collections/hash-set";
 import { ILookup } from "./interfaces/i-lookup";
 import { Lookup } from "./collections/lookup";
+import { DefaultEqualityComparer } from "./utils/abstract-equlity-comparer";
 
 export class Sequence<T> implements ISequence<T> {
     // @ts-ignore
@@ -55,22 +56,8 @@ export class Sequence<T> implements ISequence<T> {
         return this.sum(map) / this.count()
     }
 
-    public sequenceEqual(collection: T[] | ISequence<T>): boolean;
-    public sequenceEqual(collection: T[] | ISequence<T>, comparer: EqualityCondition<T>): boolean;
-    public sequenceEqual(collection: T[] | ISequence<T>, comparer: EqualityCondition<T> = equalityCompare): boolean {
-        const arr1 = this.toArray();
-        const arr2 = Array.isArray(collection) ? collection : collection.toArray();
-
-        const len1 = arr1.length;
-        const len2 = arr2.length;
-
-        if (len1 !== len2) return false;
-
-        return arr1.every((item, index) => comparer(item, arr2[index]));
-    }
-
-    public contains(element: T, condition: EqualityCondition<T> = equalityCompare): boolean {
-        return this.toArray().some(item => condition(item, element));
+    public contains(element: T, comparer: IEqualityComparer<T> = new DefaultEqualityComparer<T>()): boolean {
+        return this.toArray().some(item => comparer.equal(item, element));
     }
 
     public count(filter?: FilterCondition<T>): number {
@@ -164,6 +151,20 @@ export class Sequence<T> implements ISequence<T> {
 
     public min(predicate: CompareCondition<T> = (a, b) => a > b ? 1 : -1): T {
         return this.toArray().reduce((a, b) => predicate(a, b) < 0 ? a : b)
+    }
+
+    public sequenceEqual(collection: T[] | ISequence<T>): boolean;
+    public sequenceEqual(collection: T[] | ISequence<T>, comparer: IEqualityComparer<T>): boolean;
+    public sequenceEqual(collection: T[] | ISequence<T>, comparer: IEqualityComparer<T> = new DefaultEqualityComparer<T>()): boolean {
+        const arr1 = this.toArray();
+        const arr2 = Array.isArray(collection) ? collection : collection.toArray();
+
+        const len1 = arr1.length;
+        const len2 = arr2.length;
+
+        if (len1 !== len2) return false;
+
+        return arr1.every((item, index) => comparer.equal(item, arr2[index]));
     }
 
     public single(): T {

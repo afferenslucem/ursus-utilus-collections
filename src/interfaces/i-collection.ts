@@ -66,7 +66,7 @@ export interface ISequence<T> extends IIterable<T> {
      * @param element Element for checking
      * @param condition Equality condition
      */
-    contains(element: T, condition: EqualityCondition<T>): boolean;
+    contains(element: T, condition: IEqualityComparer<T>): boolean;
 
     
     /**
@@ -207,7 +207,7 @@ export interface ISequence<T> extends IIterable<T> {
     /**
      * Determines whether two sequences are equal by comparing the elements by using the specified equality comparer.
      */
-    sequenceEqual(sequence: T[] | ISequence<T>, comparer: (first: T, second: T) => boolean): boolean;
+    sequenceEqual(sequence: T[] | ISequence<T>, comparer: IEqualityComparer<T>): boolean;
 
     /**
      * Returns the only element of a sequence, and throws an exception if there is not exactly one element in the sequence.
