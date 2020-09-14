@@ -1,4 +1,3 @@
-import { DictionaryException } from "../exceptions/dictionary-exceptions";
 import { IEqualityComparer } from "../interfaces/i-equality-comparer";
 import { Dictionary } from "./distionary";
 

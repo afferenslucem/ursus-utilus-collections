@@ -1,6 +1,5 @@
 import { Exception } from "./exceptions/exceptions";
-import { ReduceCondition, ReduceWithAccumulatorCondition, FilterCondition, MapCondition, EqualityCondition, CompareCondition, ServiceMapCondition, GroupJoinCondition, ZipCondition } from "./delegates";
-import { equalityCompare } from "./utils/equality-compare";
+import { ReduceCondition, ReduceWithAccumulatorCondition, FilterCondition, MapCondition, CompareCondition, ServiceMapCondition, GroupJoinCondition, ZipCondition } from "./delegates";
 import { IGroupedData } from "./interfaces/i-grouped-data";
 import { ISortingCollection } from "./interfaces/i-sorting-collection";
 import { SortDirection, SortSettings, Comparer } from "./utils/comparer";

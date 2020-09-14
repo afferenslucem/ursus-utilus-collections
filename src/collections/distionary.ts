@@ -1,12 +1,16 @@
 import { DictionaryException } from "../exceptions/dictionary-exceptions";
 import { IEqualityComparer } from "../interfaces/i-equality-comparer";
 import { DefaultEqualityComparer } from "../utils/abstract-equlity-comparer";
+import { hasIn } from "lodash";
 
 export class Dictionary<TKey, TValue> {
     private storage: { [id: string] : Array<[TKey, TValue]> } = {};
 
     private comparer: IEqualityComparer<TKey>;
     
+    /**
+     * Returns count of key/value pairs
+     */
     public get count(): number {
         return Object.values(this.storage).reduce((acc, item) => acc + item.length, 0);
     }
@@ -15,6 +19,12 @@ export class Dictionary<TKey, TValue> {
         this.comparer = comparer || new DefaultEqualityComparer();
     }
 
+    /**
+     * Adds new pair to storage
+     * @param key Key for add
+     * @param value Value for add
+     * @throws 'Value with this key already exists' if You try insert value with dublicate key
+     */
     public add(key: TKey, value: TValue): void {
         const hash = this.comparer.getHashCode(key);
 
@@ -33,6 +43,11 @@ export class Dictionary<TKey, TValue> {
         }
     }
 
+    /**
+     * Adds new pair to storage if pair with specified key does not exists
+     * @param key Key for add
+     * @param value Value for add
+     */
     public addIfNotExists(key: TKey, value: TValue): void {
         if(this.contains(key)) {
             return;
@@ -41,6 +56,12 @@ export class Dictionary<TKey, TValue> {
         }
     }
 
+    /**
+     * Updates value in pair with same key
+     * @param key Key for update
+     * @param value Value for update
+     * @throws 'Value with this key does not exist' if You try update value for non existing key
+     */
     public update(key: TKey, value: TValue): void {
         const hash = this.comparer.getHashCode(key);
 
@@ -59,6 +80,11 @@ export class Dictionary<TKey, TValue> {
         }
     }
 
+    /**
+     * Updates value in pair with same key if key exists, otherwise add new pair
+     * @param key Key for add/update
+     * @param value Value for add/update
+     */
     public addOrUpdate(key: TKey, value: TValue): void {
         const hash = this.comparer.getHashCode(key);
 
@@ -77,6 +103,11 @@ export class Dictionary<TKey, TValue> {
         }
     }
 
+    /**
+     * Returns value for specified key
+     * @param key Key for search
+     * @throws 'Value with this key does not exist' if You try get value for non existing key
+     */
     public get(key: TKey): TValue {
         const saved = this.tryGet(key)
 
@@ -87,6 +118,10 @@ export class Dictionary<TKey, TValue> {
         }
     }
 
+    /**
+     * Returns value for specified key if exists, otherwise returns undefined
+     * @param key Key for search
+     */
     public tryGet(key: TKey): TValue | undefined {
         const hash = this.comparer.getHashCode(key);
 
@@ -105,6 +140,11 @@ export class Dictionary<TKey, TValue> {
         }
     }
 
+    /**
+     * Removes value for specified key
+     * @param key Key for search
+     * @throws 'Value with this key does not exist' if You try remove value for non existing key
+     */
     public remove(key: TKey): void {
         const hash = this.comparer.getHashCode(key);
 
@@ -123,14 +163,32 @@ export class Dictionary<TKey, TValue> {
         }
     }
 
+    /**
+     * Returns array with key/value tuples
+     */
     public entries(): Array<[TKey, TValue]> {
-        return Object.entries(this.storage).reduce((acc, item) => acc.concat(item[1]), [] as Array<[TKey, TValue]>)
+        const arrays = Object.entries(this.storage).map((item) => item[1])
+
+        return ([] as Array<[TKey, TValue]>).concat(...arrays);
     }
 
+    /**
+     * Check existing key
+     * @param key Key for check
+     */
     public contains(key: TKey): boolean {
-        return this.tryGet(key) !== undefined;
+        const hash = this.comparer.getHashCode(key);
+
+        const batch = this.storage[hash];
+
+        if(!batch) return false;
+
+        return this.searchIndexForKey(key, batch) !== -1;
     }
 
+    /**
+     * Removes all pairs
+     */
     public clear(): void {
         this.storage = {};
     }

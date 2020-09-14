@@ -1,4 +1,4 @@
 export enum DictionaryException {
-    KeyAlreadyExists = 'KeyAlreadyExists',
-    KeyDoesNotExists = 'KeyDoesNotExists',
+    KeyAlreadyExists = 'Value with this key already exists',
+    KeyDoesNotExists = 'Value with this key does not exist',
 }
