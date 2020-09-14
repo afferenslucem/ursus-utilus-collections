@@ -5,7 +5,7 @@ import { ISortingCollection } from "./interfaces/i-sorting-collection";
 import { SortDirection, SortSettings, Comparer } from "./utils/comparer";
 import { combine, of } from "./utils/operators";
 import { compare } from "./utils/compare";
-import { ISequence } from "./interfaces/i-collection";
+import { ISequence } from "./interfaces/i-sequence";
 import { Dictionary } from "./collections/distionary";
 import { IEqualityComparer } from "./interfaces/i-equality-comparer";
 import { HashSet } from "./collections/hash-set";

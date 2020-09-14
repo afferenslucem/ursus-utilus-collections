@@ -1,4 +1,4 @@
-import { ISequence } from "./interfaces/i-collection";
+import { ISequence } from "./interfaces/i-sequence";
 
 export type FilterCondition<T> = (item: T, index?: number) => boolean;
 

@@ -1,4 +1,4 @@
-import { ISequence } from "./i-collection";
+import { ISequence } from "./i-sequence";
 import { CompareCondition, MapCondition } from "../delegates";
 
 export interface ISortingCollection<T> extends ISequence<T> {

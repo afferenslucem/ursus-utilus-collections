@@ -7,13 +7,6 @@ export class Dictionary<TKey, TValue> {
     private storage: { [id: string] : Array<[TKey, TValue]> } = {};
 
     private comparer: IEqualityComparer<TKey>;
-    
-    /**
-     * Returns count of key/value pairs
-     */
-    public get count(): number {
-        return Object.values(this.storage).reduce((acc, item) => acc + item.length, 0);
-    }
 
     public constructor(comparer?: IEqualityComparer<TKey>) {
         this.comparer = comparer || new DefaultEqualityComparer();
@@ -173,7 +166,7 @@ export class Dictionary<TKey, TValue> {
     }
 
     /**
-     * Check existing key
+     * Check existing of key
      * @param key Key for check
      */
     public contains(key: TKey): boolean {
@@ -201,5 +194,12 @@ export class Dictionary<TKey, TValue> {
         }
 
         return -1;
+    }
+        
+    /**
+     * Returns count of key/value pairs
+     */
+    public get count(): number {
+        return Object.values(this.storage).reduce((acc, item) => acc + item.length, 0);
     }
 }

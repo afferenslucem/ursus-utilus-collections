@@ -1,4 +1,4 @@
-import { ISequence } from './interfaces/i-collection';
+import { ISequence } from './interfaces/i-sequence';
 import { range, random, of, empty, repeat } from './utils/operators';
 import { Sequence } from './sequence';
 
