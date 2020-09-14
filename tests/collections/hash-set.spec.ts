@@ -19,11 +19,11 @@ describe('HashSet With String Key', function () {
         storage.add('one');
         storage.add('one');
 
-        const result = storage.has('one');
+        const result = storage.contains('one');
 
         assert.isTrue(result)
 
-        assert.equal(storage.entries().length, 1)
+        assert.equal(storage.count, 1)
     });
 
     it('should contains every only once', () => {
@@ -37,6 +37,8 @@ describe('HashSet With String Key', function () {
         storage.add('zero');
 
         assert.deepEqual(storage.entries(), ['one', 'two', 'zero'])
+        
+        assert.equal(storage.count, 3)
     });
 
     it('should add different', () => {
@@ -44,11 +46,15 @@ describe('HashSet With String Key', function () {
         storage.add('one');
         storage.add('two');
 
-        const result = storage.has('two');
+        const result = storage.contains('two');
 
         assert.isTrue(result)
 
-        assert.equal(storage.entries().length, 2)
+        assert.equal(storage.count, 2)
+
+        storage.clear();
+
+        assert.equal(storage.count, 0)
     });
 
     it('should remove', () => {
@@ -56,7 +62,7 @@ describe('HashSet With String Key', function () {
 
         storage.remove('one');
 
-        const result = storage.has('one');
+        const result = storage.contains('one');
 
         assert.isFalse(result);
 
@@ -80,7 +86,7 @@ describe('Dictionary With Number Key', function () {
         storage.add(1);
         storage.add(1);
 
-        const result = storage.has(1);
+        const result = storage.contains(1);
 
         assert.isTrue(result)
 
@@ -92,7 +98,7 @@ describe('Dictionary With Number Key', function () {
         storage.add(1);
         storage.add(2);
 
-        const result = storage.has(2);
+        const result = storage.contains(2);
 
         assert.isTrue(result)
 
@@ -117,7 +123,7 @@ describe('Dictionary With Number Key', function () {
 
         storage.remove(1);
 
-        const result = storage.has(1);
+        const result = storage.contains(1);
 
         assert.isFalse(result);
 
@@ -171,7 +177,7 @@ describe('Dictionary With Object Key and custom comparer', function () {
         storage.add(cats[0]);
         storage.add(cats[0]);
 
-        const result = storage.has(cats[0]);
+        const result = storage.contains(cats[0]);
 
         assert.isTrue(result)
 
@@ -183,7 +189,7 @@ describe('Dictionary With Object Key and custom comparer', function () {
         storage.add(cats[0]);
         storage.add(cats[1]);
 
-        const result = storage.has(cats[1]);
+        const result = storage.contains(cats[1]);
 
         assert.isTrue(result)
 
@@ -219,7 +225,7 @@ describe('Dictionary With Object Key and custom comparer', function () {
 
         storage.remove(cats[1]);
 
-        const result = storage.has(cats[1]);
+        const result = storage.contains(cats[1]);
 
         assert.isFalse(result);
 

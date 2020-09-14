@@ -5,6 +5,7 @@ import { ReduceCondition, ReduceWithAccumulatorCondition, FilterCondition, MapCo
 import { Dictionary } from "../collections/distionary";
 import { IEqualityComparer } from "./i-equality-comparer";
 import { HashSet } from "../collections/hash-set";
+import { ILookup } from "./i-lookup";
 
 export interface ISequence<T> extends IIterable<T> {
 
@@ -498,14 +499,19 @@ export interface ISequence<T> extends IIterable<T> {
      * Creates a Dictionary<TKey, T[]> from an sequence according to a specified key selector function.
      * @param key key selector
      */
-    toLookup<TKey>(key: MapCondition<T, TKey>): Dictionary<TKey, T[]>;
+    toLookup<TKey>(key: MapCondition<T, TKey>): ILookup<TKey, T>;
+
+    
+    toLookup<TKey>(key: MapCondition<T, TKey>, comparer: IEqualityComparer<TKey>): ILookup<TKey, T>;
 
     /**
      * Creates a Dictionary<TKey, TElement[]> from an sequence according to specified key selector and element selector functions.
      * @param key 
      * @param element 
      */
-    toLookup<TKey, TElement>(key: MapCondition<T, TKey>, element: MapCondition<T, TElement>): Dictionary<TKey, TElement[]>;
+    toLookup<TKey, TElement>(key: MapCondition<T, TKey>, element: MapCondition<T, TElement>): ILookup<TKey, TElement>;
+    
+    toLookup<TKey, TElement>(key: MapCondition<T, TKey>, comparer: IEqualityComparer<TKey>, value: MapCondition<T, TElement>): ILookup<TKey, TElement>;
 
     /**
      * Creates a Dictionary<TKey, T> from a sequence according to a specified key selector function using by default equality comparer.

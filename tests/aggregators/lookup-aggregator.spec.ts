@@ -80,4 +80,40 @@ describe('LookupAggregator', function () {
             ],
         ])
     });
+
+    it('should lookup cats by cat and select name', () => {
+        const cats = [{
+            name: 'Barsik',
+            age: 9
+        }, {
+            name: 'Barsik',
+            age: 9
+        }, {
+            name: 'Feya',
+            age: 4
+        }, {
+            name: 'Lulya',
+            age: 1
+        },];
+
+        const result = _(cats).toLookup(item => item, {
+            equal: (a, b) => a.name === b.name && a.age === b.age,
+            getHashCode: a => a.name
+        }, item => item.name).entries();
+
+        assert.deepEqual(result, [
+            [{
+                name: 'Barsik',
+                age: 9
+            }, ['Barsik', 'Barsik']],
+            [{
+                name: 'Feya',
+                age: 4
+            },['Feya',]],
+            [{
+                name: 'Lulya',
+                age: 1
+            }, ['Lulya']]
+        ])
+    });
 });

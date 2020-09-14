@@ -23,6 +23,8 @@ describe('Dictionary With String Key', function () {
         const result = storage.get('one');
 
         assert.equal(expected, result)
+
+        assert.equal(storage.count, 1);
     });
 
     it('should return undefined for unexists key', () => {
@@ -49,6 +51,18 @@ describe('Dictionary With String Key', function () {
         const result = storage.entries();
 
         assert.deepEqual(result, expected);
+
+        assert.equal(storage.count, 2);
+
+        storage.clear();
+
+        assert.equal(storage.count, 0);
+        
+        const expectedAfterClear = []
+
+        const resultAfterClear = storage.entries();
+
+        assert.deepEqual(resultAfterClear, expectedAfterClear);
     });
 
     it('should add and addOrUpdate', () => {
@@ -139,6 +153,12 @@ describe('Dictionary With Number Key', function () {
         const result = storage.get(1);
 
         assert.equal(expected, result)
+
+        assert.equal(storage.count, 1)
+
+        assert.isTrue(storage.contains(1))
+
+        assert.isFalse(storage.contains(9))
     });
 
     it('should remove', () => {
@@ -202,6 +222,8 @@ describe('Dictionary With Object Key and custom comparer', function () {
         const result = storage.get(cats[0]);
 
         assert.equal(expected, result)
+        
+        assert.isTrue(storage.contains(cats[0]))
     });
 
     it('should add whith same code', () => {
@@ -216,6 +238,10 @@ describe('Dictionary With Object Key and custom comparer', function () {
 
         const result2 = storage.get(cats[1]);
         assert.equal(expected2, result2)
+        
+        assert.isTrue(storage.contains(cats[1]))
+        
+        assert.isFalse(storage.contains(cats[2]))
     });
 
     it('should return entries', () => {
@@ -250,6 +276,8 @@ describe('Dictionary With Object Key and custom comparer', function () {
 
         const result2 = storage.get(cats[1]);
         assert.equal(expected3, result2)
+
+        assert.equal(storage.count, 2);
     });
 
     it('should remove whith same code', () => {

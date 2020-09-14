@@ -21,7 +21,15 @@ export class HashSet<T> {
         return this.storage.entries().map(item => item[0]);
     }
 
-    public has(item: T): boolean {
-        return this.storage.has(item);
+    public contains(item: T): boolean {
+        return this.storage.contains(item);
+    }
+
+    public clear(): void {
+        this.storage.clear();
+    }
+
+    public get count(): number {
+        return this.storage.count;
     }
 }

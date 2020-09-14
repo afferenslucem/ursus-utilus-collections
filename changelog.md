@@ -3,6 +3,9 @@
 ## Added
 
 * Dictionary
+* HashSet
+* Lookup
+* ILookup
 * ToDictionary
 * ToHashSet
 

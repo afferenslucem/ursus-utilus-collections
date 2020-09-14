@@ -10,6 +10,8 @@ import { ISequence } from "./interfaces/i-collection";
 import { Dictionary } from "./collections/distionary";
 import { IEqualityComparer } from "./interfaces/i-equality-comparer";
 import { HashSet } from "./collections/hash-set";
+import { ILookup } from "./interfaces/i-lookup";
+import { Lookup } from "./collections/lookup";
 
 export class Sequence<T> implements ISequence<T> {
     // @ts-ignore
@@ -366,36 +368,16 @@ export class Sequence<T> implements ISequence<T> {
         return result;
     }
 
-    public toLookup<TKey>(key: MapCondition<T, TKey>): Dictionary<TKey, T[]>;
-    public toLookup<TKey, TValue>(key: MapCondition<T, TKey>, value: MapCondition<T, TValue>): Dictionary<TKey, TValue[]>;
-    public toLookup<TKey, TValue = T>(key: MapCondition<T, TKey>, value?: MapCondition<T, TValue>): Dictionary<TKey, TValue[]> {
-        const materialized = this.toArray();
-
-        const result = new Dictionary<TKey, (TValue | T)[]>();
-
-        if(value) {
-            for(let i = 0, len = materialized.length; i < len; i++) {
-                const keyItem = key(materialized[i]);
-                const valueItem = value(materialized[i]);
-    
-                const arr = result.tryGet(keyItem) || [];
-                arr.push(valueItem);
-
-                result.addOrUpdate(keyItem, arr)
-            }
+    public toLookup<TKey>(key: MapCondition<T, TKey>): ILookup<TKey, T>;
+    public toLookup<TKey>(key: MapCondition<T, TKey>, comparer: IEqualityComparer<TKey>): ILookup<TKey, T>;
+    public toLookup<TKey, TValue>(key: MapCondition<T, TKey>, comparer: IEqualityComparer<TKey>, value: MapCondition<T, TValue>): ILookup<TKey, TValue>;
+    public toLookup<TKey, TValue>(key: MapCondition<T, TKey>, value: MapCondition<T, TValue>): ILookup<TKey, TValue>;
+    public toLookup<TKey, TValue = T>(key: MapCondition<T, TKey>, comparer?: IEqualityComparer<TKey> | MapCondition<T, TValue>, value?: MapCondition<T, TValue>): ILookup<TKey, TValue> {
+        if(typeof comparer === "function") {
+            return new Lookup<T, TKey, TValue>(this.toArray(), key, comparer)
         } else {
-            for(let i = 0, len = materialized.length; i < len; i++) {
-                const keyItem = key(materialized[i]);
-    
-                const arr = result.tryGet(keyItem) || [];
-                arr.push(materialized[i]);
-
-                result.addOrUpdate(keyItem, arr)
-            }
+            return new Lookup<T, TKey, TValue>(this.toArray(), key, value, comparer)
         }
-
-        // @ts-ignore
-        return result;
     }
 
     public toDictionary<TKey>(key: MapCondition<T, TKey>): Dictionary<TKey, T>;
@@ -911,7 +893,7 @@ export class IntersectCollection<T> extends Sequence<T> {
         const result: T[] = [];
 
         for(let i = 0, len = first.length; i < len; i++) {
-            if(second.has(first[i])) {
+            if(second.contains(first[i])) {
                 result.push(first[i])
             }
         }
@@ -934,7 +916,7 @@ export class ExceptCollection<T> extends Sequence<T> {
         const result: T[] = [];
 
         for(let i = 0, len = first.length; i < len; i++) {
-            if(!second.has(first[i])) {
+            if(!second.contains(first[i])) {
                 result.push(first[i])
             }
         }

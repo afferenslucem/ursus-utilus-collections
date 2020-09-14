@@ -6,6 +6,10 @@ export class Dictionary<TKey, TValue> {
     private storage: { [id: string] : Array<[TKey, TValue]> } = {};
 
     private comparer: IEqualityComparer<TKey>;
+    
+    public get count(): number {
+        return Object.values(this.storage).reduce((acc, item) => acc + item.length, 0);
+    }
 
     public constructor(comparer?: IEqualityComparer<TKey>) {
         this.comparer = comparer || new DefaultEqualityComparer();
@@ -30,7 +34,7 @@ export class Dictionary<TKey, TValue> {
     }
 
     public addIfNotExists(key: TKey, value: TValue): void {
-        if(this.has(key)) {
+        if(this.contains(key)) {
             return;
         } else {
             this.add(key, value);
@@ -123,8 +127,12 @@ export class Dictionary<TKey, TValue> {
         return Object.entries(this.storage).reduce((acc, item) => acc.concat(item[1]), [] as Array<[TKey, TValue]>)
     }
 
-    public has(key: TKey): boolean {
+    public contains(key: TKey): boolean {
         return this.tryGet(key) !== undefined;
+    }
+
+    public clear(): void {
+        this.storage = {};
     }
 
     private searchIndexForKey(key: TKey, batch: Array<[TKey, TValue]>): number {
