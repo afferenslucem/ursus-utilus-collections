@@ -273,12 +273,16 @@ export interface ISequence<T> extends IIterable<T> {
      */
     groupBy<TKey>(key: MapCondition<T, TKey>): ISequence<IGroupedData<TKey, ISequence<T>>>;
 
+    groupBy<TKey>(key: MapCondition<T, TKey>, comparer: IEqualityComparer<TKey>): ISequence<IGroupedData<TKey, ISequence<T>>>;
+
     /**
      * Groups items by key and modify theese by mapCondition
      * @param key Key taking function
      * @param groupMap Group mapping function
      */
     groupBy<TKey, TValue>(key: MapCondition<T, TKey>, groupMap: MapCondition<ISequence<T>, TValue>): ISequence<IGroupedData<TKey, TValue>>;
+    
+    groupBy<TKey, TValue>(key: MapCondition<T, TKey>, comparer: IEqualityComparer<TKey>, groupMap: MapCondition<ISequence<T>, TValue>): ISequence<IGroupedData<TKey, TValue>>;
 
     
     /**

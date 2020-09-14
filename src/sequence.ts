@@ -216,9 +216,17 @@ export class Sequence<T> implements ISequence<T> {
     }
     
     public groupBy<TKey>(key: MapCondition<T, TKey>): ISequence<IGroupedData<TKey, ISequence<T>>>;
+    public groupBy<TKey>(key: MapCondition<T, TKey>, comparer: IEqualityComparer<TKey>): ISequence<IGroupedData<TKey, ISequence<T>>>;
     public groupBy<TKey, TValue>(key: MapCondition<T, TKey>, group: MapCondition<ISequence<T>, TValue>): ISequence<IGroupedData<TKey, TValue>>;
-    public groupBy<TKey, TValue>(key: MapCondition<T, TKey>, group?: MapCondition<ISequence<T>, TValue>): ISequence<IGroupedData<TKey, TValue>> {
-        return new GroupingCollection<T, TKey, TValue>(this, key, group);
+    public groupBy<TKey, TValue>(key: MapCondition<T, TKey>, comparer: IEqualityComparer<TKey>, group: MapCondition<ISequence<T>, TValue>): ISequence<IGroupedData<TKey, TValue>>;
+    public groupBy<TKey, TValue>(key: MapCondition<T, TKey>, comparer?: MapCondition<ISequence<T>, TValue> | IEqualityComparer<TKey>, group?: MapCondition<ISequence<T>, TValue>): ISequence<IGroupedData<TKey, TValue>> {
+        if (typeof comparer === "function") {
+            return new GroupingCollection<T, TKey, TValue>(this, key, undefined, comparer);
+        } else if (typeof comparer === "object") {
+            return new GroupingCollection<T, TKey, TValue>(this, key, comparer, group);
+        } else {
+            return new GroupingCollection<T, TKey, TValue>(this, key, undefined, group);
+        }
     }
 
     public orderBy<E>(map: MapCondition<T, E>, condition?: CompareCondition<E> | undefined): ISortingCollection<T> {
@@ -619,54 +627,28 @@ export class SortingCollection<T, V = T> extends Sequence<T> implements ISorting
     }
 }
 
-interface IDictionary<TKey, TValue> {
-    // @ts-ignore
-    [id: TKey] : TValue
-}
-
 export class GroupingCollection<T, TKey, TValue = ISequence<T>> extends Sequence<IGroupedData<TKey, TValue>> {    
-    public constructor(iterable: Sequence<T>, private key: MapCondition<T, TKey>, private groupMapping?: MapCondition<ISequence<T>, TValue>) {
+    public constructor(iterable: Sequence<T>, private key: MapCondition<T, TKey>, private comparer?: IEqualityComparer<TKey>, private groupMapping?: MapCondition<ISequence<T>, TValue>) {
         // @ts-ignore
         super(iterable);
     }
 
     protected materialize(): IGroupedData<TKey, TValue>[] {
         // @ts-ignore
-        const array = this.inner.toArray() as T[];
-        // @ts-ignore
-        const storage = array.reduce<IDictionary<TKey, [TKey, TValue[]]>>(
-            (acc: IDictionary<TKey, [TKey, TValue[]]>, item: T) => {
-            const key = this.key(item);
+        const lookup = this.inner.toLookup(this.key, this.comparer) as ILookup<TKey, TValue>;
 
-            // @ts-ignore
-            let data = acc[key];
-
-            if (data) {
+        if(this.groupMapping !== undefined) {
+            return lookup.entries().map<IGroupedData<TKey, TValue>>(item => ({
+                key: item[0],
                 // @ts-ignore
-                data[1].push(item)
-            } else {
-                // @ts-ignore
-                data = [key, [item]];
-                // @ts-ignore
-                acc[key] = data;
-            }
-
-            return acc;
-        }, {})
-
-        if(this.groupMapping) {
-            // @ts-ignore
-            return Object.entries(storage).map(item => ({
-                key: item[1][0],
-                // @ts-ignore
-                group: this.groupMapping(new Sequence(item[1][1]))
+                group: this.groupMapping(new Sequence(item[1]))
             }))
         } else {
             // @ts-ignore
-            return Object.entries(storage).map(item => ({
-                key: item[1][0],
-                group: new Sequence(item[1][1])
-            }));
+            return lookup.entries().map<IGroupedData<TKey, ISequence<TValue>>>(item => ({
+                key: item[0],
+                group: new Sequence(item[1])
+            }))
         }
     }
 }

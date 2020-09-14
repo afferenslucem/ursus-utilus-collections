@@ -16,6 +16,7 @@
 * Intersect
 * Except
 * Distinct
+* Group
 
 ## Removed
 
