@@ -56,17 +56,17 @@ export interface ISequence<T> extends IIterable<T> {
     average(map: MapCondition<T, number>): number;
 
     /**
-     * Determines whether a sequence contains a specified element. Using default equality condition.
+     * Determines whether a sequence contains a specified element. Using default equality comparer.
      * @param element Element for checking
      */
     contains(element: T): boolean;
     
     /**
-     * Determines whether a sequence contains a specified element. Using custom equality condition.
+     * Determines whether a sequence contains a specified element. Using specified equality comparer.
      * @param element Element for checking
-     * @param condition Equality condition
+     * @param comparer Equality comparer
      */
-    contains(element: T, condition: IEqualityComparer<T>): boolean;
+    contains(element: T, comparer: IEqualityComparer<T>): boolean;
 
     
     /**
