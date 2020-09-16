@@ -1,6 +1,7 @@
 import { ISequence } from './interfaces/i-sequence';
 import { range, random, of, empty, repeat } from './utils/operators';
 import { Sequence } from './sequence';
+export { IEqualityComparer } from './interfaces/i-equality-comparer';
 
 const exp = function<T>(items: T[]): ISequence<T> {
     return new Sequence<T>(items);

@@ -329,16 +329,51 @@ export class Sequence<T> implements ISequence<T> {
         iterable: ISequence<T2> | T2[],
         firstKey: MapCondition<T, TKey>,
         secondKey: MapCondition<T2, TKey>,
-        zipFunc: GroupJoinCondition<T, T2, TResult>): ISequence<TResult> {
-        return new GroupJoinCollection<T, T2, TKey, TResult>(this, new Sequence(iterable), firstKey, secondKey, zipFunc);
+        zipFunc: GroupJoinCondition<T, T2, TResult>): ISequence<TResult>;
+    public groupJoin<T2, TKey, TResult>(
+        iterable: ISequence<T2> | T2[],
+        firstKey: MapCondition<T, TKey>,
+        secondKey: MapCondition<T2, TKey>,
+        eqalityComparer: IEqualityComparer<TKey>,
+        zipFunc: GroupJoinCondition<T, T2, TResult>): ISequence<TResult>;
+    public groupJoin<T2, TKey, TResult>(
+        iterable: ISequence<T2> | T2[],
+        firstKey: MapCondition<T, TKey>,
+        secondKey: MapCondition<T2, TKey>,
+        eqalityComparer: IEqualityComparer<TKey> | GroupJoinCondition<T, T2, TResult>,
+        zipFunc?: GroupJoinCondition<T, T2, TResult>): ISequence<TResult> {
+        if(typeof eqalityComparer === "object") {
+            // @ts-ignore
+            return new GroupJoinCollection<T, T2, TKey, TResult>(this, new Sequence(iterable), firstKey, secondKey, eqalityComparer, zipFunc);
+        } else {
+            return new GroupJoinCollection<T, T2, TKey, TResult>(this, new Sequence(iterable), firstKey, secondKey, undefined, eqalityComparer);
+        }
     }
 
     public join<T2, TKey, TResult>(
         iterable: ISequence<T2> | T2[],
         firstKey: MapCondition<T, TKey>,
         secondKey: MapCondition<T2, TKey>,
-        zipFunc: ZipCondition<T, T2, TResult>): ISequence<TResult> {
-        return new JoinCollection<T, T2, TKey, TResult>(this, new Sequence(iterable), firstKey, secondKey, zipFunc);
+        eqalityComparer: IEqualityComparer<TKey>,
+        zipFunc: ZipCondition<T, T2, TResult>): ISequence<TResult>;
+    public join<T2, TKey, TResult>(
+        iterable: ISequence<T2> | T2[],
+        firstKey: MapCondition<T, TKey>,
+        secondKey: MapCondition<T2, TKey>,
+        zipFunc: ZipCondition<T, T2, TResult>): ISequence<TResult>;
+
+    public join<T2, TKey, TResult>(
+        iterable: ISequence<T2> | T2[],
+        firstKey: MapCondition<T, TKey>,
+        secondKey: MapCondition<T2, TKey>,
+        eqalityComparer: IEqualityComparer<TKey> |  ZipCondition<T, T2, TResult>,
+        zipFunc?: ZipCondition<T, T2, TResult>): ISequence<TResult> {
+        if(typeof eqalityComparer === "object") {
+            // @ts-ignore
+            return new JoinCollection<T, T2, TKey, TResult>(this, new Sequence(iterable), firstKey, secondKey, eqalityComparer, zipFunc);
+        } else {
+            return new JoinCollection<T, T2, TKey, TResult>(this, new Sequence(iterable), firstKey, secondKey, undefined, eqalityComparer);
+        }
     }
 
     public union(items: T[] | ISequence<T>): ISequence<T>;
@@ -726,6 +761,7 @@ export class JoinCollection<T1, T2, TKey, TResult> extends Sequence<TResult> {
         private outer: Sequence<T2>, 
         private firstKey: MapCondition<T1, TKey>,
         private secondKey: MapCondition<T2, TKey>,
+        private equalityComparer: IEqualityComparer<TKey> = new DefaultEqualityComparer<TKey>(),
         private zipFunc: ZipCondition<T1, T2, TResult>) {
         // @ts-ignore
         super(iterable);
@@ -735,10 +771,7 @@ export class JoinCollection<T1, T2, TKey, TResult> extends Sequence<TResult> {
         // @ts-ignore
         const left = this.inner as ISequence<T1>;
         
-        const right = this.outer.groupBy(this.secondKey).toArray().reduce((map, item) => {
-            map.set(item.key, item.group);
-            return map;
-        }, new Map<TKey, ISequence<T2>>());
+        const right = this.outer.toLookup(this.secondKey, this.equalityComparer);
 
         const result = left.selectMany<[T1, T2]>(item => {
             const target = right.get(this.firstKey(item))
@@ -760,6 +793,7 @@ export class GroupJoinCollection<T1, T2, TKey, TResult> extends Sequence<TResult
         private outer: Sequence<T2>, 
         private firstKey: MapCondition<T1, TKey>,
         private secondKey: MapCondition<T2, TKey>,
+        private equalityComparer: IEqualityComparer<TKey> = new DefaultEqualityComparer<TKey>(),
         private zipFunc: GroupJoinCondition<T1, T2, TResult>) {
         // @ts-ignore
         super(iterable);
@@ -769,16 +803,13 @@ export class GroupJoinCollection<T1, T2, TKey, TResult> extends Sequence<TResult
         // @ts-ignore
         const left = this.inner as ISequence<T1>;
         
-        const right = this.outer.groupBy(this.secondKey).toArray().reduce((map, item) => {
-            map.set(item.key, item.group);
-            return map;
-        }, new Map<TKey, ISequence<T2>>());
+        const right = this.outer.toLookup(this.secondKey, this.equalityComparer);
 
         const result = left.toArray().map<[T1, ISequence<T2>] | null>(item => {
             const target = right.get(this.firstKey(item))
 
-            if(target) {
-                return [item, target];
+            if(target.length > 0) {
+                return [item, new Sequence(target)];
             } else {
                 return null
             } 

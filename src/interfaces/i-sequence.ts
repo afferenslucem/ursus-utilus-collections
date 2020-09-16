@@ -200,14 +200,17 @@ export interface ISequence<T> extends IIterable<T> {
     min(comparing: CompareCondition<T>): T;
     
     /**
-     * Determines whether two sequences are equal by comparing the elements by using the default equality comparer.
+     * Determines whether two sequences are equal by comparing the elements by using the default equality comparer;
+     * @param sequence Second sequence for equality checking
      */
     sequenceEqual(sequence: T[] | ISequence<T>): boolean;
 
     /**
-     * Determines whether two sequences are equal by comparing the elements by using the specified equality comparer.
+     * Determines whether two sequences are equal by comparing the elements by using specified equality comparer for their type.
+     * @param sequence Second sequence for equality checking
+     * @param eqalityComparer Equality comparer for items equality checking
      */
-    sequenceEqual(sequence: T[] | ISequence<T>, comparer: IEqualityComparer<T>): boolean;
+    sequenceEqual(sequence: T[] | ISequence<T>, eqalityComparer: IEqualityComparer<T>): boolean;
 
     /**
      * Returns the only element of a sequence, and throws an exception if there is not exactly one element in the sequence.
@@ -256,61 +259,72 @@ export interface ISequence<T> extends IIterable<T> {
     defaultIfEmpty(value: T | T[] | ISequence<T>): ISequence<T>;
 
     /**
-     * Returns distinct elements from a sequence using default equality comparer
+     * Returns distinct elements from a sequence by using default equality comparer
      */
     distinct(): ISequence<T>;
 
     /**
-     * Returns distinct elements from a sequence using specified equality comparer
-     * @param comparer Rule for comparing
+     * Returns distinct elements from a sequence by using specified equality comparer
+     * @param eqalityComparer Equality comparer for items equality checking
      */
     distinct(comparer: IEqualityComparer<T>): ISequence<T>;
 
 
     /**
-     * Groups items by key
-     * @param key Key taking function
+     * Groups items by key by using default equalityComparer
+     * @param keySelector Function for selecting key
      */
-    groupBy<TKey>(key: MapCondition<T, TKey>): ISequence<IGroupedData<TKey, ISequence<T>>>;
-
-    groupBy<TKey>(key: MapCondition<T, TKey>, comparer: IEqualityComparer<TKey>): ISequence<IGroupedData<TKey, ISequence<T>>>;
+    groupBy<TKey>(keySelector: MapCondition<T, TKey>): ISequence<IGroupedData<TKey, ISequence<T>>>;
+    
+    /**
+     * Groups items by key by using specified equalityComparer
+     * @param keySelector Function for selecting key
+     * @param eqalityComparer Equality comparer for keys equality checking
+     */
+    groupBy<TKey>(keySelector: MapCondition<T, TKey>, eqalityComparer: IEqualityComparer<TKey>): ISequence<IGroupedData<TKey, ISequence<T>>>;
 
     /**
-     * Groups items by key and modify theese by mapCondition
-     * @param key Key taking function
+     * Groups items by key and transforms groups by groupMap function by using default equalityComparer
+     * @param keySelector Function for selecting key
      * @param groupMap Group mapping function
      */
-    groupBy<TKey, TValue>(key: MapCondition<T, TKey>, groupMap: MapCondition<ISequence<T>, TValue>): ISequence<IGroupedData<TKey, TValue>>;
+    groupBy<TKey, TValue>(keySelector: MapCondition<T, TKey>, groupMap: MapCondition<ISequence<T>, TValue>): ISequence<IGroupedData<TKey, TValue>>;
     
-    groupBy<TKey, TValue>(key: MapCondition<T, TKey>, comparer: IEqualityComparer<TKey>, groupMap: MapCondition<ISequence<T>, TValue>): ISequence<IGroupedData<TKey, TValue>>;
+    /**
+     * Groups items by key and transforms groups by groupMap function by using specified equalityComparer
+     * @param keySelector Function for selecting key
+     * @param eqalityComparer Equality comparer for keys equality checking
+     * @param groupMap Group mapping function
+     */
+    groupBy<TKey, TValue>(keySelector: MapCondition<T, TKey>, eqalityComparer: IEqualityComparer<TKey>, groupMap: MapCondition<ISequence<T>, TValue>): ISequence<IGroupedData<TKey, TValue>>;
 
     
     /**
      * Sorts the elements of a sequence in ascending order to a key
-     * @param key Key taking function
+     * @param keySelector Function for selecting key
      */
-    orderBy<TKey>(key: MapCondition<T, TKey>): ISortingCollection<T>;
+    orderBy<TKey>(keySelector: MapCondition<T, TKey>): ISortingCollection<T>;
 
     /**
      * Sorts the elements of a sequence in ascending order to a key
-     * @param key Key taking function
-     * @param condition Comparing function
+     * @param keySelector Function for selecting key
+     * @param comparingCondition Function for comparing sorting keys
      */
-    orderBy<TKey>(key: MapCondition<T, TKey>, condition: CompareCondition<TKey>): ISortingCollection<T>;
+    orderBy<TKey>(keySelector: MapCondition<T, TKey>, comparingCondition: CompareCondition<TKey>): ISortingCollection<T>;
 
 
     /**
      * Sorts the elements of a sequence in descending order to a key
-     * @param key Key taking function
+     * @param keySelector Function for selecting key
      */
-    orderByDescending<TKey>(key: MapCondition<T, TKey>): ISortingCollection<T>;
+    orderByDescending<TKey>(keySelector: MapCondition<T, TKey>): ISortingCollection<T>;
 
     /**
      * Sorts the elements of a sequence in descending order to a key
-     * @param key Key taking function
-     * @param condition Comparing function
+     * @param keySelector Function for selecting key
+     * @param comparingCondition Function for comparing sorting keys
      */
-    orderByDescending<TKey>(key: MapCondition<T, TKey>, condition: CompareCondition<TKey>): ISortingCollection<T>;
+    orderByDescending<TKey>(keySelector: MapCondition<T, TKey>, comparingCondition: CompareCondition<TKey>): ISortingCollection<T>;
 
 
     /**
@@ -359,23 +373,23 @@ export interface ISequence<T> extends IIterable<T> {
 
 
     /**
-     * Sorts items ascending using default comparison
+     * Sorts items ascending by using default comparison
      */
     sort(): ISequence<T>;
 
     /**
-     * Sorts items ascending using specified comparison
-     * @param condition Comparing condition
+     * Sorts items ascending by using specified comparison
+     * @param condition Condition for compare items
      */
     sort(condition: CompareCondition<T>): ISequence<T>;
 
     /**
-     * Sorts items descending using default comparison
+     * Sorts items descending by using default comparison
      */
     sortDescending(): ISequence<T>;
 
     /**
-     * Sorts items descending using default comparison
+     * Sorts items descending by using default comparison
      * @param condition Comparing condition
      */
     sortDescending(condition: CompareCondition<T>): ISequence<T>;
@@ -416,65 +430,103 @@ export interface ISequence<T> extends IIterable<T> {
 
     /**
      * Produces the set difference of two collections by using the default equality comparer to compare values.
+     * @param items Second collection for union
      */
     except(items: T[] | ISequence<T>): ISequence<T>;
 
     /**
      * Produces the set difference of two collections by using the specified comparer to compare values.
-     * @param comparer function to compare values
+     * @param items Second collection for union
+     * @param eqalityComparer Equality comparer for items equality checking
      */
-    except(items: T[] | ISequence<T>, comparer: IEqualityComparer<T>): ISequence<T>;
+    except(items: T[] | ISequence<T>, eqalityComparer: IEqualityComparer<T>): ISequence<T>;
     
 
     /**
      * Produces the set sequence of two collections by using the default equality comparer to compare values.
+     * @param items Second collection for union
      */
     intersect(items: T[] | ISequence<T>): ISequence<T>;
 
     /**
      * Produces the set sequence of two collections by using the specified equality comparer to compare values.
-     * @param comparer function to compare values
+     * @param items Second collection for union
+     * @param eqalityComparer Equality comparer for items equality checking
      */
-    intersect(items: T[] | ISequence<T>, comparer: IEqualityComparer<T>): ISequence<T>;
+    intersect(items: T[] | ISequence<T>, coeqalityComparermparer: IEqualityComparer<T>): ISequence<T>;
 
 
     /**
      * Correlates the elements of two sequences based on equality of keys and groups the results.
      * @param iterable Collection for joining
-     * @param firstKey Key taking function
-     * @param secondKey Key taking function
+     * @param firstKeySelector Function for selecting key
+     * @param secondKeySelector Function for selecting key
      * @param zipFunc Function for merging elements
      */
     groupJoin<T2, TKey, TResult>(
         iterable: ISequence<T2> | T2[],
-        firstKey: MapCondition<T, TKey>,
-        secondKey: MapCondition<T2, TKey>,
+        firstKeySelector: MapCondition<T, TKey>,
+        secondKeySelector: MapCondition<T2, TKey>,
+        zipFunc: GroupJoinCondition<T, T2, TResult>): ISequence<TResult>
+        
+
+    /**
+     * Correlates the elements of two sequences based on equality of keys and groups the results.
+     * @param iterable Collection for joining
+     * @param firstKeySelector Function for selecting key
+     * @param secondKeySelector Function for selecting key
+     * @param eqalityComparer Equality comparer for items equality checking
+     * @param zipFunc Function for merging elements
+     */
+    groupJoin<T2, TKey, TResult>(
+        iterable: ISequence<T2> | T2[],
+        firstKeySelector: MapCondition<T, TKey>,
+        secondKeySelector: MapCondition<T2, TKey>,
+        eqalityComparer: IEqualityComparer<TKey>,
         zipFunc: GroupJoinCondition<T, T2, TResult>): ISequence<TResult>
 
 
     /**
      * Correlates the elements of two collections based on matching keys.
      * @param iterable Collection for joining
-     * @param firstKey Key taking function
-     * @param secondKey Key taking function
+     * @param firstKeySelector Function for selecting key
+     * @param secondKeySelector Function for selecting key
      * @param zipFunc Function for merging elements
      */
     join<T2, TKey, TResult>(
         iterable: ISequence<T2> | T2[],
-        firstKey: MapCondition<T, TKey>,
-        secondKey: MapCondition<T2, TKey>,
+        firstKeySelector: MapCondition<T, TKey>,
+        secondKeySelector: MapCondition<T2, TKey>,
+        zipFunc: ZipCondition<T, T2, TResult>): ISequence<TResult>
+
+    /**
+     * Correlates the elements of two collections based on matching keys.
+     * @param iterable Collection for joining
+     * @param firstKeySelector Function for selecting key
+     * @param secondKeySelector Function for selecting key
+     * @param eqalityComparer Equality comparer for keys equality checking
+     * @param zipFunc Function for merging elements
+     */
+    join<T2, TKey, TResult>(
+        iterable: ISequence<T2> | T2[],
+        firstKeySelector: MapCondition<T, TKey>,
+        secondKeySelector: MapCondition<T2, TKey>,
+        eqalityComparer: IEqualityComparer<TKey>,
         zipFunc: ZipCondition<T, T2, TResult>): ISequence<TResult>
 
 
     /**
      * Produces the set union of two collections by using the default equality comparer.
+     * @param items Second collection for union
      */
     union(items: T[] | ISequence<T>): ISequence<T>;
 
     /**
      * Produces the set union of two collections by using the specified  equality comparer.
+     * @param items Second collection for union
+     * @param eqalityComparer Equality comparer for items equality checking
      */
-    union(items: T[] | ISequence<T>, comparer: IEqualityComparer<T>): ISequence<T>;
+    union(items: T[] | ISequence<T>, eqalityComparer: IEqualityComparer<T>): ISequence<T>;
 
 
     /**
@@ -500,46 +552,58 @@ export interface ISequence<T> extends IIterable<T> {
     toHashSet(eqalityComparer: IEqualityComparer<T>): HashSet<T>
 
     /**
-     * Creates a Dictionary<TKey, T[]> from an sequence according to a specified key selector function.
-     * @param key key selector
+     * Creates a ILookup<TKey, T[]> from an sequence according to a specified key selector function.
+     * @param keySelector Function for selecting key
      */
-    toLookup<TKey>(key: MapCondition<T, TKey>): ILookup<TKey, T>;
-
-    
-    toLookup<TKey>(key: MapCondition<T, TKey>, comparer: IEqualityComparer<TKey>): ILookup<TKey, T>;
+    toLookup<TKey>(keySelector: MapCondition<T, TKey>): ILookup<TKey, T>;
 
     /**
-     * Creates a Dictionary<TKey, TElement[]> from an sequence according to specified key selector and element selector functions.
-     * @param key 
-     * @param element 
+     * Creates a ILookup<TKey, T[]> from an sequence according to a specified key selector function by using specified equality comparer.
+     * @param keySelector Function for selecting key
+     * @param eqalityComparer Equality comparer for keys equality checking
      */
-    toLookup<TKey, TElement>(key: MapCondition<T, TKey>, element: MapCondition<T, TElement>): ILookup<TKey, TElement>;
-    
-    toLookup<TKey, TElement>(key: MapCondition<T, TKey>, comparer: IEqualityComparer<TKey>, value: MapCondition<T, TElement>): ILookup<TKey, TElement>;
+    toLookup<TKey>(keySelector: MapCondition<T, TKey>, eqalityComparer: IEqualityComparer<TKey>): ILookup<TKey, T>;
 
     /**
-     * Creates a Dictionary<TKey, T> from a sequence according to a specified key selector function using by default equality comparer.
-     * @param key key selector
+     * Creates a ILookup<TKey, TElement[]> from an sequence according to specified key selector and element selector functions by using default equality comparer.
+     * @param keySelector Function for selecting key
+     * @param elementSelector Function for selecting keeping element
      */
-    toDictionary<TKey>(key: MapCondition<T, TKey>): Dictionary<TKey, T>;
-
-    /**
-     * Creates a Dictionary<TKey, T> from a sequence according to a specified key selector function using by specified equality comparer.
-     * @param key key selector
-     */
-    toDictionary<TKey>(key: MapCondition<T, TKey>, eqalityComparer: IEqualityComparer<TKey>): Dictionary<TKey, T>;
-
-    /**
-     * Creates a Dictionary<TKey, TElement> from a sequence according to specified key selector and element selector functions using by default equality comparer.
-     * @param key 
-     * @param element 
-     */
-    toDictionary<TKey, TElement>(key: MapCondition<T, TKey>, element: MapCondition<T, TElement>): Dictionary<TKey, TElement>;
+    toLookup<TKey, TElement>(keySelector: MapCondition<T, TKey>, elementSelector: MapCondition<T, TElement>): ILookup<TKey, TElement>;
     
     /**
-     * Creates a Dictionary<TKey, TElement> from a sequence according to specified key selector and element selector functions using by specified equality comparer.
-     * @param key 
-     * @param element 
+     * Creates a ILookup<TKey, TElement[]> from an sequence according to specified key selector and element selector functions by using specified equality comparer.
+     * @param keySelector Function for selecting key
+     * @param eqalityComparer Equality comparer for keys equality checking
+     * @param elementSelector Function for selecting keeping element
      */
-    toDictionary<TKey, TElement>(key: MapCondition<T, TKey>, eqalityComparer: IEqualityComparer<TKey>, element: MapCondition<T, TElement>): Dictionary<TKey, TElement>;
+    toLookup<TKey, TElement>(keySelector: MapCondition<T, TKey>, eqalityComparer: IEqualityComparer<TKey>, elementSelector: MapCondition<T, TElement>): ILookup<TKey, TElement>;
+
+    /**
+     * Creates a Dictionary<TKey, T> from a sequence according to a specified key selector function by using default equality comparer.
+     * @param keySelector Function for selecting key
+     */
+    toDictionary<TKey>(keySelector: MapCondition<T, TKey>): Dictionary<TKey, T>;
+
+    /**
+     * Creates a Dictionary<TKey, T> from a sequence according to a specified key selector function by using specified equality comparer.
+     * @param keySelector Function for selecting key
+     * @param eqalityComparer Equality comparer for keys equality checking
+     */
+    toDictionary<TKey>(keySelector: MapCondition<T, TKey>, eqalityComparer: IEqualityComparer<TKey>): Dictionary<TKey, T>;
+
+    /**
+     * Creates a Dictionary<TKey, TElement> from a sequence according to specified key selector and element selector functions by using default equality comparer.
+     * @param keySelector Function for selecting key
+     * @param elementSelector Function for selecting keeping element
+     */
+    toDictionary<TKey, TElement>(keySelector: MapCondition<T, TKey>, elementSelector: MapCondition<T, TElement>): Dictionary<TKey, TElement>;
+    
+    /**
+     * Creates a Dictionary<TKey, TElement> from a sequence according to specified key selector and element selector functions by using specified equality comparer.
+     * @param keySelector Function for selecting key
+     * @param eqalityComparer Equality comparer for keys equality checking
+     * @param elementSelector Function for selecting keeping element
+     */
+    toDictionary<TKey, TElement>(keySelector: MapCondition<T, TKey>, eqalityComparer: IEqualityComparer<TKey>, elementSelector: MapCondition<T, TElement>): Dictionary<TKey, TElement>;
 }
