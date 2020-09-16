@@ -1,4 +1,4 @@
-import _ from '../../src/index'
+import _, { IEqualityComparer } from '../../src/index'
 import { assert } from "chai";
 import { JoinCollection, Sequence } from '../../src/sequence';
 
@@ -226,67 +226,73 @@ describe('JoinCollection', function () {
     })
 
     it('should merge by func with ec', () => {
-        const cats = [{
-            name: 'Barsik',
-            age: {
-                years: 9
+        const personsWithCats = [
+            {
+                name: 'John',
+                cat: {
+                    name: 'Barsik'
+                }
+            },
+            {
+                name: 'Peter',
+                cat: {
+                    name: 'Cherry'
+                }
+            },
+            {
+                name: 'Leo',
+                cat: {
+                    name: 'Feya'
+                }
+            },
+        ]
+
+        const clinicWithCats = [{
+            name: 'ZooHealth',
+            cat: {
+                name: 'Barsik'
             }
         },{
-            name: 'Cherry',
-            age: {
-                years: 4
+            name: 'Panaceya',
+            cat: {
+                name: 'Feya'
             }
         },{
-            name: 'Feya',
-            age: {
-                years: 4
+            name: 'Cat\'s Paradise',
+            cat: {
+                name: 'Cherry'
             }
         },{
-            name: 'Lulya',
-            age: {
-                years: 1
+            name: 'Doctor Cat',
+            cat: {
+                name: 'Feya'
             }
         },];
 
-        const ages = [{
-            age: {
-                years: 1
-            },
-            name: "Young"
-        },{
-            age: {
-                years: 4
-            },
-            name: "Middle"
-        },{
-            age: {
-                years: 9
-            },
-            name: "Old"
-        },{
-            age: {
-                years: 1
-            },
-            name: "Baby"
-        }]
-
         const expected = [
-            {name: 'Barsik', age: 'Old'},
-            {name: 'Cherry', age: 'Middle'},
-            {name: 'Feya', age: 'Middle'},
-            {name: 'Lulya', age: 'Young'},
-            {name: 'Lulya', age: 'Baby'},
+            {person: 'John',  clinic: 'ZooHealth'},
+            {person: 'Peter', clinic: 'Cat\'s Paradise'},
+            {person: 'Leo',   clinic: 'Panaceya'},
+            {person: 'Leo',   clinic: 'Doctor Cat'},
         ]
 
-        const result = _(cats).join(
-            ages, 
-            cat => cat.age, 
-            age => age.age,
-            {
-                equal: (a, b) => a.years === b.years,
-                getHashCode: a => a.years
+        const catComparer: IEqualityComparer<{
+            name: 'Feya'
+        }> = {
+            equal(a, b) {
+                return a.name == b.name
             },
-            (cat, age) => ({name: cat.name, age: age.name})
+            getHashCode(a) {
+                return a.name
+            }
+        }
+
+        const result = _(personsWithCats).join(
+            clinicWithCats, 
+            person => person.cat, 
+            clinic => clinic.cat,
+            catComparer,
+            (person, clinic) => ({person: person.name, clinic: clinic.name})
         ).toArray();
 
         assert.deepEqual(result, expected);

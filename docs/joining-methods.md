@@ -129,7 +129,7 @@ console.log(union)
 
 Method signature: `groupJoin<T2, TKey, TResult>(iterable: ISequence<T2> | T2[], firstKey: MapCondition<T, TKey>, secondKey: MapCondition<T2, TKey>, zipFunc: (first: T1, seconds: ISequence<T2>) => TResult): ISequence<TResult>`
 
-Correlates the elements of two sequences based on equality of keys and groups the results.
+Correlates the elements of two sequences based on equality of keys and groups the results by using default comparer.
 
 ```typescript
 const cats = [{
@@ -172,11 +172,88 @@ console.log(joined);
 // ]
 ```
 
+### groupJoin with comparer
+
+Method signature: `groupJoin<T2, TKey, TResult>(iterable: ISequence<T2> | T2[], firstKey: MapCondition<T, TKey>, secondKey: MapCondition<T2, TKey>, eqalityComparer: IEqualityComparer<TKey>, zipFunc: (first: T1, seconds: ISequence<T2>) => TResult): ISequence<TResult>`
+
+Correlates the elements of two sequences based on equality of keys and groups the results by using specified comparer.
+
+```typescript
+const personsWithCats = [
+    {
+        name: 'John',
+        cat: {
+            name: 'Barsik'
+        }
+    },
+    {
+        name: 'Peter',
+        cat: {
+            name: 'Cherry'
+        }
+    },
+    {
+        name: 'Leo',
+        cat: {
+            name: 'Feya'
+        }
+    },
+]
+
+const clinicWithCats = [{
+    name: 'ZooHealth',
+    cat: {
+        name: 'Barsik'
+    }
+},{
+    name: 'Panaceya',
+    cat: {
+        name: 'Feya'
+    }
+},{
+    name: 'Cat\'s Paradise',
+    cat: {
+        name: 'Cherry'
+    }
+},{
+    name: 'Doctor Cat',
+    cat: {
+        name: 'Feya'
+    }
+},];
+
+const catComparer = {
+    equal(a, b) {
+        return a.name == b.name
+    },
+    getHashCode(a) {
+        return a.name
+    }
+}
+
+const personsWithClinics = _(personsWithCats).groupJoin(
+    clinicWithCats,
+    person => person.cat,
+    clinic => clinic.cat,
+    catComparer,
+    (person, clinics) => ({person: person.name, clinics: clinics.select(item => item.name).toArray()})
+).toArray();
+
+console.log(personsWithClinics)
+
+// [
+//   {person: 'John',  clinics: ['ZooHealth']},
+//   {person: 'Peter', clinics: ['Cat\'s Paradise']},
+//   {person: 'Leo',   clinics: ['Panaceya', 'Doctor Cat']},
+// ]
+
+```
+
 ## join
 
-Method signature: `join<T2, TKey, TResult>(iterable: ISequence<T2> | T2[], firstKey: (item: T1) => TKey, secondKey: (item: T2) => TKey, zipFunc: (first: T1, second: T2) => TResult)`
+Method signature: `join<T2, TKey, TResult>(iterable: ISequence<T2> | T2[], firstKeySelector: MapCondition<T, TKey>, secondKeySelector: MapCondition<T2, TKey>, zipFunc: ZipCondition<T, T2, TResult>): ISequence<TResult>`
 
-Correlates the elements of two sequences based on matching keys.
+Correlates the elements of two collections based on matching keys by using default keys equality comparer.
 
 ```typescript
 const cats = [{
@@ -217,6 +294,83 @@ console.log(joined);
 //     {name: 'Cherry', age: 'Middle'},
 //     {name: 'Feya', age: 'Middle'},
 //     {name: 'Lulya', age: 'Young'},
+// ]
+```
+
+### join with comparer
+
+Method signature: `join<T2, TKey, TResult>(iterable: ISequence<T2> | T2[], firstKeySelector: MapCondition<T, TKey>, secondKeySelector: MapCondition<T2, TKey>, eqalityComparer: IEqualityComparer<TKey>, zipFunc: ZipCondition<T, T2, TResult>): ISequence<TResult>`
+
+Correlates the elements of two collections based on matching keys by using specified keys equality comparer.
+
+```typescript
+const personsWithCats = [
+    {
+        name: 'John',
+        cat: {
+            name: 'Barsik'
+        }
+    },
+    {
+        name: 'Peter',
+        cat: {
+            name: 'Cherry'
+        }
+    },
+    {
+        name: 'Leo',
+        cat: {
+            name: 'Feya'
+        }
+    },
+]
+const clinicWithCats = [{
+        name: 'ZooHealth',
+        cat: {
+            name: 'Barsik'
+        }
+    },{
+        name: 'Panaceya',
+        cat: {
+            name: 'Feya'
+        }
+    },{
+        name: 'Cat\'s Paradise',
+        cat: {
+            name: 'Cherry'
+        }
+    },{
+        name: 'Doctor Cat',
+        cat: {
+            name: 'Feya'
+        }
+    },
+];
+
+const catComparer = {
+    equal(a, b) {
+        return a.name == b.name
+    },
+    getHashCode(a) {
+        return a.name
+    }
+}
+
+const personsWithClinic = _(personsWithCats).join(
+    clinicWithCats,
+    person => person.cat,
+    clinic => clinic.cat,
+    catComparer,
+    (person, clinic) => ({person: person.name, clinic: clinic.na
+).toArray();
+
+console.log(personsWithClinic)
+
+// [
+//   {person: 'John',  clinic: 'ZooHealth'},
+//   {person: 'Peter', clinic: 'Cat\'s Paradise'},
+//   {person: 'Leo',   clinic: 'Panaceya'},
+//   {person: 'Leo',   clinic: 'Doctor Cat'},
 // ]
 ```
 

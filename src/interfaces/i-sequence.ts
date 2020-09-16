@@ -271,27 +271,27 @@ export interface ISequence<T> extends IIterable<T> {
 
 
     /**
-     * Groups items by key by using default equalityComparer
+     * Groups items by key by using default equalityComparer.
      * @param keySelector Function for selecting key
      */
     groupBy<TKey>(keySelector: MapCondition<T, TKey>): ISequence<IGroupedData<TKey, ISequence<T>>>;
     
     /**
-     * Groups items by key by using specified equalityComparer
+     * Groups items by key by using specified equalityComparer.
      * @param keySelector Function for selecting key
      * @param eqalityComparer Equality comparer for keys equality checking
      */
     groupBy<TKey>(keySelector: MapCondition<T, TKey>, eqalityComparer: IEqualityComparer<TKey>): ISequence<IGroupedData<TKey, ISequence<T>>>;
 
     /**
-     * Groups items by key and transforms groups by groupMap function by using default equalityComparer
+     * Groups items by key and transforms groups by groupMap function by using default equalityComparer.
      * @param keySelector Function for selecting key
      * @param groupMap Group mapping function
      */
     groupBy<TKey, TValue>(keySelector: MapCondition<T, TKey>, groupMap: MapCondition<ISequence<T>, TValue>): ISequence<IGroupedData<TKey, TValue>>;
     
     /**
-     * Groups items by key and transforms groups by groupMap function by using specified equalityComparer
+     * Groups items by key and transforms groups by groupMap function by using specified equalityComparer.
      * @param keySelector Function for selecting key
      * @param eqalityComparer Equality comparer for keys equality checking
      * @param groupMap Group mapping function
@@ -300,13 +300,13 @@ export interface ISequence<T> extends IIterable<T> {
 
     
     /**
-     * Sorts the elements of a sequence in ascending order to a key
+     * Sorts the elements of a sequence in ascending order to a key.
      * @param keySelector Function for selecting key
      */
     orderBy<TKey>(keySelector: MapCondition<T, TKey>): ISortingCollection<T>;
 
     /**
-     * Sorts the elements of a sequence in ascending order to a key
+     * Sorts the elements of a sequence in ascending order to a key.
      * @param keySelector Function for selecting key
      * @param comparingCondition Function for comparing sorting keys
      */
@@ -314,13 +314,13 @@ export interface ISequence<T> extends IIterable<T> {
 
 
     /**
-     * Sorts the elements of a sequence in descending order to a key
+     * Sorts the elements of a sequence in descending order to a key.
      * @param keySelector Function for selecting key
      */
     orderByDescending<TKey>(keySelector: MapCondition<T, TKey>): ISortingCollection<T>;
 
     /**
-     * Sorts the elements of a sequence in descending order to a key
+     * Sorts the elements of a sequence in descending order to a key.
      * @param keySelector Function for selecting key
      * @param comparingCondition Function for comparing sorting keys
      */
@@ -334,7 +334,7 @@ export interface ISequence<T> extends IIterable<T> {
 
     
     /**
-     * Inverts the order of the elements in a sequence
+     * Inverts the order of the elements in a sequence.
      */
     reverse(): ISequence<T>;
     
@@ -346,7 +346,7 @@ export interface ISequence<T> extends IIterable<T> {
     select<TResult>(condition: MapCondition<T, TResult>): ISequence<TResult>;
 
     /**
-     * Projects each element of a sequence to an Array<T> and flattens the resulting sequence into one sequence
+     * Projects each element of a sequence to an Array<T> and flattens the resulting sequence into one sequence.
      */
     selectMany<TResult>(condition: MapCondition<T, TResult[]>): ISequence<TResult>;
 
@@ -373,23 +373,23 @@ export interface ISequence<T> extends IIterable<T> {
 
 
     /**
-     * Sorts items ascending by using default comparison
+     * Sorts items ascending by using default comparison.
      */
     sort(): ISequence<T>;
 
     /**
-     * Sorts items ascending by using specified comparison
+     * Sorts items ascending by using specified comparison.
      * @param condition Condition for compare items
      */
     sort(condition: CompareCondition<T>): ISequence<T>;
 
     /**
-     * Sorts items descending by using default comparison
+     * Sorts items descending by using default comparison.
      */
     sortDescending(): ISequence<T>;
 
     /**
-     * Sorts items descending by using default comparison
+     * Sorts items descending by using specified comparison.
      * @param condition Comparing condition
      */
     sortDescending(condition: CompareCondition<T>): ISequence<T>;
@@ -457,7 +457,7 @@ export interface ISequence<T> extends IIterable<T> {
 
 
     /**
-     * Correlates the elements of two sequences based on equality of keys and groups the results.
+     * Correlates the elements of two sequences based on equality of keys and groups the results by using default comparer.
      * @param iterable Collection for joining
      * @param firstKeySelector Function for selecting key
      * @param secondKeySelector Function for selecting key
@@ -471,7 +471,7 @@ export interface ISequence<T> extends IIterable<T> {
         
 
     /**
-     * Correlates the elements of two sequences based on equality of keys and groups the results.
+     * Correlates the elements of two sequences based on equality of keys and groups the results by using specified comparer.
      * @param iterable Collection for joining
      * @param firstKeySelector Function for selecting key
      * @param secondKeySelector Function for selecting key
@@ -487,7 +487,7 @@ export interface ISequence<T> extends IIterable<T> {
 
 
     /**
-     * Correlates the elements of two collections based on matching keys.
+     * Correlates the elements of two collections based on matching keys by using default keys equality comparer.
      * @param iterable Collection for joining
      * @param firstKeySelector Function for selecting key
      * @param secondKeySelector Function for selecting key
@@ -500,7 +500,7 @@ export interface ISequence<T> extends IIterable<T> {
         zipFunc: ZipCondition<T, T2, TResult>): ISequence<TResult>
 
     /**
-     * Correlates the elements of two collections based on matching keys.
+     * Correlates the elements of two collections based on matching keys by using specified keys equality comparer.
      * @param iterable Collection for joining
      * @param firstKeySelector Function for selecting key
      * @param secondKeySelector Function for selecting key
