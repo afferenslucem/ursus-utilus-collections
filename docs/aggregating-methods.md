@@ -139,9 +139,9 @@ console.log(result); //false
 
 ## contains with equality comparer
 
-Method signature: `contains(element: T, (first: T, second: T) => boolean): boolean`.
+Method signature: `contains(element: T, comparer: IEqualityComparer<T>): boolean`.
 
-Determines whether a sequence contains a specified element. Using custom equality condition.
+Determines whether a sequence contains a specified element. Using specified equality comparer.
 
 ```typescript
 const cats = [{
@@ -163,7 +163,12 @@ const cat = {
     age: 9
 }
 
-const result = _(cats).contains(cat, (a, b) => a.name == b.name);
+const catByNameComparer = {
+    equal: (a, b) => a.name == b.name,
+    getHashCode: a => a.name
+};
+
+const result = _(cats).contains(cat, catByNameComparer);
 
 console.log(result); // true
 ```
@@ -435,7 +440,7 @@ console.log(el); // { name: 'Tom', age: 1 }
 
 ## sequenceEqual
 
-Method signature: `sequenceEqual(sequence: T[] | Isequence<T>): boolean`.
+Method signature: `sequenceEqual(sequence: T[] | ISequence<T>): boolean`.
 
 Determines whether two sequences are equal by comparing the elements by using the default equality comparer.
 
@@ -446,7 +451,7 @@ console.log(eq); //true
 
 ## sequenceEqual with equality comparer
 
-Method signature: `sequenceEqual(sequence: T[] | Isequence<T>, (first: T, second: T) => boolean): boolean`.
+Method signature: `sequenceEqual(sequence: T[] | ISequence<T>, eqalityComparer: IEqualityComparer<T>): boolean`.
 
 Determines whether two sequences are equal by comparing the elements by using the specified equality comparer.
 
@@ -479,7 +484,12 @@ const cats2 = [{
     age: 1
 },];
 
-const result = _(cats).sequenceEqual(cats2, (a, b) => a.name == b.name);
+const catByNameComparer = {
+    equal: (a, b) => a.name == b.name,
+    getHashCode: a => a.name
+}
+
+const result = _(cats).sequenceEqual(cats2, catByNameComparer);
 
 console.log(result); // true
 ```

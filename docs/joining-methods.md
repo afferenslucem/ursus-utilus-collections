@@ -10,7 +10,7 @@
 
 ## concat
 
-Method signature: `concat(items: T[] | Isequence<T>): Isequence<T>`.
+Method signature: `concat(items: T[] | ISequence<T>): ISequence<T>`.
 
 Concatenates two sequences.
 
@@ -22,7 +22,7 @@ console.log(concated); // [ 1, 2, 3, 4, 5, 6 ]
 
 ## except
 
-Method signature: `except(items: T[] | Isequence<T>): Isequence<T>`.
+Method signature: `except(items: T[] | ISequence<T>): ISequence<T>`.
 
 Produces the set sequence of two sequences by using the default equality comparer to compare values.
 
@@ -34,7 +34,7 @@ console.log(onlyInFirst) // [ 0, 1, 7, 8 ];
 
 ### except with custom comparer
 
-Method signature: `except(items: T[] | Isequence<T>, comparer: (first: T, second: T) => boolean): Isequence<T>`.
+Method signature: `except(items: T[] | ISequence<T>, eqalityComparer: IEqualityComparer<T>): ISequence<T>`.
 
 Produces the set sequence of two sequences by using the specified equality comparer to compare values.
 
@@ -61,7 +61,12 @@ const cats2 = [{
     age: 2
 }]
 
-const onlyInFirst = _(cats).except(cats2, (a, b) => a.name === b.name && a.age === b.age).toArray();
+const catEqualityComparer = {
+    equal: (a, b) => a.age === b.age && a.name === b.name,
+    getHashCode: a => a.name
+}
+
+const onlyInFirst = _(cats).except(cats2, catEqualityComparer).toArray();
 
 console.log(onlyInFirst)
 // [ { name: 'Tom', age: 1 } ]
@@ -69,7 +74,7 @@ console.log(onlyInFirst)
 
 ## intersect
 
-Method signature: `intersect(items: T[] | Isequence<T>): Isequence<T>`.
+Method signature: `intersect(items: T[] | ISequence<T>): ISequence<T>`.
 
 Produces the set sequence of two sequences by using the default equality comparer to compare values.
 
@@ -81,7 +86,7 @@ console.log(intersect) // [ 2, 3 ];
 
 ### intersect with custom comparer
 
-Method signature: `intersect(items: T[] | Isequence<T>, comparer: (first: T, second: T) => boolean): Isequence<T>`.
+Method signature: `intersect(items: T[] | ISequence<T>, eqalityComparer: IEqualityComparer<T>): ISequence<T>`.
 
 Produces the set sequence of two sequences by using the specified equality comparer to compare values.
 
@@ -108,7 +113,12 @@ const cats2 = [{
     age: 2
 }]
 
-const intersect = _(cats).intersect(cats2, (a, b) => a.name === b.name && a.age === b.age).toArray();
+const catEqualityComparer = {
+    equal: (a, b) => a.age === b.age && a.name === b.name,
+    getHashCode: a => a.name
+}
+
+const intersect = _(cats).intersect(cats2, catEqualityComparer).toArray();
 // getiing intersect cats
 
 console.log(union)
@@ -117,7 +127,7 @@ console.log(union)
 
 ## groupJoin
 
-Method signature: `groupJoin<T2, TKey, TResult>(iterable: Isequence<T2> | T2[], firstKey: MapCondition<T, TKey>, secondKey: MapCondition<T2, TKey>, zipFunc: (first: T1, seconds: Isequence<T2>) => TResult): Isequence<TResult>`
+Method signature: `groupJoin<T2, TKey, TResult>(iterable: ISequence<T2> | T2[], firstKey: MapCondition<T, TKey>, secondKey: MapCondition<T2, TKey>, zipFunc: (first: T1, seconds: ISequence<T2>) => TResult): ISequence<TResult>`
 
 Correlates the elements of two sequences based on equality of keys and groups the results.
 
@@ -164,7 +174,7 @@ console.log(joined);
 
 ## join
 
-Method signature: `join<T2, TKey, TResult>(iterable: Isequence<T2> | T2[], firstKey: (item: T1) => TKey, secondKey: (item: T2) => TKey, zipFunc: (first: T1, second: T2) => TResult)`
+Method signature: `join<T2, TKey, TResult>(iterable: ISequence<T2> | T2[], firstKey: (item: T1) => TKey, secondKey: (item: T2) => TKey, zipFunc: (first: T1, second: T2) => TResult)`
 
 Correlates the elements of two sequences based on matching keys.
 
@@ -212,7 +222,7 @@ console.log(joined);
 
 ## union
 
-Method signature: `union(items: T[] | Isequence<T>): Isequence<T>`.
+Method signature: `union(items: T[] | ISequence<T>): ISequence<T>`.
 
 Produces the set union of two sequences by using the default equality comparer.
 
@@ -224,7 +234,7 @@ console.log(union) // [0, 1, 2, 3, 4, 5, 6];
 
 ### union with custom comparer
 
-Method signature: `union(items: T[] | Isequence<T>, comparer: (first: T, second: T) => boolean): Isequence<T>`.
+Method signature: `union(items: T[] | ISequence<T>, eqalityComparer: IEqualityComparer<T>): ISequence<T>`.
 
 Produces the set union of two sequences by using the specified equality comparer.
 
@@ -250,7 +260,12 @@ const cats2 = [{
     age: 2
 }]
 
-const union = _(cats).union(cats2, (a, b) => a.age === b.age).toArray();
+const catByAgeEqualityComparer = {
+    equal: (a, b) => a.age === b.age,
+    getHashCode: a => a.age
+}
+
+const union = _(cats).union(cats2, catByAgeEqualityComparer).toArray();
 // getiing unnion cats by age
 
 console.log(union)
@@ -259,7 +274,7 @@ console.log(union)
 
 ## zip
 
-Method signature: `zip<T2>(iterable: Isequence<T2> | T2[]): Isequence<[T, T2]>`.
+Method signature: `zip<T2>(iterable: ISequence<T2> | T2[]): ISequence<[T, T2]>`.
 
 Returns new sequence with converted corresponding elements to tuples.
 
@@ -271,7 +286,7 @@ console.log(zipped); // [ [1, 4], [2, 5], [3, 6] ]
 
 ### zip with function
 
-Method signature: `zip<T2, TResult>(iterable: Isequence<T2> | T2[], zipFunc: (first: T1, second: T2) => TResult): Isequence<TResult>`.
+Method signature: `zip<T2, TResult>(iterable: ISequence<T2> | T2[], zipFunc: (first: T1, second: T2) => TResult): ISequence<TResult>`.
 
 Applies a specified function to the corresponding elements of two sequences, producing a sequence of the results.
 

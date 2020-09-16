@@ -52,10 +52,12 @@ describe('ExceptCollection', function () {
             age: 2
         }]
 
-        const result = _(cats).except(cats2, {
+        const catEqualityComparer = {
             equal: (a, b) => a.age === b.age && a.name === b.name,
             getHashCode: a => a.name
-        }).toArray();
+        }
+
+        const result = _(cats).except(cats2, catEqualityComparer).toArray();
 
         const expected = [{
             name: 'Tom',

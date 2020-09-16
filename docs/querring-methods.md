@@ -20,7 +20,7 @@
 
 ## append
 
-Method signature: `append(item: T): Isequence<T>`.
+Method signature: `append(item: T): ISequence<T>`.
 
 Appends a value to the end of the sequence.
 
@@ -32,7 +32,7 @@ console.log(appended); // [1, 2, 3, 4]
 
 ## defaultIfEmpty
 
-Method signature: `defaultIfEmpty(value: T | T[] | Isequence<T>): Isequence<T>`.
+Method signature: `defaultIfEmpty(value: T | T[] | ISequence<T>): ISequence<T>`.
 
 Returns the elements of the sequence or the specified value in a sequence if the original sequence is empty.
 
@@ -44,7 +44,7 @@ console.log(defaultValue); // [ 0 ]
 
 ## distinct
 
-Method signature: `distinct(): Isequence<T>`.
+Method signature: `distinct(): ISequence<T>`.
 
 Returns distinct elements from a sequence using default equality comparer
 
@@ -56,7 +56,7 @@ console.log(distinct); // [ 1, 3, 2 ]
 
 ### distinct with custom comparer
 
-Method signature: `distinct<V>(comparer: (first: T, second: T) => boolean): Isequence<T>`.
+Method signature: `distinct<V>(comparer: (first: T, second: T) => boolean): ISequence<T>`.
 
 Returns distinct elements from a sequence using specified equality comparer
 
@@ -87,7 +87,7 @@ console.log(distinct)
 
 ## groupBy
 
-Method signature: `groupBy<TKey>(key: (item: T) => TKey): Isequence< IGroupedData<TKey, Isequence<T>> >`.
+Method signature: `groupBy<TKey>(key: (item: T) => TKey): ISequence< IGroupedData<TKey, ISequence<T>> >`.
 
 Groups the elements of a sequence.
 
@@ -117,7 +117,7 @@ console.log(grouped);
 
 ### Grouping with mapping result
 
-Method signature: `groupBy<TKey, TValue>(key: (item: T) => TKey, groupMap: (item: Isequence<T>) => TValue>): Isequence<IGroupedData<TKey, TValue>>`.
+Method signature: `groupBy<TKey, TValue>(key: (item: T) => TKey, groupMap: (item: ISequence<T>) => TValue>): ISequence<IGroupedData<TKey, TValue>>`.
 
 Groups the elements of a sequence and aggregates it.
 
@@ -213,7 +213,7 @@ console.log(ordered);
 
 ## prepend
 
-Method signature: `prepend(item: T): Isequence<T>`.
+Method signature: `prepend(item: T): ISequence<T>`.
 
 Adds a value to the beginning of the sequence.
 
@@ -225,7 +225,7 @@ console.log(prepended); // [0, 1, 2, 3]
 
 ## reverse
 
-Method signature: `reverse(): Isequence<T>`.
+Method signature: `reverse(): ISequence<T>`.
 
 ```typescript
 const reverced = _([1, 2, 3, 4, 5]).reverse().toArray();
@@ -235,7 +235,7 @@ console.log(reverced); // [ 5, 4, 3, 2, 1 ]
 
 ## select
 
-Method signature: `select<TResult>(condition: (item: T) => T2): Isequence<TResult>`.
+Method signature: `select<TResult>(condition: (item: T) => T2): ISequence<TResult>`.
 
 Converts each element of a sequence into a new form.
 
@@ -247,7 +247,7 @@ console.log(selected); // [ 1, 4, 9, 16, 25 ]
 
 ## selectMany
 
-Method signature: `select<TResult>(condition: (item: T) => T2): Isequence<TResult>`.
+Method signature: `select<TResult>(condition: (item: T) => T2): ISequence<TResult>`.
 
 Projects each element of a sequence to an `Array<T>` and flattens the resulting sequence into one sequence
 
@@ -270,7 +270,7 @@ console.log(allKittens); // [ 'Lory', 'Pussy', 'Browny', 'Tommy' ]
 
 ## skip
 
-Method signature: `skip(shouldSkip: number) : Isequence<T>`.
+Method signature: `skip(shouldSkip: number) : ISequence<T>`.
 
 Bypasses `shouldSkip` elements in a sequence and then returns the remaining elements.
 
@@ -282,7 +282,7 @@ console.log(skipped); // [ 4, 5 ]
 
 ## skipLast
 
-Method signature: `skipLast(shouldSkip: number) : Isequence<T>`.
+Method signature: `skipLast(shouldSkip: number) : ISequence<T>`.
 
 Returns a new sequence that contains the elements from source with the last `shouldSkip` elements of the source sequence omitted.
 
@@ -294,7 +294,7 @@ console.log(skipped); // [ 1, 2 ]
 
 ## skipWhile
 
-Method signature: `skipWhile(shouldSkipCondition: (item: T, index?: number) => boolean): Isequence<T>`.
+Method signature: `skipWhile(shouldSkipCondition: (item: T, index?: number) => boolean): ISequence<T>`.
 
 Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements.
 
@@ -306,7 +306,7 @@ console.log(skipped); // [ 3, 2, 1 ]
 
 ## sort
 
-Method signature: `sort(): Isequence<T>`.
+Method signature: `sort(): ISequence<T>`.
 
 Sorts items ascending using default comparison
 
@@ -318,7 +318,7 @@ console.log(sorted); // [ 1, 2, 3, 4 ]
 
 ## sortDescending
 
-Method signature: `sortDescending(): Isequence<T>`.
+Method signature: `sortDescending(): ISequence<T>`.
 
 Sorts items descending using default comparison
 
@@ -330,7 +330,7 @@ console.log(sorted); // [ 4, 3, 2, 1 ]
 
 ## take
 
-Method signature: `take(shouldTake: number) : Isequence<T>`.
+Method signature: `take(shouldTake: number) : ISequence<T>`.
 
 Returns a `shouldTake` elements from the start of a sequence.
 
@@ -342,7 +342,7 @@ console.log(taked); // [ 1, 2, 3 ]
 
 ## takeLast
 
-Method signature: `takeLast(shouldTake: number) : Isequence<T>`.
+Method signature: `takeLast(shouldTake: number) : ISequence<T>`.
 
 Returns a new sequence that contains the last `shouldTake` elements from source.
 
@@ -354,7 +354,7 @@ console.log(taked); // [ 3, 4, 5 ]
 
 ## takeWhile
 
-Method signature: `takeWhile(shouldSkipCondition: (item: T, index?: number) => boolean): Isequence<T>`.
+Method signature: `takeWhile(shouldSkipCondition: (item: T, index?: number) => boolean): ISequence<T>`.
 
 Returns elements from a sequence as long as a specified condition is true, and then skips the remaining elements.
 
@@ -366,7 +366,7 @@ console.log(skipped); // [ 1, 2 ]
 
 ## where
 
-Method signature: `where(predicate: (item: T, index?: number) => boolean) : Isequence<T>`.
+Method signature: `where(predicate: (item: T, index?: number) => boolean) : ISequence<T>`.
 
 Filters a sequence of values based on a predicate.
 

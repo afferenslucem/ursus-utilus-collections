@@ -257,10 +257,12 @@ describe('Index', function () {
             age: 9
         }
 
-        const result = _(cats).contains(cat, {
+        const catByNameComparer = {
             equal: (a, b) => a.name == b.name,
             getHashCode: a => a.name
-        });
+        }
+
+        const result = _(cats).contains(cat, catByNameComparer);
             
         const expected = true;
         

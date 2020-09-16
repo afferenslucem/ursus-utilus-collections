@@ -8,7 +8,7 @@
 
 ## empty
 
-Method signature: `empty<T> (): Isequence<T>`.
+Method signature: `empty<T> (): ISequence<T>`.
 
 Creates empty sequence
 
@@ -20,7 +20,7 @@ console.log(empty); // []
 
 ## of
 
-Method signature: `of<T>(obj: T) : Isequence<T>`.
+Method signature: `of<T>(obj: T) : ISequence<T>`.
 
 Creates a sequence that contains specified value.
 
@@ -32,7 +32,7 @@ console.log(sequence); // [ 0, 4, 4, 3, 1 ]
 
 ## random
 
-Method signature: `random (length: number, max = 10e10): Isequence<number>`.
+Method signature: `random (length: number, max = 10e10): ISequence<number>`.
 
 Generates a sequence of random numbers with a specified length.
 
@@ -44,7 +44,7 @@ console.log(random); // [ 0, 4, 4, 3, 1 ]
 
 ## range
 
-Method signature: `range(from: number, to: number, step = 1) : Isequence<number>`.
+Method signature: `range(from: number, to: number, step = 1) : ISequence<number>`.
 
 Generates a sequence of integral numbers within a specified range.
 
@@ -66,7 +66,7 @@ console.log(range); // [ 0, 3, 6, 9 ]
 
 ## repeat
 
-Method signature: `random (length: number, max = 10e10): Isequence<number>`.
+Method signature: `random (length: number, max = 10e10): ISequence<number>`.
 
 Generates a sequence of random numbers with a specified length.
 

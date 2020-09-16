@@ -53,7 +53,7 @@ describe('UnionCollection', function () {
 
         const result = _(cats).union(cats2, {
             equal: (a, b) => a.age == b.age,
-            getHashCode: a => a.age.toString()
+            getHashCode: a => a.age
         }).toArray();
 
         const expected = [{
