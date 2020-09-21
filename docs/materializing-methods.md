@@ -4,13 +4,13 @@ Materializing methods trigger computation of your query. All your chain of metho
 
 * [toArray](#toArray)
 * [toLookup](#toLookup)
-* [toMap](#toMap)
+* [toDictionary](#toDictionary)
 
 ## toArray
 
 Method signature: `toArray(): T[]`.
 
-Creates an array from sequence
+Creates an array from sequence.
 
 ```typescript
 const concated = _([1, 2, 3).toArray();
@@ -20,9 +20,9 @@ console.log(concated); // [ 1, 2, 3, ]
 
 ## toLookup
 
-Method signature: `toLookup<TKey>(key: MapCondition<T, TKey>): Map<TKey, T[]>`.
+Method signature: `toLookup<TKey>(keySelector: MapCondition<T, TKey>): ILookup<TKey, T>`.
 
-Creates a `Map<TKey, T[]>` from an sequence according to a specified key selector function.
+Creates a `ILookup<TKey, T[]>` from an sequence according to a specified key selector function by using default equality comparer.
 
 ```typescript
 const cats = [{
@@ -86,11 +86,11 @@ console.log(result);
 // ]
 ```
 
-## toMap
+## toDictionary
 
-Method signature: `toMap<TKey>(key: MapCondition<T, TKey>): Map<TKey, T>`.
+Method signature: `toDictionary<TKey>(keySelector: MapCondition<T, TKey>): Dictionary<TKey, T>`.
 
-Creates a `Map<TKey, T>` from an sequence according to a specified key selector function.
+Creates a Dictionary<TKey, TElement> from a sequence according to specified key selector and element selector functions by using default equality comparer.
 
 ```typescript
 const cats = [{
@@ -107,21 +107,21 @@ const cats = [{
     age: 1
 },];
 
-const result = Array.from(new MapAggregator(_(cats), item => item.age).aggregate());
+const result = _(cats).toDictionary(item => item.age).entries()
 
 console.log(result)
 // [
-//     [9, { name: 'Barsik', age: 9 } ],
-//     [4, { name: 'Cherry', age: 4 } ],
 //     [1, { name: 'Lulya',  age: 1 } ],
+//     [4, { name: 'Cherry', age: 4 } ],
+//     [9, { name: 'Barsik', age: 9 } ],
 // ]
 ```
 
-## toMap with element selector
+## toDictionary with element selector
 
-Method signature: `toMap<TKey, TElement>(key: MapCondition<T, TKey>, element: MapCondition<T, TElement>): Map<TKey, TElement>`.
+Method signature: `toDictionary<TKey, TElement>(keySelector: MapCondition<T, TKey>, elementSelector: MapCondition<T, TElement>): Dictionary<TKey, TElement>`.
 
-Creates a `Map<TKey, TElement>` from an sequence according to specified key selector and element selector functions.
+Creates a Dictionary<TKey, TElement> from a sequence according to specified key selector and element selector functions by using default equality comparer.
 
 ```typescript
 const cats = [{
@@ -138,12 +138,12 @@ const cats = [{
     age: 1
 },];
 
-const result = Array.from(new MapAggregator(_(cats), item => item.age, item => item.name).aggregate());
+const result = _(cats).toDictionary(item => item.age, item => item.name).entries()
 
 assert.deepEqual(result, [
-    [9, 'Barsik'],
-    [4, 'Cherry'],
     [1, 'Lulya'],
+    [4, 'Cherry'],
+    [9, 'Barsik'],
 ])
 
 console.log(result)

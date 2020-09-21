@@ -552,7 +552,7 @@ export interface ISequence<T> extends IIterable<T> {
     toHashSet(eqalityComparer: IEqualityComparer<T>): HashSet<T>
 
     /**
-     * Creates a ILookup<TKey, T[]> from an sequence according to a specified key selector function.
+     * Creates a ILookup<TKey, T[]> from an sequence according to a specified key selector function by using default equality comparer.
      * @param keySelector Function for selecting key
      */
     toLookup<TKey>(keySelector: MapCondition<T, TKey>): ILookup<TKey, T>;
