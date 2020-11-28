@@ -21,3 +21,4 @@ tsconfig.*json
 bench-out-formatter.js
 bench-out-formatter.d.ts
 *.csv
+.idea/
