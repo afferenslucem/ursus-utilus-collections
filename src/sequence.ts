@@ -12,6 +12,8 @@ import { HashSet } from "./collections/hash-set";
 import { ILookup } from "./interfaces/i-lookup";
 import { Lookup } from "./collections/lookup";
 import { DefaultEqualityComparer } from "./utils/abstract-equlity-comparer";
+import {IMaterializeSequence} from "./interfaces/i-materialize-sequence";
+import {IPromiseMaterializeSequence} from "./interfaces/i-promisify-materialize-sequence";
 
 export class Sequence<T> implements ISequence<T> {
     // @ts-ignore
@@ -453,6 +455,10 @@ export class Sequence<T> implements ISequence<T> {
 
         // @ts-ignore
         return result;
+    }
+
+    public promisify(): PromisifyCollection<T> {
+        return new PromisifyCollection<T>(this);
     }
 
     ///////////////////////////
@@ -936,5 +942,56 @@ export class ExceptCollection<T> extends Sequence<T> {
 
         // @ts-ignore
         return new Sequence(result).distinct(this.comparer).toArray();
+    }
+}
+
+export class PromisifyCollection<T> implements IPromiseMaterializeSequence<T>{
+    private inner: Sequence<T>;
+
+    public constructor(iterable: Sequence<T>) {
+        this.inner = iterable;
+    }
+
+    toArray(): Promise<T[]> {
+        return new Promise<T[]>(resolve => {
+           const result = this.inner.toArray();
+
+           resolve(result);
+        });
+    }
+
+    toDictionary<TKey>(keySelector: MapCondition<T, TKey>): Promise<Dictionary<TKey, T>>;
+    toDictionary<TKey>(keySelector: MapCondition<T, TKey>, eqalityComparer: IEqualityComparer<TKey>): Promise<Dictionary<TKey, T>>;
+    toDictionary<TKey, TElement>(keySelector: MapCondition<T, TKey>, elementSelector: MapCondition<T, TElement>): Promise<Dictionary<TKey, TElement>>;
+    toDictionary<TKey, TElement>(keySelector: MapCondition<T, TKey>, eqalityComparer: IEqualityComparer<TKey>, elementSelector: MapCondition<T, TElement>): Promise<Dictionary<TKey, TElement>>;
+    toDictionary(keySelector, eqalityComparer?, elementSelector?): any {
+        return new Promise<Dictionary<any, any>>(resolve => {
+            const result = this.inner.toDictionary(keySelector, eqalityComparer || elementSelector, elementSelector);
+
+            resolve(result);
+        });
+    }
+
+    toHashSet(): Promise<HashSet<T>>;
+    toHashSet(equalityComparer: IEqualityComparer<T>): Promise<HashSet<T>>;
+    toHashSet(equalityComparer?: IEqualityComparer<T>): Promise<HashSet<T>> {
+        return new Promise<HashSet<T>>(resolve => {
+            // @ts-ignore
+            const result = this.inner.toHashSet(equalityComparer);
+
+            resolve(result);
+        });
+    }
+
+    toLookup<TKey>(keySelector: MapCondition<T, TKey>): Promise<ILookup<TKey, T>>;
+    toLookup<TKey>(keySelector: MapCondition<T, TKey>, eqalityComparer: IEqualityComparer<TKey>): Promise<ILookup<TKey, T>>;
+    toLookup<TKey, TElement>(keySelector: MapCondition<T, TKey>, elementSelector: MapCondition<T, TElement>): Promise<ILookup<TKey, TElement>>;
+    toLookup<TKey, TElement>(keySelector: MapCondition<T, TKey>, eqalityComparer: IEqualityComparer<TKey>, elementSelector: MapCondition<T, TElement>): Promise<ILookup<TKey, TElement>>;
+    toLookup(keySelector, eqalityComparer?, elementSelector?): any {
+        return new Promise<ILookup<any, any>>(resolve => {
+            const result = this.inner.toLookup(keySelector, eqalityComparer || elementSelector, elementSelector);
+
+            resolve(result);
+        });
     }
 }
