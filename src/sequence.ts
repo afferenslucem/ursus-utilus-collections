@@ -12,7 +12,6 @@ import { HashSet } from "./collections/hash-set";
 import { ILookup } from "./interfaces/i-lookup";
 import { Lookup } from "./collections/lookup";
 import { DefaultEqualityComparer } from "./utils/abstract-equlity-comparer";
-import {IMaterializeSequence} from "./interfaces/i-materialize-sequence";
 import {IPromiseMaterializeSequence} from "./interfaces/i-promisify-materialize-sequence";
 
 export class Sequence<T> implements ISequence<T> {
@@ -257,7 +256,7 @@ export class Sequence<T> implements ISequence<T> {
         return new ReverseCollection(this);
     }
 
-    public select<TOut>(condition: ServiceMapCondition<T, TOut>): ISequence<TOut> {                
+    public select<TOut>(condition: ServiceMapCondition<T, TOut>): ISequence<TOut> {
         // @ts-ignore
         return new MappingCollection<T, TOut>(this, condition);
     }
@@ -475,7 +474,7 @@ export class Sequence<T> implements ISequence<T> {
         return !!this.computed;
     }
 
-    protected materialize(): T[] {
+    protected materialize(): any[] {
         return this.inner.toArray();
     }
 }
@@ -504,7 +503,6 @@ export class MappingCollection<T, V> extends Sequence<T> {
         super(iterable);
     }
 
-    // @ts-ignore
     public select<TOut>(condition: MapCondition<T, TOut>): ISequence<TOut> {
         // @ts-ignore
         const result = new MappingCollection<T, V>(this.inner, (item: T) => condition(this.condition(item)));
@@ -513,7 +511,6 @@ export class MappingCollection<T, V> extends Sequence<T> {
         return result;
     }
 
-    // @ts-ignore
     protected materialize(): V[] {        
         const array = this.inner.toArray();
 
@@ -527,7 +524,6 @@ export class MappingManyCollection<T, T2> extends Sequence<T> {
         super(iterable);
     }
 
-    // @ts-ignore
     public selectMany<TOut>(condition: MapCondition<T, TOut[]>): ISequence<TOut> {
         // @ts-ignore
         const result = new MappingManyCollection<T, T2>(this.inner, (item: T) => condition(this.condition(item)));
@@ -536,7 +532,6 @@ export class MappingManyCollection<T, T2> extends Sequence<T> {
         return result;
     }
 
-    // @ts-ignore
     protected materialize(): T2[] {        
         const array = this.inner.toArray();
 
