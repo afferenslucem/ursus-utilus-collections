@@ -7,6 +7,8 @@ import { IEqualityComparer } from "./i-equality-comparer";
 import { HashSet } from "../collections/hash-set";
 import { ILookup } from "./i-lookup";
 import {IMaterializeSequence} from "./i-materialize-sequence";
+import {IPromiseMaterializeSequence} from "./i-promisify-materialize-sequence";
+import {PromisifyCollection} from "../sequence";
 
 export interface ISequence<T> extends IIterable<T>, IMaterializeSequence<T> {
 
@@ -333,6 +335,10 @@ export interface ISequence<T> extends IIterable<T>, IMaterializeSequence<T> {
      */
     prepend(item: T): ISequence<T>;
 
+    /**
+     * Allow execute computes in promise
+     */
+    promisify(): PromisifyCollection<T>
     
     /**
      * Inverts the order of the elements in a sequence.
